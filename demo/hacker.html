@@ -57,10 +57,10 @@
     .dim{color:#111}
 
     /* Legend */
-    .legend{margin-top:16px;border:1px solid #111;border-radius:6px;padding:12px;display:none}
+    .legend{margin-top:16px;border:1px solid #1a1a1a;border-radius:6px;padding:16px;display:none;background:#050505}
     .legend.active{display:block}
-    .legend-title{color:#333;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
-    #legend-items{font-size:10px;line-height:2.2}
+    .legend-title{color:#00B88A;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+    #legend-items{font-size:12px;line-height:2.4}
     #legend-items div{opacity:0;transform:translateX(-8px);transition:all 0.2s ease-out}
 
     /* Score */
@@ -384,7 +384,7 @@ function runAllAttacks() {
 
       if (atk.explain) {
         var li = document.createElement('div');
-        li.innerHTML = '<span style="color:#ef4444">#' + total + '</span> <span style="color:#555">' + atk.explain + '</span>';
+        li.innerHTML = '<span style="color:#ef4444;font-weight:700">#' + total + '</span> <span style="color:#888">' + atk.name + '</span> <span style="color:#00B88A">→ ' + atk.explain + '</span>';
         document.getElementById('legend-items').appendChild(li);
         setTimeout(function() { li.style.opacity = '1'; li.style.transform = 'translateX(0)'; }, 20);
       }
