@@ -566,15 +566,7 @@
 <!-- PRICING -->
 <section id="pricing">
   <h2 class="section-title">Simple Pricing</h2>
-  <p class="section-sub">Start free. Scale when you need to.</p>
-
-  <!-- Toggle Monthly/Annual -->
-  <div style="display:flex;justify-content:center;margin-bottom:32px">
-    <div style="display:flex;background:#0f172a;border-radius:10px;padding:4px;border:1px solid #1e293b" id="billing-toggle">
-      <button onclick="setBilling('monthly')" id="btn-monthly" style="padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;background:#22c55e;color:#020617">Monthly</button>
-      <button onclick="setBilling('annual')" id="btn-annual" style="padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;background:transparent;color:#64748b">Annual <span style="color:#22c55e;font-size:11px;margin-left:4px">Save 20%</span></button>
-    </div>
-  </div>
+  <p class="section-sub">Start free. Pay when you're ready.</p>
 
   <div class="pricing-grid">
     <div class="price-card">
@@ -587,30 +579,30 @@
         <li><span class="ck">✓</span> Shadow DOM protection</li>
         <li><span class="ck">✓</span> Anti copy/paste/select</li>
         <li><span class="ck">✓</span> Animated cipher display</li>
-        <li style="color:#334155">— Community support</li>
-        <li style="color:#334155">— SmartField badge shown</li>
+        <li style="color:#aaa">— Community support</li>
+        <li style="color:#aaa">— SmartField badge shown</li>
       </ul>
       <a href="/landing/signup.html?plan=free" class="price-btn price-btn-outline" style="text-align:center;text-decoration:none;display:block">Get Started Free</a>
     </div>
     <div class="price-card featured">
       <div class="price-name">Pro</div>
-      <div class="price-amount" id="pro-price">$49<span>/mo</span></div>
-      <div class="price-period" id="pro-period">Per domain · billed monthly</div>
+      <div class="price-amount">$19<span>/mo</span></div>
+      <div class="price-period">Per domain</div>
       <ul class="price-features">
         <li><span class="ck">✓</span> Unlimited encrypted fields</li>
-        <li><span class="ck">✓</span> Server-side SDK (Node, Python, PHP)</li>
-        <li><span class="ck">✓</span> Threat scanner dashboard</li>
+        <li><span class="ck">✓</span> Server-side SDK (6 languages)</li>
         <li><span class="ck">✓</span> Custom styling & branding</li>
         <li><span class="ck">✓</span> No SmartField badge</li>
-        <li><span class="ck">✓</span> Priority email support</li>
         <li><span class="ck">✓</span> Field format validation</li>
+        <li><span class="ck">✓</span> Email support</li>
+        <li><span class="ck">✓</span> Environment threat scanner</li>
       </ul>
       <a href="/landing/signup.html?plan=pro" class="price-btn price-btn-primary" style="text-align:center;text-decoration:none;display:block">Start Pro Trial</a>
     </div>
     <div class="price-card">
       <div class="price-name">Enterprise</div>
-      <div class="price-amount" id="ent-price">$299<span>/mo</span></div>
-      <div class="price-period" id="ent-period">Unlimited domains · billed monthly</div>
+      <div class="price-amount" style="font-size:32px">Custom</div>
+      <div class="price-period">For teams & compliance</div>
       <ul class="price-features">
         <li><span class="ck">✓</span> Everything in Pro</li>
         <li><span class="ck">✓</span> Self-hosted option</li>
@@ -620,7 +612,7 @@
         <li><span class="ck">✓</span> SLA & dedicated support</li>
         <li><span class="ck">✓</span> SSO & team management</li>
       </ul>
-      <a href="/landing/signup.html?plan=enterprise" class="price-btn price-btn-white" style="text-align:center;text-decoration:none;display:block">Contact Sales</a>
+      <a href="mailto:sales@smartfield.dev" class="price-btn price-btn-white" style="text-align:center;text-decoration:none;display:block">Contact Sales</a>
     </div>
   </div>
 </section>
