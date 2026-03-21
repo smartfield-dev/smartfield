@@ -163,7 +163,7 @@
     </div>
 
     <!-- Right: bank card -->
-    <div style="background:#ffffff;border-radius:20px;padding:40px;box-shadow:0 4px 24px rgba(47,49,146,0.1);border:1px solid #d8d9e8;max-width:400px;margin:0 auto;width:100%">
+    <div style="background:#ffffff;border-radius:20px;padding:40px;box-shadow:0 4px 24px rgba(47,49,146,0.1);border:1px solid #d8d9e8;max-width:400px;margin:0 auto;width:100%;-webkit-user-select:none;user-select:none">
       <!-- Bank header -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #2f3192">
         <div style="display:flex;align-items:center;gap:10px">
@@ -544,7 +544,7 @@
         var el=document.getElementById(id);
         if(!el)continue;
         el.textContent=originals[id];el.dataset.revealed='false';
-        el.style.color='';el.style.textShadow='';
+        el.style.color='#2f3192';el.style.textShadow='0 0 8px rgba(47,49,146,0.2)';
       }
     },5000);
   }
