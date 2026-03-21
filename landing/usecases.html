@@ -137,8 +137,7 @@
 
 <!-- SEPARATOR -->
 <div style="text-align:center;padding:80px 20px;background:#ffffff">
-  <img src="/landing/img/ima_bank.png" alt="Banking" style="height:48px;margin-bottom:12px">
-  <h2 style="font-size:32px;font-weight:800;color:#0B1120">Banking</h2>
+  <h2 id="anim-banking" style="font-size:56px;font-weight:800;color:#2f3192;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
   <p style="color:#888;font-size:15px;margin-top:8px">Balances, transactions, account numbers — encrypted on screen</p>
 </div>
 
@@ -429,6 +428,56 @@
     },1200);
     render();
   })();
+
+  // Section title decrypt animations
+  function animateTitle(elId, text, color1, color2, delay) {
+    var CH='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
+    var el=document.getElementById(elId);
+    if(!el) return;
+    var cur=[], rev=[];
+    for(var i=0;i<text.length;i++){
+      if(text[i]===' '){cur.push(' ');rev.push(true);}
+      else{cur.push(CH[Math.floor(Math.random()*CH.length)]);rev.push(false);}
+    }
+    function render(){
+      var h='';
+      for(var i=0;i<cur.length;i++){
+        if(rev[i]) h+='<span style="color:'+color1+';font-family:-apple-system,sans-serif;letter-spacing:-2px">'+cur[i]+'</span>';
+        else h+='<span style="color:'+color2+';text-shadow:0 0 12px '+color2+'44">'+cur[i]+'</span>';
+      }
+      el.innerHTML=h;
+    }
+    var si=setInterval(function(){for(var i=0;i<cur.length;i++){if(!rev[i])cur[i]=CH[Math.floor(Math.random()*CH.length)];}render();},60);
+    setTimeout(function(){
+      var ri=0;
+      var riv=setInterval(function(){
+        while(ri<text.length&&rev[ri])ri++;
+        if(ri>=text.length){clearInterval(riv);clearInterval(si);el.style.fontFamily="-apple-system,'Segoe UI',sans-serif";el.style.letterSpacing="-2px";el.innerHTML='<span style="color:'+color1+'">'+text+'</span>';return;}
+        cur[ri]=text[ri];rev[ri]=true;ri++;render();
+      },60);
+    },delay||1500);
+    render();
+  }
+
+  // Trigger when scrolled into view
+  var animated = {};
+  function checkAnimations() {
+    var sections = [
+      {id:'anim-banking', text:'Banking', c1:'#2f3192', c2:'#ec1e24'}
+    ];
+    sections.forEach(function(s) {
+      if(animated[s.id]) return;
+      var el = document.getElementById(s.id);
+      if(!el) return;
+      var rect = el.getBoundingClientRect();
+      if(rect.top < window.innerHeight && rect.bottom > 0) {
+        animated[s.id] = true;
+        animateTitle(s.id, s.text, s.c1, s.c2, 800);
+      }
+    });
+  }
+  window.addEventListener('scroll', checkAnimations);
+  setTimeout(checkAnimations, 500);
 
   // Bank login demo
   function bankLogin(){
