@@ -275,21 +275,7 @@ function runAllAttacks() {
           '<span style="color:#ef4444;font-weight:700">No zero-day exploit.</span><br>' +
           '<span style="color:#666;font-size:11px;margin-top:4px;display:inline-block">If it can\'t read the data, it can\'t steal the data. Period.</span>' +
         '</div>' +
-        '<div style="margin-top:20px;text-align:left;background:#111;border:1px solid #222;border-radius:10px;padding:16px;font-size:11px;line-height:2.2">' +
-          '<div style="color:#666;margin-bottom:8px;font-weight:700;font-size:12px">What each attack does in the real world:</div>' +
-          '<div style="color:#ef4444">#1  .value <span style="color:#555">→ How hackers steal passwords from normal inputs</span></div>' +
-          '<div style="color:#ef4444">#2  shadowRoot <span style="color:#555">→ How they access open Web Components</span></div>' +
-          '<div style="color:#ef4444">#3  innerHTML <span style="color:#555">→ How they read DOM content</span></div>' +
-          '<div style="color:#ef4444">#6  querySelector <span style="color:#555">→ How bots find and fill inputs</span></div>' +
-          '<div style="color:#ef4444">#11 .value injection <span style="color:#555">→ How they inject malicious data</span></div>' +
-          '<div style="color:#ef4444">#12 keydown listener <span style="color:#555">→ How keyloggers capture every keystroke</span></div>' +
-          '<div style="color:#ef4444">#13 Prototype pollution <span style="color:#555">→ Advanced attack that redefines properties</span></div>' +
-          '<div style="color:#ef4444">#14 MutationObserver <span style="color:#555">→ How Hotjar/FullStory watch DOM changes</span></div>' +
-          '<div style="color:#ef4444">#17 execCommand copy <span style="color:#555">→ How they steal from clipboard</span></div>' +
-          '<div style="color:#ef4444">#18 JSON.stringify <span style="color:#555">→ How they serialize objects to exfiltrate data</span></div>' +
-          '<div style="color:#ef4444">#19 Property enum <span style="color:#555">→ How they scan all object properties</span></div>' +
-          '<div style="margin-top:12px;color:#00B88A;font-weight:700;font-size:12px">All 20 are real-world attack vectors. SmartField blocked every one.</div>' +
-        '</div>';
+        '';
       } else {
         box.innerHTML = '<div class="score" style="background:#450a0a;color:#ef4444">VULNERABLE<br><span style="font-size:14px">' + (total - blocked) + ' attacks succeeded</span></div>';
       }
