@@ -62,8 +62,16 @@
 
       this._anim = null;
 
-      // Helper to access secrets - non-enumerable, invisible to JSON.stringify
+      // Protect .value from Object.defineProperty attacks
       var me = this;
+      Object.defineProperty(this, 'value', {
+        get: function() { return _secrets.get(me).encrypted; },
+        set: function() {},
+        enumerable: false,
+        configurable: false  // CANNOT be overridden by attacker
+      });
+
+      // Helper to access secrets - non-enumerable, invisible to JSON.stringify
       Object.defineProperty(this, '_s', {
         value: function(key, val) {
           var s = _secrets.get(me);
@@ -488,8 +496,8 @@
     }
 
     // Public API - only encrypted
-    get value() { return this._s('encrypted'); }
-    set value(_) {}
+    // value is defined via Object.defineProperty in constructor for protection
+    // See constructor: non-configurable, non-writable getter
     get name() { return this._s('fieldId'); }  // returns random ID, not real name
     get type() { return 'encrypted'; }    // hides if it's email/password/text
     get length() { return -1; }           // hides real length
