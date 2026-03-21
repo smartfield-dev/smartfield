@@ -28,6 +28,10 @@
 
 <h1>SmartField Hacker Challenge</h1>
 <p class="sub">Type something in the fields below, then click "Run All Attacks" to try to steal it.</p>
+<div style="background:#1a1a2e;border:1px solid #2a2a4a;border-radius:8px;padding:10px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
+  <span style="font-size:20px">💻</span>
+  <span style="font-size:12px;color:#00B88A">Press <kbd style="background:#333;padding:2px 8px;border-radius:4px;color:#fff;font-weight:700">F12</kbd> to open DevTools Console — watch the attacks in real-time there too</span>
+</div>
 
 <div class="grid">
   <div class="target">
@@ -227,6 +231,12 @@ function runAllAttacks() {
     return { stolen: false, reason: 'No data in ARIA attributes' };
   });
 
+  // Console output with colors
+  console.clear();
+  console.log('%c SmartField Hacker Challenge ', 'background:#ef4444;color:white;font-size:16px;font-weight:bold;padding:8px 16px;border-radius:4px');
+  console.log('%cTarget: SmartField password field', 'color:#60a5fa;font-size:12px');
+  console.log('');
+
   // Run one by one with delay
   hlog('=== AUTOMATED HACK ATTEMPT ===', 'warn');
   hlog('Target: SmartField password field', 'info');
@@ -239,6 +249,14 @@ function runAllAttacks() {
       hlog('════════════════════════════════', 'warn');
       hlog('RESULT: ' + blocked + '/' + total + ' attacks BLOCKED', blocked === total ? 'pass' : 'fail');
       hlog('════════════════════════════════', 'warn');
+
+      // Console final
+      console.log('');
+      if (blocked === total) {
+        console.log('%c 🛡 UNBREAKABLE — ' + total + '/' + total + ' attacks blocked ', 'background:#00B88A;color:#000;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:4px');
+      } else {
+        console.log('%c ⚠ VULNERABLE — ' + blocked + '/' + total + ' attacks blocked ', 'background:#ef4444;color:white;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:4px');
+      }
 
       var box = document.getElementById('score-box');
       if (blocked === total) {
@@ -263,13 +281,16 @@ function runAllAttacks() {
         var result = atk.fn();
         if (result.stolen) {
           hlog('  ✗ STOLEN: "' + result.data + '"', 'fail');
+          console.log('%c ATTACK #' + total + ': ' + atk.name + ' %c ✗ STOLEN: "' + result.data + '"', 'color:#60a5fa;font-weight:bold', 'color:#ef4444;font-weight:bold');
         } else {
           hlog('  ✓ BLOCKED: ' + result.reason, 'pass');
           blocked++;
+          console.log('%c ATTACK #' + total + ': ' + atk.name + ' %c ✓ BLOCKED', 'color:#60a5fa;font-weight:bold', 'color:#00B88A;font-weight:bold');
         }
       } catch(e) {
         hlog('  ✓ BLOCKED: ' + e.message, 'pass');
         blocked++;
+        console.log('%c ATTACK #' + total + ': ' + atk.name + ' %c ✓ BLOCKED', 'color:#60a5fa;font-weight:bold', 'color:#00B88A;font-weight:bold');
       }
 
       document.getElementById('counter').textContent = blocked + '/' + total + ' blocked';
