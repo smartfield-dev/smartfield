@@ -197,9 +197,9 @@
       <div style="font-size:12px;color:#555;padding:6px 0;display:flex;justify-content:space-between"><span>Netflix</span><span style="font-family:'Fira Code',monospace;color:#2f3192;letter-spacing:2px" id="bank-tx3">λμ</span></div>
 
       <div style="text-align:center;margin-top:20px">
-        <button onclick="revealBalances()" style="padding:12px 28px;background:#ec1e24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(236,30,36,0.3)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          Unlock Balances (5s)
+        <button id="lock-btn" onclick="toggleBalances()" style="padding:12px 28px;background:#ec1e24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(236,30,36,0.3)">
+          <svg id="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span id="lock-text">Unlock Balances</span>
         </button>
       </div>
 
@@ -515,7 +515,11 @@
   },120);
 
   // BANKING: Reveal balances for 5 seconds
-  function revealBalances(){
+  var balancesVisible = false;
+  function toggleBalances(){
+    var btn = document.getElementById('lock-btn');
+    var txt = document.getElementById('lock-text');
+    var icon = document.getElementById('lock-icon');
     var items = {
       'bank-balance-1': '$24,891.53',
       'bank-balance-2': '$142,500.00',
@@ -532,21 +536,33 @@
       'bank-tx2': 'ΣΩΔψξ',
       'bank-tx3': 'λμ'
     };
-    for(var id in items){
-      var el=document.getElementById(id);
-      if(!el)continue;
-      el.textContent=items[id];el.dataset.revealed='true';
-      el.style.textShadow='none';
-      el.style.color=items[id].startsWith('-')?'#dc2626':'#16a34a';
-    }
-    setTimeout(function(){
+
+    if (!balancesVisible) {
+      // Unlock
+      for(var id in items){
+        var el=document.getElementById(id);
+        if(!el)continue;
+        el.textContent=items[id];el.dataset.revealed='true';
+        el.style.textShadow='none';
+        el.style.color=items[id].startsWith('-')?'#dc2626':'#16a34a';
+      }
+      btn.style.background='#2f3192';
+      txt.textContent='Lock Balances';
+      icon.innerHTML='<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><line x1="12" y1="16" x2="12" y2="20" stroke="currentColor" stroke-width="2"/>';
+      balancesVisible = true;
+    } else {
+      // Lock
       for(var id in originals){
         var el=document.getElementById(id);
         if(!el)continue;
         el.textContent=originals[id];el.dataset.revealed='false';
         el.style.color='#2f3192';el.style.textShadow='0 0 8px rgba(47,49,146,0.2)';
       }
-    },5000);
+      btn.style.background='#ec1e24';
+      txt.textContent='Unlock Balances';
+      icon.innerHTML='<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>';
+      balancesVisible = false;
+    }
   }
 
   // MEDICAL: Reveal records for 5 seconds
