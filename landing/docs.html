@@ -129,8 +129,16 @@
 const sf = require('@smartfield/server');
 await sf.init();
 
+// Serve public key (SmartField fetches this automatically)
+app.get('/sf-key', (req, res) =&gt; res.json(sf.getPublicKey()));
+
+// Decrypt — fields arrive with random IDs, not "password"
 app.post('/login', async (req, res) =&gt; {
-  const password = await sf.decrypt(req.body.password);
+  const data = await sf.decryptFields(req.body);
+  // data = { sf_a7f3c2: "user@email.com", sf_b9e1d4: "mypassword" }
+  const values = Object.values(data);
+  const email = values[0];
+  const password = values[1];
 });</code></pre>
 
 <div class="success">That's it. Your form is now encrypted end-to-end. Every keystroke is protected with AES-256-GCM + RSA-2048.</div>
@@ -197,7 +205,7 @@ app.post('/login', async (req, res) =&gt; {
 // Or use middleware (auto-serves key + auto-decrypts)
 app.use(sf.middleware());</code></pre>
 
-<h3 id="python">Python <span class="badge-lang badge-python">Python</span></h3>
+<h3 id="python">Python <span class="badge-lang badge-python">Python</span> <span style="font-size:10px;color:#f59e0b;background:#fef3cd;padding:2px 6px;border-radius:4px;margin-left:4px">Coming Soon</span></h3>
 <pre><code>pip install smartfield</code></pre>
 <pre><code>from smartfield import SmartField
 from flask import Flask, request, jsonify
@@ -219,7 +227,7 @@ def login():
     # Authenticate...
     return jsonify({"status": "ok"})</code></pre>
 
-<h3 id="java">Java <span class="badge-lang badge-java">Java / Spring</span></h3>
+<h3 id="java">Java <span class="badge-lang badge-java">Java / Spring</span> <span style="font-size:10px;color:#f59e0b;background:#fef3cd;padding:2px 6px;border-radius:4px;margin-left:4px">Coming Soon</span></h3>
 <pre><code>// Maven
 &lt;dependency&gt;
   &lt;groupId&gt;dev.smartfield&lt;/groupId&gt;
@@ -253,7 +261,7 @@ public class AuthController {
     }
 }</code></pre>
 
-<h3 id="php">PHP <span class="badge-lang badge-php">PHP / Laravel</span></h3>
+<h3 id="php">PHP <span class="badge-lang badge-php">PHP / Laravel</span> <span style="font-size:10px;color:#f59e0b;background:#fef3cd;padding:2px 6px;border-radius:4px;margin-left:4px">Coming Soon</span></h3>
 <pre><code>composer require smartfield/server</code></pre>
 <pre><code>use SmartField\SmartField;
 
@@ -272,7 +280,7 @@ Route::post('/login', function(Request $request) use ($sf) {
     // Authenticate...
 });</code></pre>
 
-<h3 id="go">Go <span class="badge-lang badge-go">Go</span></h3>
+<h3 id="go">Go <span class="badge-lang badge-go">Go</span> <span style="font-size:10px;color:#f59e0b;background:#fef3cd;padding:2px 6px;border-radius:4px;margin-left:4px">Coming Soon</span></h3>
 <pre><code>go get github.com/smartfield/smartfield-go</code></pre>
 <pre><code>package main
 
@@ -303,7 +311,7 @@ func main() {
     http.ListenAndServe(":8080", nil)
 }</code></pre>
 
-<h3 id="ruby">Ruby / Rails <span class="badge-lang badge-ruby">Ruby</span></h3>
+<h3 id="ruby">Ruby / Rails <span class="badge-lang badge-ruby">Ruby</span> <span style="font-size:10px;color:#f59e0b;background:#fef3cd;padding:2px 6px;border-radius:4px;margin-left:4px">Coming Soon</span></h3>
 <pre><code>gem install smartfield</code></pre>
 <pre><code>require 'smartfield'
 
