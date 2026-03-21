@@ -268,6 +268,13 @@ function runAllAttacks() {
       var box = document.getElementById('score-box');
       if (blocked === total) {
         box.innerHTML = '<div class="score" style="background:#052e16;color:#00B88A">UNBREAKABLE<br><span style="font-size:14px">' + total + '/' + total + ' attacks blocked</span></div>' +
+        '<div style="margin-top:16px;padding:16px;background:#0a0a0a;border:1px solid #222;border-radius:10px;text-align:center;font-size:13px;line-height:1.8">' +
+          '<span style="color:#ef4444;font-weight:700">No Russian attack.</span><br>' +
+          '<span style="color:#ef4444;font-weight:700">No North Korean attack.</span><br>' +
+          '<span style="color:#ef4444;font-weight:700">No state-sponsored hack.</span><br>' +
+          '<span style="color:#ef4444;font-weight:700">No zero-day exploit.</span><br>' +
+          '<span style="color:#666;font-size:11px;margin-top:4px;display:inline-block">If it can\'t read the data, it can\'t steal the data. Period.</span>' +
+        '</div>' +
         '<div style="margin-top:20px;text-align:left;background:#111;border:1px solid #222;border-radius:10px;padding:16px;font-size:11px;line-height:2.2">' +
           '<div style="color:#666;margin-bottom:8px;font-weight:700;font-size:12px">What each attack does in the real world:</div>' +
           '<div style="color:#ef4444">#1  .value <span style="color:#555">→ How hackers steal passwords from normal inputs</span></div>' +
