@@ -503,6 +503,37 @@ User types → AES key generated (random, per encryption)
 19. Property enumeration   → no plaintext properties
 20. Accessibility APIs     → no data in ARIA</code></pre>
 
+<!-- WHAT WE PROTECT / DON'T PROTECT -->
+<h2 id="attacks">What SmartField Protects — And What It Doesn't</h2>
+<p>We believe in transparency. No security product is 100%. Here's exactly what SmartField covers and what it doesn't.</p>
+
+<h3>SmartField PROTECTS against:</h3>
+<table>
+  <tr><th>Attack</th><th>How</th></tr>
+  <tr><td>JavaScript reading .value</td><td>Returns encrypted payload only</td></tr>
+  <tr><td>Trackers (Hotjar, GA, FullStory)</td><td>Shadow DOM + event blocking</td></tr>
+  <tr><td>XSS attacks</td><td>Attacker gets encrypted gibberish</td></tr>
+  <tr><td>Screen recorders</td><td>Cipher characters + scramble on blur</td></tr>
+  <tr><td>Bots and AI agents</td><td>Shadow DOM blocks querySelector</td></tr>
+  <tr><td>Copy / paste / select</td><td>All clipboard events blocked</td></tr>
+  <tr><td>Prototype pollution</td><td>value property is non-configurable</td></tr>
+  <tr><td>JSON serialization</td><td>Sensitive data in WeakMap (invisible)</td></tr>
+  <tr><td>MutationObserver</td><td>Cannot observe closed Shadow DOM</td></tr>
+  <tr><td>Browser autofill / autosave</td><td>Input shows cipher chars, not real data</td></tr>
+</table>
+
+<h3>SmartField DOES NOT protect against:</h3>
+<table>
+  <tr><th>Attack</th><th>Why</th></tr>
+  <tr><td>Malicious browser extensions</td><td>Extensions with elevated permissions operate below the JavaScript layer. SmartField cannot block them. This is a browser-level limitation, not a SmartField limitation.</td></tr>
+  <tr><td>OS-level keyloggers</td><td>A keylogger installed on the operating system captures keystrokes before they reach the browser. No web technology can prevent this.</td></tr>
+  <tr><td>Physical access to the machine</td><td>Someone with physical access can install keyloggers, use hardware devices, or read the screen directly. This requires endpoint security, not web security.</td></tr>
+  <tr><td>Browser zero-day exploits</td><td>A vulnerability in Chrome/Firefox itself could bypass Shadow DOM. If this happens, the entire browser is compromised — not just SmartField.</td></tr>
+  <tr><td>RAM dump with root access</td><td>With root/admin access to the machine, an attacker could read browser process memory. This requires full system compromise.</td></tr>
+</table>
+
+<div class="warn"><strong>Our position:</strong> SmartField protects the browser layer — the space between the keyboard and the server. This is the layer that no one else protects. We are transparent about what falls outside our scope because we believe honesty builds more trust than false promises.</div>
+
 <!-- LICENSE -->
 <h2 id="license">License Keys</h2>
 <pre><code>&lt;!-- Free plan: no key needed --&gt;
