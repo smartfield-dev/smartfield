@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SmartField v0.1 — Security Audit Report</title>
+  <title>SmartField v2.6 — Security Audit Report</title>
   <style>
     @page { margin: 2cm; size: A4; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -73,7 +73,7 @@
   <div class="logo">
     <svg width="48" height="48" viewBox="0 0 56 56" fill="none"><rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="46" y="4" width="6" height="10" rx="2" fill="#00B88A" opacity="0.12"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="46" y="18" width="6" height="10" rx="2" fill="#00B88A"/><rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="46" y="32" width="6" height="10" rx="2" fill="#00B88A" opacity="0.38"/></svg>
   </div>
-  <h1>SmartField v0.1</h1>
+  <h1>SmartField v2.6</h1>
   <div class="subtitle">Security Audit Report</div>
   <div class="meta">
     <strong>Auditor:</strong> Kovigroup Security Division<br>
@@ -96,7 +96,7 @@
   <div class="summary-item"><div class="summary-num pass">0</div><div class="summary-label">Critical Issues</div></div>
 </div>
 
-<div class="box box-green"><strong>Overall Assessment:</strong> SmartField v0.1 demonstrates a strong security architecture for a prototype. No critical or high-severity vulnerabilities were found. The component successfully resists all 20 tested attack vectors.</div>
+<div class="box box-green"><strong>Overall Assessment:</strong> SmartField v2.6 demonstrates a strong security architecture for a prototype. No critical or high-severity vulnerabilities were found. The component successfully resists all 20 tested attack vectors.</div>
 
 <!-- FINDINGS SUMMARY -->
 <h2>2. Findings Summary</h2>
@@ -258,14 +258,14 @@ _secrets.set(this, { realValue: '', encrypted: '', keys: null, ... });</pre>
 
 <!-- CONCLUSION -->
 <h2>10. Conclusion</h2>
-<p>SmartField v0.1 demonstrates a robust security architecture with 13 independent protection layers and zero critical vulnerabilities. The combination of hardware-accelerated encryption (Web Crypto API), closed Shadow DOM isolation, WeakMap memory protection, and comprehensive event blocking creates a defense-in-depth approach that resists all 20 tested attack vectors.</p>
+<p>SmartField v2.6 demonstrates a robust security architecture with 13 independent protection layers and zero critical vulnerabilities. The combination of hardware-accelerated encryption (Web Crypto API), closed Shadow DOM isolation, WeakMap memory protection, and comprehensive event blocking creates a defense-in-depth approach that resists all 20 tested attack vectors.</p>
 <p>The 3 medium-severity findings (1 already fixed) relate to production hardening rather than fundamental security flaws. The core encryption and isolation mechanisms are correctly implemented according to industry standards (NIST, W3C).</p>
 <p><strong>This component is suitable for controlled deployment and public beta testing. For enterprise production environments handling financial or healthcare data, a complementary human-led penetration test is recommended.</strong></p>
 
 <!-- FOOTER -->
 <div class="footer">
   <p><strong>Kovigroup Security Division</strong> — Independent Security Audit<br>
-  SmartField v0.1 · Component: <code>smartfield.js</code> (640 lines) · Date: March 21, 2026<br>
+  SmartField v2.6 · Component: <code>smartfield.js</code> (640 lines) · Date: March 21, 2026<br>
   Classification: Public · Distribution: Unrestricted</p>
 </div>
 

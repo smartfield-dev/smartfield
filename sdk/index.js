@@ -270,7 +270,7 @@ function status() {
     keysDir: _keysDir,
     hasPrivateKey: !!_privateKey,
     hasPublicKey: !!_publicKey,
-    version: '0.1.0'
+    version: '2.6.0'
   };
 }
 

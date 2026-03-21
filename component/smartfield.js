@@ -636,5 +636,5 @@
   }
 
   customElements.define('smart-field', SmartField);
-  window.SmartField = { version: '0.1.0' };
+  window.SmartField = { version: '2.6.0' };
 })();
