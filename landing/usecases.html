@@ -215,9 +215,9 @@
 
 <!-- SEPARATOR -->
 <div style="text-align:center;padding:80px 20px;background:#ffffff">
-  <img src="/landing/img/ima_onl.png" alt="Payments" style="height:48px;margin-bottom:12px">
-  <h2 style="font-size:32px;font-weight:800;color:#0B1120">Payment Checkout</h2>
-  <p style="color:#888;font-size:15px;margin-top:8px">Credit cards, CVV, billing — encrypted before they touch the DOM</p>
+  <h2 id="anim-payments" style="font-size:56px;font-weight:800;color:#23073e;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Every online purchase exposes card numbers in the DOM. <strong style="color:#ee348e">Any JavaScript on the checkout page can read your customers' credit card.</strong></p>
+  <p style="color:#23073e;font-size:14px;margin-top:8px;font-weight:600">SmartField encrypts card, CVV, and expiry at the keystroke level.</p>
 </div>
 
 <!-- ========== 2. PAYMENTS — REAL CHECKOUT ========== -->
@@ -464,7 +464,8 @@
   var animated = {};
   function checkAnimations() {
     var sections = [
-      {id:'anim-banking', text:'Banking', c1:'#2f3192', c2:'#ec1e24'}
+      {id:'anim-banking', text:'Banking', c1:'#2f3192', c2:'#ec1e24'},
+      {id:'anim-payments', text:'Payments', c1:'#23073e', c2:'#ee348e'}
     ];
     sections.forEach(function(s) {
       if(animated[s.id]) return;
