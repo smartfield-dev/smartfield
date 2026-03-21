@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartField — Hacker Challenge</title>
+  <script src="../component/smartfield.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Fira Code',monospace;background:#0a0a0a;color:#e2e8f0;padding:20px}
+    h1{color:#ef4444;font-size:24px;margin-bottom:4px}
+    .sub{color:#666;font-size:12px;margin-bottom:24px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .target{background:#111;border:1px solid #222;border-radius:12px;padding:20px}
+    .target h2{font-size:14px;color:#22c55e;margin-bottom:12px}
+    .target label{display:block;font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase}
+    .target smart-field{margin-bottom:10px;--sf-bg:#0a0a0a;--sf-border-color:#333;--sf-cipher-color:#22c55e}
+    .results{background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:20px;max-height:80vh;overflow-y:auto}
+    .results h2{font-size:14px;color:#ef4444;margin-bottom:12px}
+    #log{font-size:11px;line-height:2}
+    .pass{color:#22c55e}.fail{color:#ef4444}.info{color:#3b82f6}.warn{color:#f59e0b}.dim{color:#333}
+    .run-btn{display:block;width:100%;padding:14px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;font-family:monospace}
+    .run-btn:hover{background:#dc2626}
+    .score{text-align:center;padding:20px;margin-top:16px;border-radius:12px;font-size:32px;font-weight:800}
+  </style>
+</head>
+<body>
+
+<h1>SmartField Hacker Challenge</h1>
+<p class="sub">Type something in the fields below, then click "Run All Attacks" to try to steal it.</p>
+
+<div class="grid">
+  <div class="target">
+    <h2>Target: SmartField</h2>
+    <label>Credit Card</label>
+    <smart-field sf-type="card" id="sf-card"></smart-field>
+    <label>Password</label>
+    <smart-field type="password" id="sf-pwd"></smart-field>
+    <label>SSN</label>
+    <smart-field sf-type="ssn" id="sf-ssn"></smart-field>
+    <button class="run-btn" onclick="runAllAttacks()">Run All Attacks</button>
+  </div>
+
+  <div class="results">
+    <h2>Attack Results</h2>
+    <div id="log"></div>
+    <div id="score-box"></div>
+  </div>
+</div>
+
+<script>
+var L = document.getElementById('log');
+var blocked = 0, total = 0;
+
+function log(t, c) {
+  var d = document.createElement('div');
+  d.className = c || 'dim';
+  d.textContent = t;
+  L.appendChild(d);
+  L.scrollTop = L.scrollHeight;
+}
+
+function attack(name, fn) {
+  total++;
+  log('', 'dim');
+  log('ATTACK: ' + name, 'info');
+  try {
+    var result = fn();
+    if (result.stolen) {
+      log('  STOLEN: "' + result.data + '"', 'fail');
+    } else {
+      log('  BLOCKED: ' + result.reason, 'pass');
+      blocked++;
+    }
+  } catch(e) {
+    log('  BLOCKED: ' + e.message, 'pass');
+    blocked++;
+  }
+}
+
+function runAllAttacks() {
+  L.innerHTML = '';
+  blocked = 0; total = 0;
+  var sf = document.getElementById('sf-pwd');
+
+  log('=== STARTING HACK ATTEMPT ===', 'warn');
+  log('Target: SmartField password field', 'info');
+  log('', 'dim');
+
+  // 1. Direct .value
+  attack('Read .value directly', function() {
+    var v = sf.value;
+    if (v && v.length < 100 && !v.startsWith('eyJ')) return { stolen: true, data: v };
+    return { stolen: false, reason: '.value returns encrypted: "' + (v||'').substring(0,30) + '..."' };
+  });
+
+  // 2. shadowRoot
+  attack('Access shadowRoot', function() {
+    var sr = sf.shadowRoot;
+    if (sr) return { stolen: true, data: 'shadowRoot accessible!' };
+    return { stolen: false, reason: 'shadowRoot = null (CLOSED)' };
+  });
+
+  // 3. innerHTML
+  attack('Read innerHTML', function() {
+    var h = sf.innerHTML;
+    if (h && h.length > 0) return { stolen: true, data: h };
+    return { stolen: false, reason: 'innerHTML = "" (empty)' };
+  });
+
+  // 4. textContent
+  attack('Read textContent', function() {
+    var t = sf.textContent;
+    if (t && t.length > 0) return { stolen: true, data: t };
+    return { stolen: false, reason: 'textContent = "" (empty)' };
+  });
+
+  // 5. innerText
+  attack('Read innerText', function() {
+    var t = sf.innerText;
+    if (t && t.length > 0) return { stolen: true, data: t };
+    return { stolen: false, reason: 'innerText = "" (empty)' };
+  });
+
+  // 6. querySelector for input
+  attack('querySelector("input")', function() {
+    var input = sf.querySelector('input');
+    if (input) return { stolen: true, data: 'Found input: ' + input.value };
+    return { stolen: false, reason: 'querySelector returns null' };
+  });
+
+  // 7. querySelectorAll
+  attack('querySelectorAll("*")', function() {
+    var all = sf.querySelectorAll('*');
+    if (all.length > 0) return { stolen: true, data: 'Found ' + all.length + ' elements' };
+    return { stolen: false, reason: 'querySelectorAll returns 0 elements' };
+  });
+
+  // 8. children / childNodes
+  attack('Access children / childNodes', function() {
+    if (sf.children.length > 0) return { stolen: true, data: sf.children.length + ' children' };
+    if (sf.childNodes.length > 0) {
+      var text = '';
+      sf.childNodes.forEach(function(n) { text += n.textContent; });
+      if (text.length > 0) return { stolen: true, data: text };
+    }
+    return { stolen: false, reason: 'No accessible children' };
+  });
+
+  // 9. outerHTML
+  attack('Read outerHTML for data', function() {
+    var h = sf.outerHTML;
+    if (h.indexOf('value=') > -1 && h.indexOf('encrypted') === -1) return { stolen: true, data: h.substring(0, 100) };
+    return { stolen: false, reason: 'outerHTML has no plaintext value' };
+  });
+
+  // 10. Read .type, .name, .length
+  attack('Read field metadata (type, name, length)', function() {
+    var info = 'type=' + sf.type + ', name=' + sf.name + ', length=' + sf.length;
+    if (sf.type === 'password' || sf.type === 'text') return { stolen: true, data: 'Knows field type: ' + sf.type };
+    if (sf.length > 0) return { stolen: true, data: 'Knows length: ' + sf.length };
+    return { stolen: false, reason: 'type="' + sf.type + '", name="' + sf.name + '", length=' + sf.length };
+  });
+
+  // 11. Set .value (injection)
+  attack('Set .value (inject data)', function() {
+    sf.value = 'HACKED';
+    var v = sf.value;
+    if (v === 'HACKED') return { stolen: true, data: 'Value was set!' };
+    return { stolen: false, reason: '.value setter is blocked' };
+  });
+
+  // 12. Events - try to listen
+  attack('Add keydown listener to element', function() {
+    var captured = [];
+    sf.addEventListener('keydown', function(e) { captured.push(e.key); });
+    if (captured.length > 0) return { stolen: true, data: 'Captured keys: ' + captured.join('') };
+    return { stolen: false, reason: 'Events don\'t propagate outside Shadow DOM' };
+  });
+
+  // 13. Prototype pollution
+  attack('Override HTMLElement.prototype.value', function() {
+    var original = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'value');
+    try {
+      var stolen = null;
+      Object.defineProperty(sf, 'value', { get: function() { return stolen; }, configurable: true });
+      stolen = sf.value;
+      if (stolen && typeof stolen === 'string' && stolen.length < 100) return { stolen: true, data: stolen };
+    } catch(e) {}
+    return { stolen: false, reason: 'Prototype override returns encrypted or null' };
+  });
+
+  // 14. MutationObserver
+  attack('MutationObserver on element', function() {
+    var changes = [];
+    var obs = new MutationObserver(function(m) { changes.push(m); });
+    obs.observe(sf, { attributes: true, childList: true, subtree: true, characterData: true });
+    if (changes.length > 0) return { stolen: true, data: changes.length + ' mutations detected' };
+    return { stolen: false, reason: 'MutationObserver can\'t see inside closed Shadow DOM' };
+  });
+
+  // 15. getComputedStyle
+  attack('Read data via getComputedStyle', function() {
+    var style = getComputedStyle(sf);
+    var content = style.getPropertyValue('content');
+    if (content && content !== 'none' && content !== 'normal') return { stolen: true, data: content };
+    return { stolen: false, reason: 'CSS content reveals nothing' };
+  });
+
+  // 16. Create fake input overlay
+  attack('Create transparent input overlay', function() {
+    var fake = document.createElement('input');
+    fake.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.01;z-index:9999;';
+    sf.parentElement.style.position = 'relative';
+    sf.parentElement.appendChild(fake);
+    var captured = fake.value;
+    sf.parentElement.removeChild(fake);
+    if (captured && captured.length > 0) return { stolen: true, data: captured };
+    return { stolen: false, reason: 'Overlay captures nothing — keystrokes go to Shadow DOM input' };
+  });
+
+  // 17. document.execCommand
+  attack('document.execCommand("selectAll") + copy', function() {
+    sf.focus();
+    document.execCommand('selectAll');
+    document.execCommand('copy');
+    return { stolen: false, reason: 'execCommand blocked by Shadow DOM + anti-copy' };
+  });
+
+  // 18. Try JSON.stringify
+  attack('JSON.stringify(element)', function() {
+    var j = JSON.stringify(sf);
+    if (j && j.indexOf('password') > -1) return { stolen: true, data: j.substring(0, 100) };
+    return { stolen: false, reason: 'JSON.stringify = "' + (j||'undefined') + '"' };
+  });
+
+  // 19. Object.keys / getOwnPropertyNames
+  attack('Enumerate all properties', function() {
+    var found = [];
+    var allProps = Object.getOwnPropertyNames(sf);
+    for (var i = 0; i < allProps.length; i++) {
+      try {
+        var val = sf[allProps[i]];
+        if (typeof val === 'string' && val.length > 0 && val.length < 50 && allProps[i] !== 'type' && allProps[i] !== 'tagName' && allProps[i] !== 'nodeName') {
+          found.push(allProps[i] + '="' + val + '"');
+        }
+      } catch(e) {}
+    }
+    if (found.length > 0) return { stolen: true, data: found.join(', ') };
+    return { stolen: false, reason: 'No plaintext in any enumerable property' };
+  });
+
+  // 20. Accessibility tree
+  attack('Read via accessibility APIs', function() {
+    var ariaLabel = sf.getAttribute('aria-label');
+    var ariaValue = sf.getAttribute('aria-valuenow') || sf.getAttribute('aria-valuetext');
+    if (ariaValue) return { stolen: true, data: 'aria-value: ' + ariaValue };
+    return { stolen: false, reason: 'No data in ARIA attributes' };
+  });
+
+  // SCORE
+  log('', 'dim');
+  log('════════════════════════════════', 'warn');
+  log('RESULTS: ' + blocked + '/' + total + ' attacks BLOCKED', blocked === total ? 'pass' : 'fail');
+  log('════════════════════════════════', 'warn');
+
+  var box = document.getElementById('score-box');
+  if (blocked === total) {
+    box.innerHTML = '<div class="score" style="background:#052e16;color:#22c55e">UNBREAKABLE<br><span style="font-size:14px">' + total + '/' + total + ' attacks blocked</span></div>';
+  } else {
+    box.innerHTML = '<div class="score" style="background:#450a0a;color:#ef4444">VULNERABLE<br><span style="font-size:14px">' + (total-blocked) + ' attacks succeeded</span></div>';
+  }
+}
+</script>
+</body>
+</html>

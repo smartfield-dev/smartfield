@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartField - Test</title>
+  <script src="../component/smartfield.js"></script>
+</head>
+<body style="background:#0f172a;color:white;font-family:sans-serif;padding:40px;">
+
+<h2>Test 1: Normal input</h2>
+<input type="text" id="t1" style="padding:12px;font-size:16px;width:300px;" placeholder="type here">
+<p id="r1">value: </p>
+
+<h2>Test 2: Input inside closed Shadow DOM</h2>
+<div id="host"></div>
+<p id="r2">value: </p>
+
+<h2>Test 3: SmartField component</h2>
+<smart-field name="test" placeholder="type here..."></smart-field>
+<p id="r3">waiting...</p>
+
+<script>
+  // Test 1
+  document.getElementById('t1').addEventListener('input', function(e) {
+    document.getElementById('r1').textContent = 'value: ' + e.target.value;
+  });
+
+  // Test 2
+  var host = document.getElementById('host');
+  var shadow = host.attachShadow({mode: 'closed'});
+  shadow.innerHTML = '<input type="text" style="padding:12px;font-size:16px;width:300px;background:#1e293b;color:#22c55e;border:2px solid #22c55e;border-radius:8px;" placeholder="shadow DOM input">';
+  shadow.querySelector('input').addEventListener('input', function(e) {
+    document.getElementById('r2').textContent = 'value: ' + e.target.value;
+  });
+
+  // Test 3 - SmartField
+  var sf = document.querySelector('smart-field');
+  console.log('SmartField element:', sf);
+  console.log('SmartField tagName:', sf.tagName);
+
+  sf.addEventListener('sf-input', function(e) {
+    console.log('sf-input event fired!', e.detail);
+    document.getElementById('r3').textContent = 'length: ' + e.detail.length + ' | encrypted: ' + (e.detail.encrypted || '(empty)').substring(0, 40) + '...';
+  });
+
+  // Also try polling the value directly
+  setInterval(function() {
+    var el = document.querySelector('smart-field');
+    if (el && el.length > 0) {
+      document.getElementById('r3').textContent = 'length: ' + el.length + ' | value: ' + (el.value || '(empty)').substring(0, 40) + '...';
+    }
+  }, 500);
+</script>
+</body>
+</html>

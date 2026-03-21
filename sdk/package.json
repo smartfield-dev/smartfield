@@ -1,0 +1,16 @@
+{
+  "name": "@smartfield/server",
+  "version": "0.1.0",
+  "description": "Server-side SDK for SmartField — decrypt encrypted form data from SmartField components",
+  "main": "index.js",
+  "keywords": ["encryption", "security", "input", "web-component", "aes", "rsa", "form", "password"],
+  "author": "SmartField",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ]
+}

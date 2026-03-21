@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMARTFIELD — Logo Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F4F5F0;
+    padding: 48px 32px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 40px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .card {
+    border-radius: 20px;
+    padding: 60px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card.light { background: #FFFFFF; }
+  .card.dark  { background: #0B1120; }
+  .card.teal  { background: #00B88A; }
+  .card.gray  { background: #1A1A2E; }
+
+  .logo { display: flex; align-items: center; gap: 20px; }
+  .mark { width: 60px; height: 60px; flex-shrink: 0; }
+  .wordmark { display: flex; flex-direction: column; line-height: 1.05; }
+
+  .w-smart {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    letter-spacing: -0.5px;
+  }
+  .w-field {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    letter-spacing: 3px;
+  }
+  .sub {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 8.5px;
+    letter-spacing: 4.5px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* Light */
+  .light .w-smart { color: #0D1117; }
+  .light .w-field { color: #00B88A; }
+  .light .sub     { color: #9AAABB; }
+
+  /* Dark */
+  .dark .w-smart { color: #F0F4FF; }
+  .dark .w-field { color: #00D4A8; }
+  .dark .sub     { color: #3A5066; }
+
+  /* Teal bg */
+  .teal .w-smart { color: #FFFFFF; }
+  .teal .w-field { color: #0B1120; }
+  .teal .sub     { color: rgba(255,255,255,0.55); }
+
+  /* Dark navy */
+  .gray .w-smart { color: #F0F4FF; }
+  .gray .w-field { color: #00D4A8; }
+  .gray .sub     { color: #3A4A66; }
+
+  /* Small lockup */
+  .small .mark   { width: 36px; height: 36px; }
+  .small .w-smart, .small .w-field { font-size: 20px; }
+  .small .sub    { font-size: 7px; letter-spacing: 3px; margin-top: 4px; }
+  .small         { padding: 36px 40px; }
+
+  /* Icon only */
+  .icon-only { padding: 40px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+  .icon-only svg { width: 80px; height: 80px; }
+  .icon-only span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .light.icon-only span { color: #B0BCC8; }
+  .dark.icon-only span  { color: #3A5066; }
+
+  .label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #AABB88;
+    text-align: center;
+    margin-top: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .card { padding: 44px 32px; }
+  }
+</style>
+</head>
+<body>
+<h1>Smartfield — Logo Kit · 2026</h1>
+
+<div class="grid">
+
+  <!-- LIGHT -->
+  <div class="card light">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/>
+        <rect x="46" y="4" width="6" height="10" rx="2" fill="#00B88A" opacity="0.12"/>
+        <rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/>
+        <rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="46" y="18" width="6" height="10" rx="2" fill="#00B88A"/>
+        <rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/>
+        <rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="46" y="32" width="6" height="10" rx="2" fill="#00B88A" opacity="0.38"/>
+        <rect x="4" y="46" width="10" height="6" rx="2" fill="#00B88A" opacity="0.12"/>
+        <rect x="18" y="46" width="10" height="6" rx="2" fill="#00B88A" opacity="0.38"/>
+        <rect x="32" y="46" width="10" height="6" rx="2" fill="#00B88A"/>
+        <rect x="46" y="46" width="6" height="6" rx="2" fill="#00B88A"/>
+      </svg>
+      <div class="wordmark">
+        <span class="w-smart">SMART</span>
+        <span class="w-field">FIELD</span>
+        <span class="sub">Encrypted Input Technology</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK -->
+  <div class="card dark">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="18" y="4" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="32" y="4" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.35"/>
+        <rect x="46" y="4" width="6" height="10" rx="2" fill="#00D4A8" opacity="0.12"/>
+        <rect x="4" y="18" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="18" y="18" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.2"/>
+        <rect x="32" y="18" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="46" y="18" width="6" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="4" y="32" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.2"/>
+        <rect x="18" y="32" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="32" y="32" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="46" y="32" width="6" height="10" rx="2" fill="#00D4A8" opacity="0.35"/>
+        <rect x="4" y="46" width="10" height="6" rx="2" fill="#00D4A8" opacity="0.12"/>
+        <rect x="18" y="46" width="10" height="6" rx="2" fill="#00D4A8" opacity="0.35"/>
+        <rect x="32" y="46" width="10" height="6" rx="2" fill="#00D4A8"/>
+        <rect x="46" y="46" width="6" height="6" rx="2" fill="#00D4A8"/>
+      </svg>
+      <div class="wordmark">
+        <span class="w-smart">SMART</span>
+        <span class="w-field">FIELD</span>
+        <span class="sub">Encrypted Input Technology</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAL BG -->
+  <div class="card teal">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="10" height="10" rx="2" fill="#FFFFFF"/>
+        <rect x="18" y="4" width="10" height="10" rx="2" fill="#FFFFFF"/>
+        <rect x="32" y="4" width="10" height="10" rx="2" fill="#FFFFFF" opacity="0.35"/>
+        <rect x="46" y="4" width="6" height="10" rx="2" fill="#FFFFFF" opacity="0.12"/>
+        <rect x="4" y="18" width="10" height="10" rx="2" fill="#FFFFFF"/>
+        <rect x="18" y="18" width="10" height="10" rx="2" fill="#FFFFFF" opacity="0.2"/>
+        <rect x="32" y="18" width="10" height="10" rx="2" fill="#FFFFFF"/>
+        <rect x="46" y="18" width="6" height="10" rx="2" fill="#FFFFFF"/>
+        <rect x="4" y="32" width="10" height="10" rx="2" fill="#FFFFFF" opacity="0.2"/>
+        <rect x="18" y="32" width="10" height="10" rx="2" fill="#FFFFFF"/>
+        <rect x="32" y="32" width="10" height="10" rx="2" fill="#FFFFFF"/>
+        <rect x="46" y="32" width="6" height="10" rx="2" fill="#FFFFFF" opacity="0.35"/>
+        <rect x="4" y="46" width="10" height="6" rx="2" fill="#FFFFFF" opacity="0.12"/>
+        <rect x="18" y="46" width="10" height="6" rx="2" fill="#FFFFFF" opacity="0.35"/>
+        <rect x="32" y="46" width="10" height="6" rx="2" fill="#FFFFFF"/>
+        <rect x="46" y="46" width="6" height="6" rx="2" fill="#FFFFFF"/>
+      </svg>
+      <div class="wordmark">
+        <span class="w-smart">SMART</span>
+        <span class="w-field">FIELD</span>
+        <span class="sub">Encrypted Input Technology</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK NAVY -->
+  <div class="card gray">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="18" y="4" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="32" y="4" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.35"/>
+        <rect x="46" y="4" width="6" height="10" rx="2" fill="#00D4A8" opacity="0.12"/>
+        <rect x="4" y="18" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="18" y="18" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.2"/>
+        <rect x="32" y="18" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="46" y="18" width="6" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="4" y="32" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.2"/>
+        <rect x="18" y="32" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="32" y="32" width="10" height="10" rx="2" fill="#00D4A8"/>
+        <rect x="46" y="32" width="6" height="10" rx="2" fill="#00D4A8" opacity="0.35"/>
+        <rect x="4" y="46" width="10" height="6" rx="2" fill="#00D4A8" opacity="0.12"/>
+        <rect x="18" y="46" width="10" height="6" rx="2" fill="#00D4A8" opacity="0.35"/>
+        <rect x="32" y="46" width="10" height="6" rx="2" fill="#00D4A8"/>
+        <rect x="46" y="46" width="6" height="6" rx="2" fill="#00D4A8"/>
+      </svg>
+      <div class="wordmark">
+        <span class="w-smart">SMART</span>
+        <span class="w-field">FIELD</span>
+        <span class="sub">Encrypted Input Technology</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SMALL lockup light -->
+  <div class="card light small">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/>
+        <rect x="46" y="4" width="6" height="10" rx="2" fill="#00B88A" opacity="0.12"/>
+        <rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/>
+        <rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="46" y="18" width="6" height="10" rx="2" fill="#00B88A"/>
+        <rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/>
+        <rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/>
+        <rect x="46" y="32" width="6" height="10" rx="2" fill="#00B88A" opacity="0.38"/>
+        <rect x="4" y="46" width="10" height="6" rx="2" fill="#00B88A" opacity="0.12"/>
+        <rect x="18" y="46" width="10" height="6" rx="2" fill="#00B88A" opacity="0.38"/>
+        <rect x="32" y="46" width="10" height="6" rx="2" fill="#00B88A"/>
+        <rect x="46" y="46" width="6" height="6" rx="2" fill="#00B88A"/>
+      </svg>
+      <div class="wordmark">
+        <span class="w-smart">SMART</span>
+        <span class="w-field">FIELD</span>
+        <span class="sub">Smartfield</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ICON ONLY -->
+  <div class="card dark icon-only">
+    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="4" width="10" height="10" rx="2" fill="#00D4A8"/>
+      <rect x="18" y="4" width="10" height="10" rx="2" fill="#00D4A8"/>
+      <rect x="32" y="4" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.35"/>
+      <rect x="46" y="4" width="6" height="10" rx="2" fill="#00D4A8" opacity="0.12"/>
+      <rect x="4" y="18" width="10" height="10" rx="2" fill="#00D4A8"/>
+      <rect x="18" y="18" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.2"/>
+      <rect x="32" y="18" width="10" height="10" rx="2" fill="#00D4A8"/>
+      <rect x="46" y="18" width="6" height="10" rx="2" fill="#00D4A8"/>
+      <rect x="4" y="32" width="10" height="10" rx="2" fill="#00D4A8" opacity="0.2"/>
+      <rect x="18" y="32" width="10" height="10" rx="2" fill="#00D4A8"/>
+      <rect x="32" y="32" width="10" height="10" rx="2" fill="#00D4A8"/>
+      <rect x="46" y="32" width="6" height="10" rx="2" fill="#00D4A8" opacity="0.35"/>
+      <rect x="4" y="46" width="10" height="6" rx="2" fill="#00D4A8" opacity="0.12"/>
+      <rect x="18" y="46" width="10" height="6" rx="2" fill="#00D4A8" opacity="0.35"/>
+      <rect x="32" y="46" width="10" height="6" rx="2" fill="#00D4A8"/>
+      <rect x="46" y="46" width="6" height="6" rx="2" fill="#00D4A8"/>
+    </svg>
+    <span style="color:#3A5066">Icono solo</span>
+  </div>
+
+</div>
+<p class="label" style="margin-top:24px;font-size:10px;color:#AABB88;text-align:center">
+  SMARTFIELD · Brand Identity 2026 · #00B88A · #0B1120 · Syne + DM Sans
+</p>
+</body>
+</html>
