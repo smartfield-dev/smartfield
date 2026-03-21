@@ -43,6 +43,10 @@
     <label>SSN</label>
     <smart-field sf-type="ssn" id="sf-ssn"></smart-field>
     <button class="run-btn" id="run-btn" onclick="runAllAttacks()">Run All Attacks — 20 Vectors</button>
+    <div id="legend" style="display:none;margin-top:16px;background:#111;border:1px solid #222;border-radius:10px;padding:14px;font-size:11px;line-height:2">
+      <div style="color:#666;margin-bottom:6px;font-weight:700;font-size:11px">What each attack does in the real world:</div>
+      <div id="legend-items"></div>
+    </div>
   </div>
 
   <div class="results">
@@ -84,82 +88,85 @@ function runAllAttacks() {
 
   var sf = document.getElementById('sf-pwd');
 
-  // Queue all attacks
-  function q(name, fn) {
-    attacks.push({ name: name, fn: fn });
+  document.getElementById('legend').style.display = 'block';
+  document.getElementById('legend-items').innerHTML = '';
+
+  // Queue all attacks with real-world explanation
+  function q(name, fn, explain) {
+    attacks.push({ name: name, fn: fn, explain: explain });
   }
 
   q('Read .value directly', function() {
     var v = sf.value;
     if (v && v.length < 100 && !v.startsWith('eyJ')) return { stolen: true, data: v };
     return { stolen: false, reason: '.value returns encrypted: "' + (v||'').substring(0,30) + '..."' };
-  });
+  }, 'How hackers steal passwords from normal inputs');
 
   q('Access shadowRoot', function() {
     if (sf.shadowRoot) return { stolen: true, data: 'shadowRoot accessible!' };
     return { stolen: false, reason: 'shadowRoot = null (CLOSED)' };
-  });
+  }, 'How they access open Web Components');
 
   q('Read innerHTML', function() {
     var h = sf.innerHTML;
     if (h && h.length > 0) return { stolen: true, data: h };
     return { stolen: false, reason: 'innerHTML = "" (empty)' };
-  });
+  }, 'How they read DOM content');
 
   q('Read textContent', function() {
     var t = sf.textContent;
     if (t && t.length > 0) return { stolen: true, data: t };
     return { stolen: false, reason: 'textContent = "" (empty)' };
-  });
+  }, 'Another way to extract text from elements');
 
   q('Read innerText', function() {
     var t = sf.innerText;
     if (t && t.length > 0) return { stolen: true, data: t };
     return { stolen: false, reason: 'innerText = "" (empty)' };
-  });
+  }, 'Third method to read visible text');
 
   q('querySelector("input")', function() {
     var input = sf.querySelector('input');
     if (input) return { stolen: true, data: 'Found: ' + input.value };
     return { stolen: false, reason: 'querySelector returns null' };
-  });
+  }, 'How bots find and fill input fields');
 
   q('querySelectorAll("*")', function() {
     var all = sf.querySelectorAll('*');
     if (all.length > 0) return { stolen: true, data: all.length + ' elements' };
     return { stolen: false, reason: '0 elements found' };
-  });
+  }, 'How scrapers enumerate all child elements');
 
   q('Access children / childNodes', function() {
     if (sf.children.length > 0) return { stolen: true, data: sf.children.length + ' children' };
     return { stolen: false, reason: 'No accessible children' };
-  });
+  }, 'Direct DOM tree traversal attack');
 
   q('Read outerHTML for data', function() {
     var h = sf.outerHTML;
     if (h.indexOf('value=') > -1 && h.indexOf('encrypted') === -1) return { stolen: true, data: h.substring(0, 80) };
     return { stolen: false, reason: 'No plaintext in outerHTML' };
-  });
+  }, 'How they extract HTML including attribute values');
 
   q('Read field metadata (type, name, length)', function() {
     if (sf.type === 'password' || sf.type === 'text') return { stolen: true, data: 'type=' + sf.type };
     if (sf.length > 0) return { stolen: true, data: 'length=' + sf.length };
     return { stolen: false, reason: 'type="' + sf.type + '", name="' + sf.name + '", length=' + sf.length };
-  });
+  }, 'How they identify what kind of field it is');
 
   q('Inject value (.value = "HACKED")', function() {
     try { sf.value = 'HACKED'; } catch(e) {}
     var v = sf.value;
     if (v === 'HACKED') return { stolen: true, data: 'Value was injected!' };
     return { stolen: false, reason: '.value setter is blocked' };
-  });
+  }, 'How they inject malicious data into forms');
 
   q('Add keydown event listener', function() {
     var captured = [];
     sf.addEventListener('keydown', function(e) { captured.push(e.key); });
     if (captured.length > 0) return { stolen: true, data: captured.join('') };
     return { stolen: false, reason: 'Events don\'t propagate outside Shadow DOM' };
-  });
+  }, 'How keyloggers capture every keystroke');
 
   q('Prototype pollution (Object.defineProperty)', function() {
     try {
@@ -170,7 +177,7 @@ function runAllAttacks() {
       return { stolen: false, reason: 'Cannot redefine .value (configurable: false)' };
     }
     return { stolen: false, reason: 'Prototype override returns encrypted' };
-  });
+  }, 'Advanced attack that redefines object properties');
 
   q('MutationObserver', function() {
     var changes = [];
@@ -178,14 +185,14 @@ function runAllAttacks() {
     obs.observe(sf, { attributes: true, childList: true, subtree: true });
     if (changes.length > 0) return { stolen: true, data: changes.length + ' mutations' };
     return { stolen: false, reason: 'Cannot observe closed Shadow DOM' };
-  });
+  }, 'How Hotjar and FullStory watch DOM changes');
 
   q('getComputedStyle content', function() {
     var s = getComputedStyle(sf);
     var c = s.getPropertyValue('content');
     if (c && c !== 'none' && c !== 'normal') return { stolen: true, data: c };
     return { stolen: false, reason: 'CSS reveals nothing' };
-  });
+  }, 'How they extract data hidden in CSS');
 
   q('Transparent input overlay', function() {
     var fake = document.createElement('input');
@@ -195,20 +202,20 @@ function runAllAttacks() {
     document.body.removeChild(fake);
     if (v.length > 0) return { stolen: true, data: v };
     return { stolen: false, reason: 'Overlay captures nothing' };
-  });
+  }, 'Invisible input placed on top to intercept typing');
 
   q('document.execCommand copy', function() {
     sf.focus && sf.focus();
     document.execCommand('selectAll');
     document.execCommand('copy');
     return { stolen: false, reason: 'execCommand blocked by Shadow DOM' };
-  });
+  }, 'How they steal data from the clipboard');
 
   q('JSON.stringify(element)', function() {
     var j = JSON.stringify(sf);
     if (j.indexOf('realValue') > -1 || j.indexOf('password') > -1) return { stolen: true, data: j.substring(0, 80) };
     return { stolen: false, reason: 'Sensitive data in WeakMap (invisible)' };
-  });
+  }, 'How they serialize objects to exfiltrate data');
 
   q('Enumerate all properties', function() {
     var found = [];
@@ -223,13 +230,13 @@ function runAllAttacks() {
     }
     if (found.length > 0) return { stolen: true, data: found.join(', ') };
     return { stolen: false, reason: 'No plaintext in any property' };
-  });
+  }, 'How they scan every property looking for data');
 
   q('Accessibility APIs (ARIA)', function() {
     var v = sf.getAttribute('aria-valuenow') || sf.getAttribute('aria-valuetext');
     if (v) return { stolen: true, data: v };
     return { stolen: false, reason: 'No data in ARIA attributes' };
-  });
+  }, 'How they read data from accessibility attributes');
 
   // Console output with colors
   console.clear();
@@ -309,6 +316,17 @@ function runAllAttacks() {
       }
 
       document.getElementById('counter').textContent = blocked + '/' + total + ' blocked';
+
+      // Add explanation to legend
+      if (atk.explain) {
+        var li = document.createElement('div');
+        li.style.opacity = '0';
+        li.style.transform = 'translateX(-10px)';
+        li.style.transition = 'all 0.2s ease-out';
+        li.innerHTML = '<span style="color:#ef4444;font-weight:700">#' + total + '</span> <span style="color:#888">' + atk.name + '</span> <span style="color:#555">→ ' + atk.explain + '</span>';
+        document.getElementById('legend-items').appendChild(li);
+        setTimeout(function() { li.style.opacity = '1'; li.style.transform = 'translateX(0)'; }, 20);
+      }
 
       idx++;
       setTimeout(runNext, 200);
