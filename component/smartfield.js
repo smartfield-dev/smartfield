@@ -465,11 +465,25 @@
 
     _startAnim(speed) {
       clearInterval(this._anim);
-      this._anim = setInterval(() => {
-        if (this._s('cipherMap').length === 0) return;
-        const idx = Math.floor(Math.random() * this._s('cipherMap').length);
-        this._s('cipherMap')[idx] = randChar();
-        this._showCipher();
+      var self = this;
+
+      // Camera shield: rapid color flicker that cameras can't capture
+      if (this.getAttribute('sf-camera-shield') === 'true') {
+        var colors = ['var(--sf-cipher-color, #00B88A)', '#000000'];
+        var colorIdx = 0;
+        clearInterval(this._cameraFlicker);
+        this._cameraFlicker = setInterval(function() {
+          if (self._s('cipherMap').length === 0) return;
+          self._input.style.color = colors[colorIdx % 2];
+          colorIdx++;
+        }, 16); // 60Hz flicker - visible to eye, blur to camera
+      }
+
+      this._anim = setInterval(function() {
+        if (self._s('cipherMap').length === 0) return;
+        var idx = Math.floor(Math.random() * self._s('cipherMap').length);
+        self._s('cipherMap')[idx] = randChar();
+        self._showCipher();
       }, speed || 150);
     }
 
