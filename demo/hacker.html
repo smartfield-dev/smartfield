@@ -140,27 +140,16 @@
 </div>
 
 <script>
-// Detect DevTools
+// Detect DevTools (lightweight - no debugger statement)
 var devtoolsOpen = false;
-var checkDevTools = setInterval(function() {
-  var t1 = performance.now();
-  debugger;
-  var t2 = performance.now();
-  if (t2 - t1 > 50) {
-    if (!devtoolsOpen) {
-      devtoolsOpen = true;
-      document.body.classList.add('devtools-open');
-    }
+var threshold = 160;
+setInterval(function() {
+  var w = window.outerWidth - window.innerWidth > threshold;
+  var h = window.outerHeight - window.innerHeight > threshold;
+  if (w || h) {
+    if (!devtoolsOpen) { devtoolsOpen = true; document.body.classList.add('devtools-open'); }
   }
-}, 1000);
-
-// Alternative detection
-var el = new Image();
-Object.defineProperty(el, 'id', { get: function() {
-  devtoolsOpen = true;
-  document.body.classList.add('devtools-open');
-}});
-console.log('%c', el);
+}, 500);
 
 var L = document.getElementById('log');
 var blocked = 0, total = 0, attacks = [];
