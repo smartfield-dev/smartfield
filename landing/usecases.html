@@ -224,7 +224,7 @@
 <div id="payments" style="background:#f0f4ff;padding:60px 0">
   <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
     <!-- Checkout card -->
-    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #e2e8f0;max-width:420px">
+    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #e2e8f0;max-width:420px;-webkit-user-select:none;user-select:none">
       <div style="margin-bottom:20px">
         <img src="/landing/img/ima_onl.png" alt="Online Store" style="height:36px">
       </div>
@@ -259,9 +259,9 @@
 
 <!-- SEPARATOR -->
 <div style="text-align:center;padding:80px 20px;background:#ffffff">
-  <img src="/landing/img/ima_heal.png" alt="Healthcare" style="height:48px;margin-bottom:12px">
-  <h2 style="font-size:32px;font-weight:800;color:#0B1120">Medical Records</h2>
-  <p style="color:#888;font-size:15px;margin-top:8px">Diagnoses, prescriptions, lab results — invisible to screen recorders</p>
+  <h2 id="anim-healthcare" style="font-size:56px;font-weight:800;color:#049a75;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">A CEO opens their medical results. Hotjar is recording. <strong style="color:#049a75">The diagnosis is now in FullStory's servers forever.</strong></p>
+  <p style="color:#57b1e1;font-size:14px;margin-top:8px;font-weight:600">SmartField makes patient data invisible to every tracker on the page.</p>
 </div>
 
 <!-- ========== 3. HEALTHCARE — PATIENT PORTAL ========== -->
@@ -277,7 +277,7 @@
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#0d9488;font-weight:700">✓</span> HIPAA compliant display</li>
       </ul>
     </div>
-    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #ccfbf1;max-width:420px">
+    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #ccfbf1;max-width:420px;-webkit-user-select:none;user-select:none">
       <div style="margin-bottom:20px">
         <img src="/landing/img/ima_heal.png" alt="Medical Center" style="height:36px">
       </div>
@@ -316,15 +316,15 @@
 
 <!-- SEPARATOR -->
 <div style="text-align:center;padding:80px 20px;background:#ffffff">
-  <img src="/landing/img/ima_gove.png" alt="Government" style="height:48px;margin-bottom:12px">
-  <h2 style="font-size:32px;font-weight:800;color:#0B1120">Tax & Government</h2>
-  <p style="color:#888;font-size:15px;margin-top:8px">Social security, tax IDs, income — protected from every script on the page</p>
+  <h2 id="anim-government" style="font-size:56px;font-weight:800;color:#383636;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">50 million citizens file taxes online. <strong style="color:#383636">Their social security numbers pass through Google Analytics on every government portal.</strong></p>
+  <p style="color:#1e40af;font-size:14px;margin-top:8px;font-weight:600">SmartField ensures SSN and tax data never exist in the DOM.</p>
 </div>
 
 <!-- ========== 4. GOVERNMENT — TAX PORTAL ========== -->
 <div id="government" style="background:#f8fafc;padding:60px 0">
   <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
-    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #e2e8f0;max-width:420px">
+    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #e2e8f0;max-width:420px;-webkit-user-select:none;user-select:none">
       <div style="margin-bottom:20px">
         <img src="/landing/img/ima_gove.png" alt="Government Portal" style="height:36px">
       </div>
@@ -350,9 +350,9 @@
 
 <!-- SEPARATOR -->
 <div style="text-align:center;padding:80px 20px;background:#ffffff">
-  <img src="/landing/img/ima_crip.png" alt="Crypto" style="height:48px;margin-bottom:12px">
-  <h2 style="font-size:32px;font-weight:800;color:#0B1120">Crypto & Web3</h2>
-  <p style="color:#888;font-size:15px;margin-top:8px">Seed phrases, private keys, wallet imports — protected from XSS and clipboard attacks</p>
+  <h2 id="anim-crypto" style="font-size:56px;font-weight:800;color:#7c3aed;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">One XSS attack on a DEX. One clipboard hijack. <strong style="color:#7c3aed">Your users' seed phrases are gone. Their wallets are drained.</strong></p>
+  <p style="color:#a855f7;font-size:14px;margin-top:8px;font-weight:600">SmartField makes seed phrases invisible to every script and extension.</p>
 </div>
 
 <!-- ========== 5. CRYPTO — DEX SWAP ========== -->
@@ -368,7 +368,7 @@
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Wallet import fully protected</li>
       </ul>
     </div>
-    <div style="background:#ffffff;border-radius:20px;padding:36px;border:1px solid #e5e0f0;max-width:420px;box-shadow:0 4px 24px rgba(124,58,237,0.08)">
+    <div style="background:#ffffff;border-radius:20px;padding:36px;border:1px solid #e5e0f0;max-width:420px;box-shadow:0 4px 24px rgba(124,58,237,0.08);-webkit-user-select:none;user-select:none">
       <div style="margin-bottom:20px">
         <img src="/landing/img/ima_crip.png" alt="Crypto Exchange" style="height:36px">
       </div>
@@ -465,7 +465,10 @@
   function checkAnimations() {
     var sections = [
       {id:'anim-banking', text:'Banking', c1:'#2f3192', c2:'#ec1e24'},
-      {id:'anim-payments', text:'Payments', c1:'#23073e', c2:'#ee348e'}
+      {id:'anim-payments', text:'Payments', c1:'#23073e', c2:'#ee348e'},
+      {id:'anim-healthcare', text:'Healthcare', c1:'#049a75', c2:'#57b1e1'},
+      {id:'anim-government', text:'Government', c1:'#383636', c2:'#1e40af'},
+      {id:'anim-crypto', text:'Crypto', c1:'#7c3aed', c2:'#a855f7'}
     ];
     sections.forEach(function(s) {
       if(animated[s.id]) return;
