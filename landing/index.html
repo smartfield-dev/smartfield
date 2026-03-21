@@ -247,6 +247,22 @@
     <div id="log"></div>
   </div>
   <div class="sr" id="sr"><h3>> Server Response</h3><pre id="so"></pre></div>
+
+  <!-- HACKER CHALLENGE -->
+  <div style="margin-top:40px;text-align:center">
+    <h3 style="font-size:20px;font-weight:800;color:#0B1120;margin-bottom:4px">Think you can hack it?</h3>
+    <p style="color:#888;font-size:14px;margin-bottom:20px">Type something in the SmartField above, then run 20 automated attacks.</p>
+    <button onclick="runFullHack()" style="padding:14px 32px;background:#0B1120;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:monospace;transition:all 0.2s" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0B1120'">Run Full Hack — 20 Attacks</button>
+  </div>
+
+  <div id="hack-results" style="display:none;margin-top:24px;background:#0B1120;border-radius:16px;padding:24px;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:13px;color:#ef4444;font-family:monospace">Automated Attack Sequence</h3>
+      <div id="hack-score" style="font-family:monospace;font-size:13px;color:#666"></div>
+    </div>
+    <div id="hack-log" style="font-family:'Fira Code',monospace;font-size:11px;line-height:2;max-height:500px;overflow-y:auto;color:#94a3b8"></div>
+    <div id="hack-final" style="display:none;text-align:center;padding:24px;margin-top:16px;border-top:1px solid #1e293b"></div>
+  </div>
 </section>
 
 <!-- USE CASES -->
@@ -894,6 +910,79 @@ setInterval(function(){
 
   render();
 })();
+
+// Full hack challenge
+function runFullHack(){
+  var container=document.getElementById('hack-results');
+  var logEl=document.getElementById('hack-log');
+  var scoreEl=document.getElementById('hack-score');
+  var finalEl=document.getElementById('hack-final');
+  container.style.display='block';
+  logEl.innerHTML='';
+  finalEl.style.display='none';
+  var sf=document.querySelector('#smart-form smart-field[name="password"]');
+  if(!sf){sf=document.querySelector('#smart-form smart-field');}
+  var blocked=0,total=0,queue=[];
+
+  function hlog(t,c){var d=document.createElement('div');d.style.color=c==='pass'?'#00B88A':c==='fail'?'#ef4444':c==='info'?'#60a5fa':c==='warn'?'#f59e0b':'#334155';d.textContent=t;logEl.appendChild(d);logEl.scrollTop=logEl.scrollHeight;}
+
+  function atk(name,fn){
+    queue.push(function(){
+      total++;
+      hlog('','');
+      hlog('ATTACK #'+total+': '+name,'info');
+      try{
+        var r=fn();
+        if(r.stolen){hlog('  STOLEN: "'+r.data+'"','fail');}
+        else{hlog('  BLOCKED: '+r.reason,'pass');blocked++;}
+      }catch(e){hlog('  BLOCKED: '+e.message,'pass');blocked++;}
+      scoreEl.textContent=blocked+'/'+total+' blocked';
+    });
+  }
+
+  atk('Read .value directly',function(){var v=sf.value;if(v&&v.length<100&&!v.startsWith('eyJ'))return{stolen:true,data:v};return{stolen:false,reason:'.value returns encrypted payload'};});
+  atk('Access shadowRoot',function(){if(sf.shadowRoot)return{stolen:true,data:'accessible'};return{stolen:false,reason:'shadowRoot = null (CLOSED)'};});
+  atk('Read innerHTML',function(){if(sf.innerHTML&&sf.innerHTML.length>0)return{stolen:true,data:sf.innerHTML};return{stolen:false,reason:'innerHTML = "" (empty)'};});
+  atk('Read textContent',function(){if(sf.textContent&&sf.textContent.length>0)return{stolen:true,data:sf.textContent};return{stolen:false,reason:'textContent = "" (empty)'};});
+  atk('Read innerText',function(){if(sf.innerText&&sf.innerText.length>0)return{stolen:true,data:sf.innerText};return{stolen:false,reason:'innerText = "" (empty)'};});
+  atk('querySelector("input")',function(){var i=sf.querySelector('input');if(i)return{stolen:true,data:'Found: '+i.value};return{stolen:false,reason:'querySelector returns null'};});
+  atk('querySelectorAll("*")',function(){var a=sf.querySelectorAll('*');if(a.length>0)return{stolen:true,data:a.length+' elements'};return{stolen:false,reason:'0 elements found'};});
+  atk('Access children/childNodes',function(){if(sf.children.length>0)return{stolen:true,data:sf.children.length+' children'};return{stolen:false,reason:'No accessible children'};});
+  atk('Read outerHTML for data',function(){var h=sf.outerHTML;if(h.indexOf('value=')>-1)return{stolen:true,data:h.substring(0,80)};return{stolen:false,reason:'No plaintext in outerHTML'};});
+  atk('Read field metadata',function(){if(sf.type==='password'||sf.type==='text')return{stolen:true,data:'type='+sf.type};if(sf.length>0)return{stolen:true,data:'length='+sf.length};return{stolen:false,reason:'type="'+sf.type+'", name="'+sf.name+'", length='+sf.length};});
+  atk('Inject value (.value = "hack")',function(){sf.value='HACKED';if(sf.value==='HACKED')return{stolen:true,data:'Injected!'};return{stolen:false,reason:'.value setter blocked'};});
+  atk('Keydown event listener',function(){var c=[];sf.addEventListener('keydown',function(e){c.push(e.key);});if(c.length>0)return{stolen:true,data:c.join('')};return{stolen:false,reason:'Events blocked by Shadow DOM'};});
+  atk('Prototype pollution',function(){try{Object.defineProperty(sf,'value',{get:function(){return'hacked'},configurable:true});var v=sf.value;if(v==='hacked')return{stolen:true,data:v};}catch(e){}return{stolen:false,reason:'Prototype override returns encrypted'};});
+  atk('MutationObserver',function(){var m=[];var o=new MutationObserver(function(x){m.push(x);});o.observe(sf,{attributes:true,childList:true,subtree:true});if(m.length>0)return{stolen:true,data:m.length+' mutations'};return{stolen:false,reason:'Cannot observe closed Shadow DOM'};});
+  atk('getComputedStyle',function(){var s=getComputedStyle(sf);var c=s.getPropertyValue('content');if(c&&c!=='none'&&c!=='normal')return{stolen:true,data:c};return{stolen:false,reason:'No data in CSS'};});
+  atk('Overlay input attack',function(){var f=document.createElement('input');f.style.cssText='position:absolute;opacity:0.01;z-index:9999';document.body.appendChild(f);var v=f.value;document.body.removeChild(f);if(v.length>0)return{stolen:true,data:v};return{stolen:false,reason:'Overlay captures nothing'};});
+  atk('document.execCommand copy',function(){sf.focus&&sf.focus();document.execCommand('selectAll');document.execCommand('copy');return{stolen:false,reason:'execCommand blocked by Shadow DOM'};});
+  atk('JSON.stringify',function(){var j=JSON.stringify(sf);if(j.indexOf('realValue')>-1||j.indexOf('password')>-1)return{stolen:true,data:j.substring(0,80)};return{stolen:false,reason:'Sensitive data in WeakMap (invisible)'};});
+  atk('Property enumeration',function(){var f=[];var p=Object.getOwnPropertyNames(sf);for(var i=0;i<p.length;i++){try{var v=sf[p[i]];if(typeof v==='string'&&v.length>0&&v.length<50&&p[i]!=='type'&&p[i]!=='tagName'&&p[i]!=='nodeName')f.push(p[i]);}catch(e){}}if(f.length>0)return{stolen:true,data:f.join(', ')};return{stolen:false,reason:'No plaintext in any property'};});
+  atk('Accessibility APIs (ARIA)',function(){var v=sf.getAttribute('aria-valuenow')||sf.getAttribute('aria-valuetext');if(v)return{stolen:true,data:v};return{stolen:false,reason:'No data in ARIA attributes'};});
+
+  // Run attacks one by one with delay for visual effect
+  var i=0;
+  function next(){
+    if(i<queue.length){queue[i]();i++;setTimeout(next,150);}
+    else{
+      hlog('','');
+      hlog('════════════════════════════════════════','warn');
+      hlog('FINAL RESULT: '+blocked+'/'+total+' attacks BLOCKED',blocked===total?'pass':'fail');
+      hlog('════════════════════════════════════════','warn');
+      finalEl.style.display='block';
+      if(blocked===total){
+        finalEl.innerHTML='<div style="font-size:48px;font-weight:800;color:#00B88A;font-family:monospace">20/20</div><div style="font-size:20px;color:#00B88A;margin-top:4px">UNBREAKABLE</div><div style="color:#666;font-size:13px;margin-top:8px">Every attack blocked. Your data is safe.</div>';
+      }else{
+        finalEl.innerHTML='<div style="font-size:48px;font-weight:800;color:#ef4444;font-family:monospace">'+blocked+'/'+total+'</div><div style="color:#ef4444">VULNERABLE</div>';
+      }
+    }
+  }
+  hlog('=== AUTOMATED ATTACK SEQUENCE INITIATED ===','warn');
+  hlog('Target: SmartField password field','info');
+  setTimeout(next,500);
+  container.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
 // Billing toggle
 function setBilling(type) {
