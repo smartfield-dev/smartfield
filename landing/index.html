@@ -192,7 +192,7 @@
 
 <!-- HERO -->
 <div class="hero">
-  <h1>Every <span class="green">Keystroke</span>,<br><span class="blue">Encrypted</span>.</h1>
+  <h1 id="hero-title" style="font-family:'Fira Code',monospace;letter-spacing:2px"></h1>
   <p class="sub">Drop-in replacement for HTML inputs. Passwords, credit cards, medical records — encrypted at the keystroke level. Invisible to JavaScript, trackers, and hackers.</p>
   <div class="hero-btns">
     <a href="#demo" class="btn-primary">Try Live Demo</a>
@@ -821,6 +821,79 @@ setInterval(function(){
     el.textContent=chars.join('');
   });
 },120);
+
+// Hero decrypt animation
+(function() {
+  var CHARS = 'ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
+  var target = 'Every Keystroke,\nEncrypted.';
+  var el = document.getElementById('hero-title');
+  var current = [];
+  var revealed = [];
+
+  // "Every Keystroke,\nEncrypted."
+  // Positions: E=0, v=1, e=2, r=3, y=4, ' '=5, K=6..e=15, ','=16, '\n'=17, E=18..d=26, '.'=27
+  for (var i = 0; i < target.length; i++) {
+    if (target[i] === ' ' || target[i] === ',' || target[i] === '.' || target[i] === '\n') {
+      current.push(target[i]);
+      revealed.push(true);
+    } else {
+      current.push(CHARS[Math.floor(Math.random() * CHARS.length)]);
+      revealed.push(false);
+    }
+  }
+
+  function render() {
+    var html = '';
+    for (var i = 0; i < current.length; i++) {
+      if (current[i] === '\n') {
+        html += '<br>';
+      } else if (revealed[i]) {
+        var isKeystroke = i >= 6 && i <= 15;
+        var isEncrypted = i >= 18 && i <= 26;
+        if (isKeystroke) html += '<span class="green">' + current[i] + '</span>';
+        else if (isEncrypted) html += '<span class="blue">' + current[i] + '</span>';
+        else html += '<span style="font-family:-apple-system,sans-serif;letter-spacing:-3px">' + current[i] + '</span>';
+      } else {
+        html += '<span style="color:#00B88A;text-shadow:0 0 8px rgba(0,184,138,0.4)">' + current[i] + '</span>';
+      }
+    }
+    el.innerHTML = html;
+  }
+
+  // Phase 1: Scramble cipher chars (1.5 seconds)
+  var scrambleInterval = setInterval(function() {
+    for (var i = 0; i < current.length; i++) {
+      if (!revealed[i]) {
+        current[i] = CHARS[Math.floor(Math.random() * CHARS.length)];
+      }
+    }
+    render();
+  }, 60);
+
+  // Phase 2: Reveal one char at a time
+  setTimeout(function() {
+    var revealIndex = 0;
+    var revealInterval = setInterval(function() {
+      // Find next unrevealed char
+      while (revealIndex < target.length && revealed[revealIndex]) revealIndex++;
+      if (revealIndex >= target.length) {
+        clearInterval(revealInterval);
+        clearInterval(scrambleInterval);
+        // Final render with proper styles
+        el.style.fontFamily = "-apple-system,'Segoe UI',sans-serif";
+        el.style.letterSpacing = '-3px';
+        el.innerHTML = 'Every <span class="green">Keystroke</span>,<br><span class="blue">Encrypted</span>.';
+        return;
+      }
+      current[revealIndex] = target[revealIndex];
+      revealed[revealIndex] = true;
+      revealIndex++;
+      render();
+    }, 50);
+  }, 1500);
+
+  render();
+})();
 
 // Billing toggle
 function setBilling(type) {
