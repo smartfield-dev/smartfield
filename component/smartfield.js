@@ -619,22 +619,22 @@
       if (!form) return;
       form.addEventListener('submit', function() {
         // Use random ID as field name - server maps it back with the field registry
-        let h = form.querySelector(`input[data-sf-id="${self._fieldId}"]`);
+        var fid = self._s('fieldId');
+        let h = form.querySelector(`input[data-sf-id="${fid}"]`);
         if (!h) {
           h = document.createElement('input');
           h.type = 'hidden';
-          h.setAttribute('data-sf-id', self._fieldId);
+          h.setAttribute('data-sf-id', fid);
           form.appendChild(h);
         }
-        // Name is the random ID, value is encrypted content
-        h.name = self._fieldId;
+        h.name = fid;
         h.value = self._s('encrypted');
       });
     }
 
-    disconnectedCallback() { this._stopAnim(); }
+    disconnectedCallback() { clearInterval(this._anim); this._anim = null; }
   }
 
   customElements.define('smart-field', SmartField);
-  window.SmartField = { version: '0.1.0', Crypto };
+  window.SmartField = { version: '0.1.0' };
 })();
