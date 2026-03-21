@@ -220,7 +220,7 @@
       <h3>Standard &lt;input&gt; <span class="tag tag-red">Vulnerable</span></h3>
       <p class="desc">What 99% of websites use. Any script reads everything.</p>
       <form id="normal-form">
-        <div class="fg"><label>Email</label><input class="ni" type="email" id="n-email" placeholder="you@example.com"></div>
+        <div class="fg"><label>Email</label><input class="ni" type="email" id="n-email" placeholder="you@example.com"><div id="autofill-warn" style="display:none;margin-top:4px;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:10px;color:#991b1b;font-weight:600">⚠ Chrome just auto-filled your email — any script on this page can read it</div></div>
         <div class="fg"><label>Password</label>
           <div style="position:relative">
             <input class="ni" type="password" id="n-pwd" placeholder="your password" style="padding-right:42px">
@@ -786,6 +786,15 @@
 var L=document.getElementById('log'),API=location.origin;
 function log(t,c){var d=document.createElement('div');d.className='log-'+(c||'dim');d.textContent='> '+t;L.appendChild(d);L.scrollTop=L.scrollHeight}
 document.getElementById('n-email').addEventListener('input',function(e){log('Normal email: "'+e.target.value+'"','error')});
+// Detect Chrome autofill
+setInterval(function(){
+  var el=document.getElementById('n-email');
+  if(el&&el.value&&el.value.length>0&&!el.dataset.warned){
+    el.dataset.warned='1';
+    document.getElementById('autofill-warn').style.display='block';
+    log('⚠ AUTOFILL DETECTED: Chrome filled "'+el.value+'" — any script can read it','error');
+  }
+},500);
 document.getElementById('n-pwd').addEventListener('input',function(e){log('Normal password: "'+e.target.value+'"  EXPOSED!','error')});
 document.querySelectorAll('smart-field').forEach(function(s){s.addEventListener('sf-input',function(e){log('SmartField ['+((e.detail.id||'?').substring(0,8))+']: encrypted='+((e.detail.encrypted||'').substring(0,36))+'...','success')})});
 
