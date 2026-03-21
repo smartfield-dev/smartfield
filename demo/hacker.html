@@ -3,67 +3,167 @@
 <head>
   <title>SmartField — Hacker Challenge</title>
   <script src="../component/smartfield.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Fira Code',monospace;background:#0a0a0a;color:#e2e8f0;padding:20px}
-    h1{color:#ef4444;font-size:24px;margin-bottom:4px}
-    .sub{color:#666;font-size:12px;margin-bottom:24px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .target{background:#111;border:1px solid #222;border-radius:12px;padding:20px}
-    .target h2{font-size:14px;color:#00B88A;margin-bottom:12px}
-    .target label{display:block;font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase}
-    .target smart-field{margin-bottom:10px;--sf-bg:#0a0a0a;--sf-border-color:#333;--sf-cipher-color:#00B88A;--sf-focus-color:#00B88A}
-    .results{background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:20px;max-height:80vh;overflow-y:auto}
-    .results h2{font-size:14px;color:#ef4444;margin-bottom:12px}
-    #log{font-size:11px;line-height:2}
-    .pass{color:#00B88A}.fail{color:#ef4444}.info{color:#3b82f6}.warn{color:#f59e0b}.dim{color:#333}
-    .run-btn{display:block;width:100%;padding:14px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;font-family:monospace;transition:all 0.15s}
-    .run-btn:hover{background:#dc2626}
-    .run-btn:disabled{opacity:0.5;cursor:not-allowed}
-    .score{text-align:center;padding:20px;margin-top:16px;border-radius:12px;font-size:32px;font-weight:800}
-    .counter{font-family:monospace;font-size:13px;color:#666;margin-top:8px;text-align:right}
+    body{font-family:'JetBrains Mono',monospace;background:#000;color:#00B88A;min-height:100vh;padding:0;overflow-x:hidden}
+
+    /* Scanline effect */
+    body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 2px);z-index:9999}
+
+    .page{max-width:700px;margin:0 auto;padding:40px 20px}
+
+    /* Header */
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+    .back{color:#333;font-size:12px;text-decoration:none;transition:color 0.2s}
+    .back:hover{color:#00B88A}
+
+    /* Terminal prompt */
+    .prompt{color:#555;font-size:11px;margin-bottom:4px}
+    .prompt span{color:#00B88A}
+
+    h1{font-size:28px;font-weight:800;color:#00B88A;margin-bottom:4px;text-shadow:0 0 20px rgba(0,184,138,0.3)}
+    .sub{color:#333;font-size:12px;margin-bottom:32px}
+
+    /* F12 banner */
+    .f12-banner{border:1px solid #1a1a1a;border-radius:8px;padding:12px 16px;margin-bottom:24px;display:flex;align-items:center;gap:10px;font-size:11px;color:#555}
+    .f12-banner kbd{background:#1a1a1a;padding:2px 8px;border-radius:4px;color:#00B88A;font-weight:700}
+    .f12-open{display:none;color:#00B88A;border-color:#0a3d2e}
+    .f12-closed{color:#555}
+    body.devtools-open .f12-open{display:flex}
+    body.devtools-open .f12-closed{display:none}
+
+    /* Fields */
+    .fields{margin-bottom:24px}
+    .field{margin-bottom:12px}
+    .field label{display:block;font-size:10px;color:#333;margin-bottom:4px;text-transform:uppercase;letter-spacing:2px}
+    smart-field{--sf-bg:#0a0a0a;--sf-border-color:#1a1a1a;--sf-radius:6px;--sf-focus-color:#00B88A;--sf-focus-ring:rgba(0,184,138,0.1);--sf-cipher-color:#00B88A;--sf-cipher-glow:rgba(0,184,138,0.4);--sf-placeholder-color:#222}
+
+    /* Run button */
+    .run-btn{display:block;width:100%;padding:14px;background:#00B88A;color:#000;border:none;border-radius:6px;font-size:14px;font-weight:800;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all 0.15s;text-transform:uppercase;letter-spacing:2px}
+    .run-btn:hover{background:#00D4A8;box-shadow:0 0 30px rgba(0,184,138,0.3)}
+    .run-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+    /* Results */
+    .results{margin-top:24px;display:none}
+    .results.active{display:block}
+    .counter{font-size:12px;color:#333;text-align:right;margin-bottom:8px}
+    #log{font-size:11px;line-height:2.2}
+    #log div{border-left:2px solid transparent;padding-left:8px;transition:all 0.2s}
+    .pass{color:#00B88A;border-left-color:#00B88A !important}
+    .fail{color:#ef4444;border-left-color:#ef4444 !important}
+    .info{color:#3b82f6;border-left-color:#3b82f6 !important}
+    .warn{color:#f59e0b}
+    .dim{color:#111}
+
+    /* Legend */
+    .legend{margin-top:16px;border:1px solid #111;border-radius:6px;padding:12px;display:none}
+    .legend.active{display:block}
+    .legend-title{color:#333;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+    #legend-items{font-size:10px;line-height:2.2}
+    #legend-items div{opacity:0;transform:translateX(-8px);transition:all 0.2s ease-out}
+
+    /* Score */
+    #score-box{margin-top:20px}
+    .score{text-align:center;padding:24px;border-radius:8px;border:1px solid #0a3d2e}
+    .score-num{font-size:64px;font-weight:800;color:#00B88A;text-shadow:0 0 40px rgba(0,184,138,0.4);line-height:1}
+    .score-label{font-size:16px;color:#00B88A;margin-top:4px;letter-spacing:4px}
+    .score-sub{font-size:11px;color:#333;margin-top:8px}
+
+    /* Provocation */
+    .provocation{margin-top:16px;padding:16px;border:1px solid #1a1a1a;border-radius:6px;text-align:center;line-height:2}
+    .provocation span{color:#ef4444;font-weight:700;font-size:12px}
+    .provocation .small{color:#333;font-size:10px;display:block;margin-top:8px}
+
+    /* Footer */
+    .footer{margin-top:40px;padding-top:20px;border-top:1px solid #0a0a0a;display:flex;align-items:center;justify-content:center;gap:8px}
+    .footer svg{width:16px;height:16px}
+    .footer span{font-size:10px;color:#222}
   </style>
 </head>
 <body>
 
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-  <h1>SmartField Hacker Challenge</h1>
-  <a href="/landing" style="padding:8px 16px;background:#222;color:#888;border-radius:6px;font-size:12px;text-decoration:none;font-weight:600;transition:all 0.15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">← Back to SmartField</a>
-</div>
-<p class="sub">Type something in the fields below, then click "Run All Attacks" to try to steal it.</p>
-<div style="background:#1a1a2e;border:1px solid #2a2a4a;border-radius:8px;padding:10px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
-  <span style="font-size:20px">💻</span>
-  <span style="font-size:12px;color:#00B88A">Press <kbd style="background:#333;padding:2px 8px;border-radius:4px;color:#fff;font-weight:700">F12</kbd> to open DevTools Console — watch the attacks in real-time there too</span>
-</div>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="prompt">root@smartfield:~$ <span>./hack --target password</span></div>
+      <h1>Hacker Challenge</h1>
+      <div class="sub">20 real-world attack vectors. Can you break SmartField?</div>
+    </div>
+    <a href="/landing" class="back">← exit</a>
+  </div>
 
-<div class="grid">
-  <div class="target">
-    <h2>Target: SmartField</h2>
-    <label>Credit Card</label>
-    <smart-field sf-type="card" id="sf-card"></smart-field>
-    <label>Password</label>
-    <smart-field type="password" id="sf-pwd"></smart-field>
-    <label>SSN</label>
-    <smart-field sf-type="ssn" id="sf-ssn"></smart-field>
-    <button class="run-btn" id="run-btn" onclick="runAllAttacks()">Run All Attacks — 20 Vectors</button>
-    <div id="legend" style="display:none;margin-top:16px;background:#111;border:1px solid #222;border-radius:10px;padding:14px;font-size:11px;line-height:2">
-      <div style="color:#666;margin-bottom:6px;font-weight:700;font-size:11px">What each attack does in the real world:</div>
-      <div id="legend-items"></div>
+  <!-- F12 detection -->
+  <div class="f12-banner f12-closed" id="f12-closed">
+    <span>💻</span> Press <kbd>F12</kbd> to watch attacks in your browser console
+  </div>
+  <div class="f12-banner f12-open" id="f12-open">
+    <span>✓</span> DevTools detected — attacks will appear in your Console tab too
+  </div>
+
+  <!-- Target fields -->
+  <div class="fields">
+    <div class="field">
+      <label>credit card</label>
+      <smart-field sf-type="card" id="sf-card"></smart-field>
+    </div>
+    <div class="field">
+      <label>password</label>
+      <smart-field type="password" id="sf-pwd"></smart-field>
+    </div>
+    <div class="field">
+      <label>ssn</label>
+      <smart-field sf-type="ssn" id="sf-ssn"></smart-field>
     </div>
   </div>
 
-  <div class="results">
-    <h2>Attack Results</h2>
+  <button class="run-btn" id="run-btn" onclick="runAllAttacks()">execute attack sequence</button>
+
+  <!-- Legend -->
+  <div class="legend" id="legend">
+    <div class="legend-title">real-world impact</div>
+    <div id="legend-items"></div>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="results">
     <div class="counter" id="counter"></div>
     <div id="log"></div>
     <div id="score-box"></div>
   </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <svg viewBox="0 0 56 56" fill="none"><rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/></svg>
+    <span>Protected by SmartField</span>
+  </div>
 </div>
 
 <script>
+// Detect DevTools
+var devtoolsOpen = false;
+var checkDevTools = setInterval(function() {
+  var t1 = performance.now();
+  debugger;
+  var t2 = performance.now();
+  if (t2 - t1 > 50) {
+    if (!devtoolsOpen) {
+      devtoolsOpen = true;
+      document.body.classList.add('devtools-open');
+    }
+  }
+}, 1000);
+
+// Alternative detection
+var el = new Image();
+Object.defineProperty(el, 'id', { get: function() {
+  devtoolsOpen = true;
+  document.body.classList.add('devtools-open');
+}});
+console.log('%c', el);
+
 var L = document.getElementById('log');
-var blocked = 0, total = 0;
-var attacks = [];
+var blocked = 0, total = 0, attacks = [];
 
 function hlog(t, c) {
   var d = document.createElement('div');
@@ -71,265 +171,230 @@ function hlog(t, c) {
   d.textContent = t;
   d.style.opacity = '0';
   d.style.transform = 'translateX(-10px)';
-  d.style.transition = 'all 0.2s ease-out';
+  d.style.transition = 'all 0.15s ease-out';
   L.appendChild(d);
-  // Animate in
   setTimeout(function() { d.style.opacity = '1'; d.style.transform = 'translateX(0)'; }, 20);
   L.scrollTop = L.scrollHeight;
 }
 
 function runAllAttacks() {
-  // Disable button
   var btn = document.getElementById('run-btn');
   btn.disabled = true;
-  btn.textContent = 'Attacking...';
-
+  btn.textContent = 'attacking...';
+  document.getElementById('results').classList.add('active');
+  document.getElementById('legend').classList.add('active');
   L.innerHTML = '';
   blocked = 0; total = 0; attacks = [];
   document.getElementById('score-box').innerHTML = '';
   document.getElementById('counter').textContent = '';
+  document.getElementById('legend-items').innerHTML = '';
 
   var sf = document.getElementById('sf-pwd');
 
-  document.getElementById('legend').style.display = 'block';
-  document.getElementById('legend-items').innerHTML = '';
-
-  // Queue all attacks with real-world explanation
-  function q(name, fn, explain) {
-    attacks.push({ name: name, fn: fn, explain: explain });
-  }
+  function q(name, fn, explain) { attacks.push({ name: name, fn: fn, explain: explain }); }
 
   q('Read .value directly', function() {
     var v = sf.value;
     if (v && v.length < 100 && !v.startsWith('eyJ')) return { stolen: true, data: v };
-    return { stolen: false, reason: '.value returns encrypted: "' + (v||'').substring(0,30) + '..."' };
+    return { stolen: false, reason: '.value → encrypted payload' };
   }, 'How hackers steal passwords from normal inputs');
 
   q('Access shadowRoot', function() {
-    if (sf.shadowRoot) return { stolen: true, data: 'shadowRoot accessible!' };
-    return { stolen: false, reason: 'shadowRoot = null (CLOSED)' };
+    if (sf.shadowRoot) return { stolen: true, data: 'accessible' };
+    return { stolen: false, reason: 'shadowRoot → null (CLOSED)' };
   }, 'How they access open Web Components');
 
   q('Read innerHTML', function() {
-    var h = sf.innerHTML;
-    if (h && h.length > 0) return { stolen: true, data: h };
-    return { stolen: false, reason: 'innerHTML = "" (empty)' };
+    if (sf.innerHTML && sf.innerHTML.length > 0) return { stolen: true, data: sf.innerHTML };
+    return { stolen: false, reason: 'innerHTML → "" (empty)' };
   }, 'How they read DOM content');
 
   q('Read textContent', function() {
-    var t = sf.textContent;
-    if (t && t.length > 0) return { stolen: true, data: t };
-    return { stolen: false, reason: 'textContent = "" (empty)' };
-  }, 'Another way to extract text from elements');
+    if (sf.textContent && sf.textContent.length > 0) return { stolen: true, data: sf.textContent };
+    return { stolen: false, reason: 'textContent → "" (empty)' };
+  }, 'Another method to extract text');
 
   q('Read innerText', function() {
-    var t = sf.innerText;
-    if (t && t.length > 0) return { stolen: true, data: t };
-    return { stolen: false, reason: 'innerText = "" (empty)' };
+    if (sf.innerText && sf.innerText.length > 0) return { stolen: true, data: sf.innerText };
+    return { stolen: false, reason: 'innerText → "" (empty)' };
   }, 'Third method to read visible text');
 
   q('querySelector("input")', function() {
-    var input = sf.querySelector('input');
-    if (input) return { stolen: true, data: 'Found: ' + input.value };
-    return { stolen: false, reason: 'querySelector returns null' };
-  }, 'How bots find and fill input fields');
+    var i = sf.querySelector('input');
+    if (i) return { stolen: true, data: i.value };
+    return { stolen: false, reason: 'querySelector → null' };
+  }, 'How bots find and fill inputs');
 
   q('querySelectorAll("*")', function() {
-    var all = sf.querySelectorAll('*');
-    if (all.length > 0) return { stolen: true, data: all.length + ' elements' };
-    return { stolen: false, reason: '0 elements found' };
-  }, 'How scrapers enumerate all child elements');
+    var a = sf.querySelectorAll('*');
+    if (a.length > 0) return { stolen: true, data: a.length + ' elements' };
+    return { stolen: false, reason: 'querySelectorAll → 0 elements' };
+  }, 'How scrapers enumerate child elements');
 
-  q('Access children / childNodes', function() {
-    if (sf.children.length > 0) return { stolen: true, data: sf.children.length + ' children' };
+  q('Access children/childNodes', function() {
+    if (sf.children.length > 0) return { stolen: true, data: sf.children.length };
     return { stolen: false, reason: 'No accessible children' };
-  }, 'Direct DOM tree traversal attack');
+  }, 'Direct DOM tree traversal');
 
-  q('Read outerHTML for data', function() {
+  q('Read outerHTML', function() {
     var h = sf.outerHTML;
-    if (h.indexOf('value=') > -1 && h.indexOf('encrypted') === -1) return { stolen: true, data: h.substring(0, 80) };
+    if (h.indexOf('value=') > -1 && h.indexOf('encrypted') === -1) return { stolen: true, data: h.substring(0, 60) };
     return { stolen: false, reason: 'No plaintext in outerHTML' };
-  }, 'How they extract HTML including attribute values');
+  }, 'How they extract HTML with values');
 
-  q('Read field metadata (type, name, length)', function() {
+  q('Read metadata (type, name, length)', function() {
     if (sf.type === 'password' || sf.type === 'text') return { stolen: true, data: 'type=' + sf.type };
     if (sf.length > 0) return { stolen: true, data: 'length=' + sf.length };
-    return { stolen: false, reason: 'type="' + sf.type + '", name="' + sf.name + '", length=' + sf.length };
-  }, 'How they identify what kind of field it is');
+    return { stolen: false, reason: 'type="encrypted" name="' + sf.name.substring(0,8) + '..." length=-1' };
+  }, 'How they identify the field type');
 
-  q('Inject value (.value = "HACKED")', function() {
+  q('Inject .value = "HACKED"', function() {
     try { sf.value = 'HACKED'; } catch(e) {}
-    var v = sf.value;
-    if (v === 'HACKED') return { stolen: true, data: 'Value was injected!' };
-    return { stolen: false, reason: '.value setter is blocked' };
-  }, 'How they inject malicious data into forms');
+    if (sf.value === 'HACKED') return { stolen: true, data: 'injected!' };
+    return { stolen: false, reason: '.value setter → blocked' };
+  }, 'How they inject malicious data');
 
-  q('Add keydown event listener', function() {
-    var captured = [];
-    sf.addEventListener('keydown', function(e) { captured.push(e.key); });
-    if (captured.length > 0) return { stolen: true, data: captured.join('') };
-    return { stolen: false, reason: 'Events don\'t propagate outside Shadow DOM' };
-  }, 'How keyloggers capture every keystroke');
+  q('Keydown event listener', function() {
+    var c = [];
+    sf.addEventListener('keydown', function(e) { c.push(e.key); });
+    if (c.length > 0) return { stolen: true, data: c.join('') };
+    return { stolen: false, reason: 'Events blocked by Shadow DOM' };
+  }, 'How keyloggers capture keystrokes');
 
-  q('Prototype pollution (Object.defineProperty)', function() {
+  q('Prototype pollution', function() {
     try {
       Object.defineProperty(sf, 'value', { get: function() { return 'hacked'; }, configurable: true });
-      var v = sf.value;
-      if (v === 'hacked') return { stolen: true, data: v };
+      if (sf.value === 'hacked') return { stolen: true, data: 'hacked' };
     } catch(e) {
-      return { stolen: false, reason: 'Cannot redefine .value (configurable: false)' };
+      return { stolen: false, reason: 'configurable: false — cannot redefine' };
     }
-    return { stolen: false, reason: 'Prototype override returns encrypted' };
-  }, 'Advanced attack that redefines object properties');
+    return { stolen: false, reason: 'Override returns encrypted' };
+  }, 'Advanced attack redefining properties');
 
   q('MutationObserver', function() {
-    var changes = [];
-    var obs = new MutationObserver(function(m) { changes.push(m); });
-    obs.observe(sf, { attributes: true, childList: true, subtree: true });
-    if (changes.length > 0) return { stolen: true, data: changes.length + ' mutations' };
+    var m = [];
+    new MutationObserver(function(x) { m.push(x); }).observe(sf, { attributes: true, childList: true, subtree: true });
+    if (m.length > 0) return { stolen: true, data: m.length + ' mutations' };
     return { stolen: false, reason: 'Cannot observe closed Shadow DOM' };
-  }, 'How Hotjar and FullStory watch DOM changes');
+  }, 'How Hotjar/FullStory watch DOM changes');
 
-  q('getComputedStyle content', function() {
-    var s = getComputedStyle(sf);
-    var c = s.getPropertyValue('content');
+  q('getComputedStyle', function() {
+    var c = getComputedStyle(sf).getPropertyValue('content');
     if (c && c !== 'none' && c !== 'normal') return { stolen: true, data: c };
     return { stolen: false, reason: 'CSS reveals nothing' };
-  }, 'How they extract data hidden in CSS');
+  }, 'How they extract data from CSS');
 
-  q('Transparent input overlay', function() {
-    var fake = document.createElement('input');
-    fake.style.cssText = 'position:absolute;opacity:0.01;z-index:9999';
-    document.body.appendChild(fake);
-    var v = fake.value;
-    document.body.removeChild(fake);
+  q('Transparent overlay', function() {
+    var f = document.createElement('input');
+    f.style.cssText = 'position:absolute;opacity:0.01;z-index:9999';
+    document.body.appendChild(f);
+    var v = f.value;
+    document.body.removeChild(f);
     if (v.length > 0) return { stolen: true, data: v };
     return { stolen: false, reason: 'Overlay captures nothing' };
-  }, 'Invisible input placed on top to intercept typing');
+  }, 'Invisible input to intercept typing');
 
-  q('document.execCommand copy', function() {
+  q('execCommand copy', function() {
     sf.focus && sf.focus();
     document.execCommand('selectAll');
     document.execCommand('copy');
-    return { stolen: false, reason: 'execCommand blocked by Shadow DOM' };
-  }, 'How they steal data from the clipboard');
+    return { stolen: false, reason: 'execCommand blocked' };
+  }, 'How they steal from clipboard');
 
-  q('JSON.stringify(element)', function() {
+  q('JSON.stringify', function() {
     var j = JSON.stringify(sf);
-    if (j.indexOf('realValue') > -1 || j.indexOf('password') > -1) return { stolen: true, data: j.substring(0, 80) };
-    return { stolen: false, reason: 'Sensitive data in WeakMap (invisible)' };
-  }, 'How they serialize objects to exfiltrate data');
+    if (j.indexOf('realValue') > -1) return { stolen: true, data: j.substring(0, 60) };
+    return { stolen: false, reason: 'WeakMap data invisible' };
+  }, 'How they serialize objects to exfiltrate');
 
-  q('Enumerate all properties', function() {
-    var found = [];
-    var props = Object.getOwnPropertyNames(sf);
-    for (var i = 0; i < props.length; i++) {
-      try {
-        var val = sf[props[i]];
-        if (typeof val === 'string' && val.length > 0 && val.length < 50 && props[i] !== 'type' && props[i] !== 'tagName' && props[i] !== 'nodeName') {
-          found.push(props[i]);
-        }
-      } catch(e) {}
-    }
-    if (found.length > 0) return { stolen: true, data: found.join(', ') };
-    return { stolen: false, reason: 'No plaintext in any property' };
-  }, 'How they scan every property looking for data');
+  q('Property enumeration', function() {
+    var f = [];
+    Object.getOwnPropertyNames(sf).forEach(function(p) {
+      try { var v = sf[p]; if (typeof v === 'string' && v.length > 0 && v.length < 50 && p !== 'type' && p !== 'tagName' && p !== 'nodeName') f.push(p); } catch(e) {}
+    });
+    if (f.length > 0) return { stolen: true, data: f.join(', ') };
+    return { stolen: false, reason: 'No plaintext properties' };
+  }, 'How they scan all object properties');
 
-  q('Accessibility APIs (ARIA)', function() {
+  q('ARIA accessibility', function() {
     var v = sf.getAttribute('aria-valuenow') || sf.getAttribute('aria-valuetext');
     if (v) return { stolen: true, data: v };
-    return { stolen: false, reason: 'No data in ARIA attributes' };
-  }, 'How they read data from accessibility attributes');
+    return { stolen: false, reason: 'No data in ARIA' };
+  }, 'How they read accessibility attributes');
 
-  // Console output with colors
+  // Console header
   console.clear();
   console.log('%c SmartField Hacker Challenge ', 'background:#ef4444;color:white;font-size:16px;font-weight:bold;padding:8px 16px;border-radius:4px');
-  console.log('%cTarget: SmartField password field', 'color:#60a5fa;font-size:12px');
+  console.log('%cTarget: SmartField password field', 'color:#3b82f6;font-size:12px');
   console.log('');
 
-  // Run one by one with delay
-  hlog('=== AUTOMATED HACK ATTEMPT ===', 'warn');
-  hlog('Target: SmartField password field', 'info');
+  hlog('root@attacker:~$ ./smartfield-exploit --target sf-pwd', 'info');
+  hlog('Initializing attack sequence...', 'dim');
 
   var idx = 0;
-  function runNext() {
+  function next() {
     if (idx >= attacks.length) {
-      // Final result
       hlog('', 'dim');
-      hlog('════════════════════════════════', 'warn');
+      hlog('════════════════════════════════════════', 'warn');
       hlog('RESULT: ' + blocked + '/' + total + ' attacks BLOCKED', blocked === total ? 'pass' : 'fail');
-      hlog('════════════════════════════════', 'warn');
+      hlog('════════════════════════════════════════', 'warn');
 
-      // Console final
       console.log('');
       if (blocked === total) {
-        console.log('%c 🛡 UNBREAKABLE — ' + total + '/' + total + ' attacks blocked ', 'background:#00B88A;color:#000;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:4px');
-      } else {
-        console.log('%c ⚠ VULNERABLE — ' + blocked + '/' + total + ' attacks blocked ', 'background:#ef4444;color:white;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:4px');
+        console.log('%c 🛡 UNBREAKABLE — ' + total + '/' + total + ' blocked ', 'background:#00B88A;color:#000;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:4px');
       }
 
       var box = document.getElementById('score-box');
       if (blocked === total) {
-        box.innerHTML = '<div class="score" style="background:#052e16;color:#00B88A">UNBREAKABLE<br><span style="font-size:14px">' + total + '/' + total + ' attacks blocked</span></div>' +
-        '<div style="margin-top:16px;padding:16px;background:#0a0a0a;border:1px solid #222;border-radius:10px;text-align:center;font-size:13px;line-height:1.8">' +
-          '<span style="color:#ef4444;font-weight:700">No Russian attack.</span><br>' +
-          '<span style="color:#ef4444;font-weight:700">No North Korean attack.</span><br>' +
-          '<span style="color:#ef4444;font-weight:700">No state-sponsored hack.</span><br>' +
-          '<span style="color:#ef4444;font-weight:700">No zero-day exploit.</span><br>' +
-          '<span style="color:#666;font-size:11px;margin-top:4px;display:inline-block">If it can\'t read the data, it can\'t steal the data. Period.</span>' +
-        '</div>' +
-        '';
+        box.innerHTML =
+          '<div class="score"><div class="score-num">' + total + '/' + total + '</div><div class="score-label">UNBREAKABLE</div><div class="score-sub">Every attack vector blocked</div></div>' +
+          '<div class="provocation"><span>No Russian attack.</span><br><span>No North Korean attack.</span><br><span>No state-sponsored hack.</span><br><span>No zero-day exploit.</span><br><span class="small">If it can\'t read the data, it can\'t steal the data.</span></div>';
       } else {
-        box.innerHTML = '<div class="score" style="background:#450a0a;color:#ef4444">VULNERABLE<br><span style="font-size:14px">' + (total - blocked) + ' attacks succeeded</span></div>';
+        box.innerHTML = '<div class="score" style="border-color:#4a0a0a"><div class="score-num" style="color:#ef4444">' + blocked + '/' + total + '</div><div class="score-label" style="color:#ef4444">VULNERABLE</div></div>';
       }
 
       btn.disabled = false;
-      btn.textContent = 'Run All Attacks — 20 Vectors';
+      btn.textContent = 'execute attack sequence';
       return;
     }
 
     var atk = attacks[idx];
     total++;
     hlog('', 'dim');
-    hlog('ATTACK #' + total + ': ' + atk.name, 'info');
+    hlog('[' + total + '/20] ' + atk.name, 'info');
 
-    // Small delay before showing result
     setTimeout(function() {
       try {
-        var result = atk.fn();
-        if (result.stolen) {
-          hlog('  ✗ STOLEN: "' + result.data + '"', 'fail');
-          console.log('%c ATTACK #' + total + ': ' + atk.name + ' %c ✗ STOLEN: "' + result.data + '"', 'color:#60a5fa;font-weight:bold', 'color:#ef4444;font-weight:bold');
+        var r = atk.fn();
+        if (r.stolen) {
+          hlog('  ✗ STOLEN: "' + r.data + '"', 'fail');
+          console.log('%c #' + total + ' ' + atk.name + ' %c✗ STOLEN', 'color:#3b82f6;font-weight:bold', 'color:#ef4444;font-weight:bold');
         } else {
-          hlog('  ✓ BLOCKED: ' + result.reason, 'pass');
+          hlog('  ✓ BLOCKED: ' + r.reason, 'pass');
           blocked++;
-          console.log('%c ATTACK #' + total + ': ' + atk.name + ' %c ✓ BLOCKED', 'color:#60a5fa;font-weight:bold', 'color:#00B88A;font-weight:bold');
+          console.log('%c #' + total + ' ' + atk.name + ' %c✓ BLOCKED', 'color:#3b82f6;font-weight:bold', 'color:#00B88A;font-weight:bold');
         }
       } catch(e) {
         hlog('  ✓ BLOCKED: ' + e.message, 'pass');
         blocked++;
-        console.log('%c ATTACK #' + total + ': ' + atk.name + ' %c ✓ BLOCKED', 'color:#60a5fa;font-weight:bold', 'color:#00B88A;font-weight:bold');
+        console.log('%c #' + total + ' ' + atk.name + ' %c✓ BLOCKED', 'color:#3b82f6;font-weight:bold', 'color:#00B88A;font-weight:bold');
       }
 
       document.getElementById('counter').textContent = blocked + '/' + total + ' blocked';
 
-      // Add explanation to legend
       if (atk.explain) {
         var li = document.createElement('div');
-        li.style.opacity = '0';
-        li.style.transform = 'translateX(-10px)';
-        li.style.transition = 'all 0.2s ease-out';
-        li.innerHTML = '<span style="color:#ef4444;font-weight:700">#' + total + '</span> <span style="color:#888">' + atk.name + '</span> <span style="color:#555">→ ' + atk.explain + '</span>';
+        li.innerHTML = '<span style="color:#ef4444">#' + total + '</span> <span style="color:#555">' + atk.explain + '</span>';
         document.getElementById('legend-items').appendChild(li);
         setTimeout(function() { li.style.opacity = '1'; li.style.transform = 'translateX(0)'; }, 20);
       }
 
       idx++;
-      setTimeout(runNext, 200);
+      setTimeout(next, 200);
     }, 100);
   }
 
-  setTimeout(runNext, 600);
+  setTimeout(next, 800);
 }
 </script>
 </body>
