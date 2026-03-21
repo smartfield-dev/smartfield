@@ -330,13 +330,13 @@ function runAllAttacks() {
 
       console.log('');
       if (blocked === total) {
-        console.log('%c 🛡 UNBREAKABLE — ' + total + '/' + total + ' blocked ', 'background:#00B88A;color:#000;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:4px');
+        console.log('%c 🛡 FULLY PROTECTED — ' + total + '/' + total + ' blocked ', 'background:#00B88A;color:#000;font-size:18px;font-weight:bold;padding:8px 16px;border-radius:4px');
       }
 
       var box = document.getElementById('score-box');
       if (blocked === total) {
         box.innerHTML =
-          '<div class="score"><div class="score-num">' + total + '/' + total + '</div><div class="score-label">UNBREAKABLE</div><div class="score-sub">Every attack vector blocked</div></div>' +
+          '<div class="score"><div class="score-num">' + total + '/' + total + '</div><div class="score-label">FULLY PROTECTED</div><div class="score-sub">Every attack vector blocked</div></div>' +
           '<div class="provocation"><span>No Russian attack.</span><br><span>No North Korean attack.</span><br><span>No state-sponsored hack.</span><br><span>No zero-day exploit.</span><br><span class="small">If it can\'t read the data, it can\'t steal the data.</span></div>';
       } else {
         box.innerHTML = '<div class="score" style="border-color:#4a0a0a"><div class="score-num" style="color:#ef4444">' + blocked + '/' + total + '</div><div class="score-label" style="color:#ef4444">VULNERABLE</div></div>';
