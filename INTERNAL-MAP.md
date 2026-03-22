@@ -359,6 +359,7 @@ Nota:         Se necesita token granular de npm con permisos read/write
 | B5 | VPS y local tienen .licenses/ separados → keys no se comparten | Key generada en local no funciona en producción | Documentar: generar keys en el entorno donde se van a usar |
 | B6 | nginx default server sirve EuroComply360 si server_name no matchea | Si el cert SSL falla, cae a EuroComply360 | Arreglar: agregar default_server block que devuelva 444 |
 | B7 | Responsive mobile básico — grids de 2 columnas no se adaptan bien | Secciones se ven mal en móvil | EN PROGRESO: agregado media queries básicas |
+| B10 | React/Next.js: re-render destruye SmartFields creados con useEffect/dangerouslySetInnerHTML | SmartField desaparece o se vacía cuando React actualiza state | NECESITA: paquete @smartfield-dev/react con wrapper que use useRef + shouldComponentUpdate o memo para proteger el Web Component del re-render |
 | B8 | sf-stealth no oculta placeholder en HTML source — solo en el browser (JS) | Un bot que lee HTML raw ve placeholder="password" y sabe qué campo es | Documentar: con sf-stealth usar placeholders genéricos ("..." o vacío) y depender del label. Considerar: encriptar placeholder en server-side render |
 | B9 | Placeholders descriptivos en la landing exponen tipo de campo en HTML | "password", "email", "card number" visibles en view-source | Cambiar a placeholders genéricos en todos los SmartFields con sf-stealth |
 
