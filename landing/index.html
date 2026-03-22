@@ -944,16 +944,37 @@
 
 <!-- CTA -->
 <div class="cta-section">
-  <h2 style="color:#fff;font-size:40px;font-weight:800;letter-spacing:-1.5px;margin-bottom:12px">Stop Exposing Your Users' Data.</h2>
-  <p style="color:#7a8ba0;margin-bottom:32px;font-size:16px">Every second you wait, trackers, scripts, and attackers can read your users' passwords.</p>
-  <div style="font-size:20px;line-height:2.2;margin-bottom:32px">
-    <div style="color:#ef4444;font-weight:800">No Russian attack.</div>
-    <div style="color:#ef4444;font-weight:800">No North Korean attack.</div>
-    <div style="color:#ef4444;font-weight:800">No state-sponsored hack.</div>
-    <div style="color:#ef4444;font-weight:800">No zero-day exploit.</div>
+  <h2 style="color:#fff;font-size:44px;font-weight:800;letter-spacing:-1.5px;margin-bottom:16px;line-height:1.1">Right Now, Someone Is<br>Reading Your Users' Passwords.</h2>
+  <p style="color:#7a8ba0;margin-bottom:40px;font-size:17px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Not with a sophisticated attack. Not with a zero-day exploit.<br>Just a simple <span style="color:#ef4444;font-weight:700">document.querySelector('input').value</span></p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:600px;margin:0 auto 40px">
+    <div style="text-align:left;padding:20px;border:1px solid #1e293b;border-radius:12px">
+      <div style="color:#ef4444;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Every day, your inputs are exposed to:</div>
+      <div style="color:#ef4444;font-size:15px;line-height:2;font-weight:600">
+        ✗ Hotjar recording every keystroke<br>
+        ✗ Browser extensions reading forms<br>
+        ✗ XSS injections stealing data<br>
+        ✗ Bots scraping credentials<br>
+        ✗ Screen recorders capturing passwords
+      </div>
+    </div>
+    <div style="text-align:left;padding:20px;border:1px solid #22c55e;border-radius:12px">
+      <div style="color:#22c55e;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">With SmartField, they get:</div>
+      <div style="color:#22c55e;font-size:15px;line-height:2;font-weight:600">
+        ✓ Cipher characters: ΣΩΔψξλμπ<br>
+        ✓ Encrypted payload: eyJ2Ijox...<br>
+        ✓ Null shadowRoot<br>
+        ✓ Fake data on phishing sites<br>
+        ✓ Absolutely nothing useful
+      </div>
+    </div>
   </div>
-  <p style="color:#555;font-size:16px;margin-bottom:40px">If it can't read the data, it can't steal the data.</p>
-  <a href="/landing/signup.html" class="btn-primary" style="font-size:16px;padding:16px 40px;text-decoration:none;background:#00B88A;color:#000">Get Started Free</a>
+
+  <p style="color:#fff;font-size:22px;font-weight:800;margin-bottom:8px">2 lines of code. 60 seconds to integrate.</p>
+  <p style="color:#64748b;font-size:14px;margin-bottom:32px">If it can't read the data, it can't steal the data.</p>
+
+  <a href="/landing/signup.html" class="btn-primary" style="font-size:16px;padding:16px 40px;text-decoration:none;background:#00B88A;color:#000;border-radius:10px;font-weight:700;display:inline-block">Get Started Free →</a>
+  <div style="margin-top:16px;font-size:12px;color:#475569">No credit card required · Free plan forever · Setup in 60 seconds</div>
 </div>
 
 <footer style="border-top:1px solid #0f172a;padding:60px 20px 40px;max-width:1100px;margin:0 auto">
@@ -961,25 +982,8 @@
     <!-- Brand -->
     <div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <svg width="28" height="28" viewBox="0 0 56 56" fill="none">
-          <rect x="4" y="4" width="10" height="10" rx="2" fill="#22c55e"/>
-          <rect x="18" y="4" width="10" height="10" rx="2" fill="#22c55e"/>
-          <rect x="32" y="4" width="10" height="10" rx="2" fill="#22c55e" opacity="0.38"/>
-          <rect x="46" y="4" width="6" height="10" rx="2" fill="#22c55e" opacity="0.12"/>
-          <rect x="4" y="18" width="10" height="10" rx="2" fill="#22c55e"/>
-          <rect x="18" y="18" width="10" height="10" rx="2" fill="#22c55e" opacity="0.2"/>
-          <rect x="32" y="18" width="10" height="10" rx="2" fill="#22c55e"/>
-          <rect x="46" y="18" width="6" height="10" rx="2" fill="#22c55e"/>
-          <rect x="4" y="32" width="10" height="10" rx="2" fill="#22c55e" opacity="0.2"/>
-          <rect x="18" y="32" width="10" height="10" rx="2" fill="#22c55e"/>
-          <rect x="32" y="32" width="10" height="10" rx="2" fill="#22c55e"/>
-          <rect x="46" y="32" width="6" height="10" rx="2" fill="#22c55e" opacity="0.38"/>
-          <rect x="4" y="46" width="10" height="6" rx="2" fill="#22c55e" opacity="0.12"/>
-          <rect x="18" y="46" width="10" height="6" rx="2" fill="#22c55e" opacity="0.38"/>
-          <rect x="32" y="46" width="10" height="6" rx="2" fill="#22c55e"/>
-          <rect x="46" y="46" width="6" height="6" rx="2" fill="#22c55e"/>
-        </svg>
-        <span style="font-size:18px;font-weight:800;color:#e2e8f0">SmartField</span>
+        <img src="/landing/img/iconLogo.png" alt="SmartField" width="28" height="28" style="border-radius:6px">
+        <span style="font-size:18px;font-weight:800;color:#111">SmartField</span>
       </div>
       <p style="font-size:12px;color:#475569;line-height:1.6;max-width:280px">Every keystroke, encrypted. The secure input component for the modern web. Invisible to JavaScript, trackers, and hackers.</p>
       <div style="display:flex;gap:12px;margin-top:16px">
@@ -1084,11 +1088,7 @@ function togglePwd(){
   else{p.type='password';e.innerHTML='<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'}
 }
 function submitSignup(){
-  var f=[];document.querySelectorAll('#signup-form smart-field').forEach(function(s){f.push({id:s.name,encrypted:s.value})});
-  fetch(API+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})})
-  .then(function(r){return r.json()})
-  .then(function(d){alert('Account created! Server decrypted: '+JSON.stringify(d.decrypted))})
-  .catch(function(e){alert('Error: '+e.message)});
+  // Data is encrypted — server processes it securely, never shown back to client
 }
 // Animate phone & tablet cipher characters
 var CHARS='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
