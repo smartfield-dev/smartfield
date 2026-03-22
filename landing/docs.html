@@ -121,11 +121,18 @@
 &lt;input type="password" name="password"&gt;
 
 &lt;!-- After (encrypted) --&gt;
-&lt;smart-field type="password"&gt;&lt;/smart-field&gt;</code></pre>
+&lt;smart-field
+  type="password"
+  encrypt-key="/sf-key"
+  sf-security="brief"
+  sf-stealth
+  placeholder="..."
+&gt;&lt;/smart-field&gt;</code></pre>
+<p style="font-size:13px;color:#666;margin-top:8px"><strong>encrypt-key</strong> is required — it tells SmartField where to fetch your server's public key. Use a relative URL (e.g. <code class="inline-code">/sf-key</code>).</p>
 
 <h3>Step 3: Decrypt on your server</h3>
 <pre><code>// Node.js
-const sf = require('@smartfield/server');
+const sf = require('@smartfield-dev/server');
 await sf.init();
 
 // Serve public key (SmartField fetches this automatically)
@@ -167,6 +174,22 @@ The private key MUST stay on your server. Never include it in JavaScript, enviro
 <code class="inline-code">&lt;smart-field sf-type="card"&gt;</code> ← Validates 16 digits, blocks letters<br><br>
 Without sf-type, the field accepts any input. Use sf-type for cards, expiry, CVV, SSN, phone.</div>
 
+<div class="error"><strong>MISTAKE #6: Using absolute HTTP URLs for encrypt-key</strong><br><br>
+<code class="inline-code">&lt;smart-field encrypt-key="http://myserver.com/api/key"&gt;</code> ← BLOCKED<br><br>
+SmartField blocks <code class="inline-code">http://</code> URLs in production for security. Use relative URLs instead:<br><br>
+<code class="inline-code">&lt;smart-field encrypt-key="/api/public-key"&gt;</code> ← CORRECT<br><br>
+Relative URLs automatically use your page's protocol (HTTPS). This ensures the key exchange is always encrypted.</div>
+
+<div class="error"><strong>MISTAKE #7: Forgetting to clear sessionStorage after adding data-key</strong><br><br>
+If you tested without a <code class="inline-code">data-key</code> first (free plan, 3 fields max), and then add a key, the free license stays cached for 24 hours. Clear it:<br><br>
+<code class="inline-code">sessionStorage.removeItem('sf_license')</code><br><br>
+Or tell your users to hard-refresh (Ctrl+Shift+R).</div>
+
+<div class="error"><strong>MISTAKE #8: Copying license keys between environments</strong><br><br>
+License keys are generated per server. A key created on <code class="inline-code">localhost</code> won't work in production. Always generate keys in the environment where they'll be used:<br><br>
+<code class="inline-code">sf.init()</code> → generates keys on YOUR server<br>
+<code class="inline-code">license.generateKey()</code> → generates license on YOUR API server</div>
+
 <div class="warn"><strong>BEST PRACTICE: Field mapping on the server</strong><br><br>
 SmartField sends random IDs (sf_a7f3c2, sf_b9e1d4). Your server maps these to field names by their order in the form:<br><br>
 Field 1 → email<br>
@@ -178,8 +201,8 @@ Or use the server SDK's <code class="inline-code">decryptFields()</code> which h
 <p>Choose your language. All SDKs use the same encryption format and key management.</p>
 
 <h3 id="nodejs">Node.js <span class="badge-lang badge-node">Node.js</span></h3>
-<pre><code>npm install @smartfield/server</code></pre>
-<pre><code>const sf = require('@smartfield/server');
+<pre><code>npm install @smartfield-dev/server</code></pre>
+<pre><code>const sf = require('@smartfield-dev/server');
 const express = require('express');
 const app = express();
 app.use(express.json());
