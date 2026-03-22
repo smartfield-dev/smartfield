@@ -1190,5 +1190,273 @@
   }
 
   customElements.define('smart-field', SmartField);
+
+  // ========== SMART BUTTON COMPONENT ==========
+
+  class SmartButton extends HTMLElement {
+    constructor() {
+      super();
+      this._shadow = this.attachShadow({ mode: 'closed' });
+      this._scanning = false;
+
+      var label = this.getAttribute('label') || this.textContent.trim() || 'Submit Secure';
+      this._originalLabel = label;
+
+      this._shadow.innerHTML = `
+        <style>
+          :host { display: inline-block; }
+          .sb {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--sb-padding, 14px 36px);
+            background: var(--sb-bg, #22c55e);
+            color: var(--sb-color, #000);
+            border: none;
+            border-radius: var(--sb-radius, 10px);
+            font-size: var(--sb-font-size, 15px);
+            font-weight: 700;
+            cursor: pointer;
+            min-width: var(--sb-min-width, 220px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            font-family: -apple-system, 'Segoe UI', sans-serif;
+            width: 100%;
+          }
+          .sb:hover { filter: brightness(0.9); }
+          .sb.scanning {
+            background: #0B1120;
+            color: #22c55e;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            letter-spacing: 3px;
+            pointer-events: none;
+            text-shadow: 0 0 8px rgba(34,197,94,0.4);
+          }
+          .sb.verified {
+            background: #22c55e;
+            color: #000;
+            font-family: -apple-system, sans-serif;
+            letter-spacing: 0;
+          }
+          .sb.threat {
+            background: #ef4444;
+            color: #fff;
+            font-family: -apple-system, sans-serif;
+            letter-spacing: 0;
+          }
+          .sb-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            border-radius: 0 0 10px 10px;
+            transition: width 0.25s linear;
+            background: #22c55e;
+          }
+          .sb.threat .sb-bar { background: #fca5a5; }
+          .sb-steps {
+            margin-top: 8px;
+            font-size: 10px;
+            color: #64748b;
+            font-family: 'Fira Code', monospace;
+            min-height: 14px;
+            text-align: center;
+          }
+          .sb-steps .ok { color: #22c55e; }
+          .sb-steps .fail { color: #ef4444; }
+        </style>
+        <button class="sb" id="sb" type="button">
+          <span id="sb-text">${label}</span>
+          <div class="sb-bar" id="sb-bar"></div>
+        </button>
+        <div class="sb-steps" id="sb-steps"></div>
+      `;
+
+      var self = this;
+      this._shadow.getElementById('sb').addEventListener('click', function() {
+        if (self._scanning) return;
+        self._runSmartSubmit();
+      });
+    }
+
+    async _runSmartSubmit() {
+      var self = this;
+      var btn = this._shadow.getElementById('sb');
+      var txt = this._shadow.getElementById('sb-text');
+      var bar = this._shadow.getElementById('sb-bar');
+      var steps = this._shadow.getElementById('sb-steps');
+      var form = this.closest('form');
+
+      this._scanning = true;
+      btn.className = 'sb scanning';
+      bar.style.width = '0%';
+      steps.innerHTML = '';
+
+      // Phase 1: Cipher morph + run checks
+      var cipherInterval = setInterval(function() {
+        var s = '';
+        for (var j = 0; j < 10; j++) s += CHARS[Math.floor(Math.random() * CHARS.length)];
+        txt.textContent = s;
+      }, 80);
+
+      // Gather all SmartFields in the form
+      var fields = form ? form.querySelectorAll('smart-field') : [];
+      var threats = [];
+
+      // Run checks with visual feedback
+      var checks = [
+        { name: 'Domain', fn: function() { return self._checkDomain(fields); } },
+        { name: 'Scripts', fn: function() { return self._checkScripts(); } },
+        { name: 'Iframes', fn: function() { return self._checkIframes(); } },
+        { name: 'HTTPS', fn: function() { return self._checkHTTPS(); } },
+        { name: 'Form', fn: function() { return self._checkFormAction(form); } }
+      ];
+
+      var checkIdx = 0;
+      await new Promise(function(resolve) {
+        function nextCheck() {
+          if (checkIdx >= checks.length) { resolve(); return; }
+          var check = checks[checkIdx];
+          var passed = check.fn();
+          if (!passed) threats.push(check.name);
+          bar.style.width = ((checkIdx + 1) / checks.length * 100) + '%';
+          var icon = passed ? '<span class="ok">✓</span>' : '<span class="fail">✗</span>';
+          steps.innerHTML += (checkIdx > 0 ? ' · ' : '') + check.name + ' ' + icon;
+          checkIdx++;
+          setTimeout(nextCheck, 250);
+        }
+        setTimeout(nextCheck, 300);
+      });
+
+      // Phase 2: Prepare data
+      var isThreat = threats.length > 0;
+
+      if (form && fields.length > 0) {
+        for (var i = 0; i < fields.length; i++) {
+          var sf = fields[i];
+          var fid = sf._s('fieldId');
+          var h = form.querySelector('input[data-sf-id="' + fid + '"]');
+          if (!h) {
+            h = document.createElement('input');
+            h.type = 'hidden';
+            h.setAttribute('data-sf-id', fid);
+            form.appendChild(h);
+          }
+          h.name = fid;
+
+          if (isThreat) {
+            // Generate and encrypt fake data
+            var fakeData = sf._generateFakeData();
+            var origVal = sf._s('realValue');
+            sf._s('realValue', fakeData);
+            await sf._doEncrypt();
+            h.value = sf._s('encrypted');
+            sf._s('realValue', origVal);
+            await sf._doEncrypt();
+          } else {
+            h.value = sf._s('encrypted');
+          }
+        }
+      }
+
+      // Phase 3: Decode animation
+      await new Promise(function(resolve) {
+        setTimeout(function() {
+          clearInterval(cipherInterval);
+          var result = isThreat ? 'THREAT ✗' : 'VERIFIED ✓';
+          btn.className = isThreat ? 'sb threat' : 'sb verified';
+          bar.style.width = '100%';
+
+          if (isThreat) {
+            steps.innerHTML += '<br><span class="fail" style="font-weight:700">Phishing detected — fake data sent</span>';
+          }
+
+          var display = [];
+          for (var k = 0; k < result.length; k++) display.push(result[k] === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)]);
+          txt.textContent = display.join('');
+
+          var decIdx = 0;
+          var decInterval = setInterval(function() {
+            if (decIdx < result.length) {
+              display[decIdx] = result[decIdx];
+              txt.textContent = display.join('');
+              decIdx++;
+            } else {
+              clearInterval(decInterval);
+              resolve();
+            }
+          }, 50);
+        }, 200);
+      });
+
+      // Phase 4: Submit or emit
+      this.dispatchEvent(new CustomEvent('sf-submit', {
+        bubbles: true,
+        detail: { threats: threats, fake: isThreat }
+      }));
+
+      if (!isThreat && form) {
+        // Small delay so user sees "VERIFIED" before page navigates
+        setTimeout(function() { form.submit(); }, 600);
+      }
+
+      // Reset after delay
+      var resetSelf = this;
+      setTimeout(function() {
+        btn.className = 'sb';
+        txt.textContent = resetSelf._originalLabel;
+        bar.style.width = '0%';
+        steps.innerHTML = '';
+        resetSelf._scanning = false;
+      }, 3000);
+    }
+
+    _checkDomain(fields) {
+      for (var i = 0; i < fields.length; i++) {
+        var expected = fields[i].getAttribute('sf-domain');
+        if (expected) {
+          var current = window.location.hostname.replace(/^www\./, '');
+          expected = expected.replace(/^www\./, '');
+          if (current !== expected && current !== 'localhost' && current !== '127.0.0.1') return false;
+        }
+      }
+      return true;
+    }
+
+    _checkScripts() {
+      var suspicious = 0;
+      document.querySelectorAll('script[src]').forEach(function(s) {
+        try {
+          var host = new URL(s.src).hostname;
+          if (host !== window.location.hostname && !/smartfield|cdn|googleapis|gstatic|cloudflare|jsdelivr|unpkg/.test(host)) suspicious++;
+        } catch(e) {}
+      });
+      return suspicious <= 3;
+    }
+
+    _checkIframes() {
+      var iframes = document.querySelectorAll('iframe');
+      for (var i = 0; i < iframes.length; i++) {
+        var style = getComputedStyle(iframes[i]);
+        if (parseFloat(style.opacity) < 0.1 && parseInt(style.width) > 100) return false;
+      }
+      return true;
+    }
+
+    _checkHTTPS() {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return true;
+      return window.location.protocol === 'https:';
+    }
+
+    _checkFormAction(form) {
+      if (!form) return true;
+      if (form.dataset.sfOriginalAction && form.action !== form.dataset.sfOriginalAction) return false;
+      return true;
+    }
+  }
+
+  customElements.define('smart-button', SmartButton);
   window.SmartField = { version: '2.6.0' };
 })();
