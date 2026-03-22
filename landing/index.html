@@ -500,6 +500,12 @@
         <span style="color:#666;font-size:13px">It's like saying "your front door lock isn't secure."<br>
         Sure — but we also have a vault, armed guards, and the money is invisible.</span>
       </p>
+      <p style="font-size:12px;color:#999;margin-top:16px;max-width:700px;margin-left:auto;margin-right:auto;line-height:1.6">
+        <strong style="color:#666">Research:</strong>
+        <a href="https://crypto.stanford.edu/shadowcrypt/" target="_blank" rel="noopener" style="color:#16a34a;text-decoration:none">ShadowCrypt (Stanford, 2014)</a> — the first academic attempt to encrypt form data using Shadow DOM. It was never commercialized because it relied on Shadow DOM alone. SmartField builds on that research with 12 additional layers: WeakMap isolation, hybrid AES-256-GCM + RSA-2048 encryption, event blocking, anti-screenshot, cipher display, and more.
+        &nbsp;|&nbsp;
+        <a href="https://developer.chrome.com/docs/extensions/develop/concepts/shadow-dom" target="_blank" rel="noopener" style="color:#16a34a;text-decoration:none">Google Chrome: Shadow DOM docs</a> — confirms closed mode is not a security boundary. We agree, which is why we never depended on it as one.
+      </p>
     </div>
 </section>
 
