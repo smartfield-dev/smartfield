@@ -733,7 +733,7 @@
       <img src="/landing/img/ai_gpt.png" alt="GPT" width="48" height="48" style="border-radius:12px;margin-bottom:12px">
       <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:4px">GPT-4o</div>
       <div style="font-size:11px;color:#dc2626;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Failed to read data</div>
-      <div style="font-size:12px;color:#666;line-height:1.5;font-style:italic">"No afirmo haber extraído el plaintext. No afirmo haber visto el Shadow DOM interno."</div>
+      <div style="font-size:12px;color:#666;line-height:1.5;font-style:italic">"I cannot confirm having extracted the plaintext. I cannot confirm having seen the internal Shadow DOM."</div>
     </div>
 
     <!-- Claude -->
@@ -796,6 +796,65 @@
       </p>
     </div>
   </div>
+</section>
+
+<!-- TESTED ON EVERY BROWSER -->
+<section id="browsers" style="background:#f8fafc;padding:80px 40px">
+  <h2 class="section-title">Tested on Every Browser</h2>
+  <p class="section-sub">6 browsers. 2 rendering engines. 1 result: fully encrypted.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;max-width:900px;margin:0 auto 32px">
+    <div style="text-align:center;padding:20px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px">
+      <img src="/landing/img/br_chrome.png" alt="Chrome" width="44" height="44" style="border-radius:10px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:#111">Chrome</div>
+      <div style="font-size:10px;color:#22c55e;font-weight:700;margin-top:4px">PASSED</div>
+    </div>
+    <div style="text-align:center;padding:20px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px">
+      <img src="/landing/img/br_edge.png" alt="Edge" width="44" height="44" style="border-radius:10px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:#111">Edge</div>
+      <div style="font-size:10px;color:#22c55e;font-weight:700;margin-top:4px">PASSED</div>
+    </div>
+    <div style="text-align:center;padding:20px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px">
+      <img src="/landing/img/br_firefox.png" alt="Firefox" width="44" height="44" style="border-radius:10px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:#111">Firefox</div>
+      <div style="font-size:10px;color:#22c55e;font-weight:700;margin-top:4px">PASSED</div>
+    </div>
+    <div style="text-align:center;padding:20px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px">
+      <img src="/landing/img/br_brave.png" alt="Brave" width="44" height="44" style="border-radius:10px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:#111">Brave</div>
+      <div style="font-size:10px;color:#22c55e;font-weight:700;margin-top:4px">PASSED</div>
+    </div>
+    <div style="text-align:center;padding:20px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px">
+      <img src="/landing/img/br_opera.png" alt="Opera" width="44" height="44" style="border-radius:10px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:#111">Opera</div>
+      <div style="font-size:10px;color:#22c55e;font-weight:700;margin-top:4px">PASSED</div>
+    </div>
+    <div style="text-align:center;padding:20px 12px;background:#fff;border:2px solid #22c55e;border-radius:12px">
+      <img src="/landing/img/br_tor.png" alt="Tor" width="44" height="44" style="border-radius:10px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:#111">Tor</div>
+      <div style="font-size:10px;color:#22c55e;font-weight:700;margin-top:4px">PASSED</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:700px;margin:0 auto 32px">
+    <div style="text-align:center;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:10px">
+      <div style="font-size:24px;font-weight:800;color:#22c55e">6/6</div>
+      <div style="font-size:11px;color:#666;margin-top:2px">Browsers Passed</div>
+    </div>
+    <div style="text-align:center;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:10px">
+      <div style="font-size:24px;font-weight:800;color:#22c55e">2/2</div>
+      <div style="font-size:11px;color:#666;margin-top:2px">Rendering Engines</div>
+    </div>
+    <div style="text-align:center;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:10px">
+      <div style="font-size:24px;font-weight:800;color:#22c55e">0</div>
+      <div style="font-size:11px;color:#666;margin-top:2px">Data Leaked</div>
+    </div>
+  </div>
+
+  <p style="text-align:center;font-size:14px;color:#666;max-width:600px;margin:0 auto;line-height:1.6">
+    Every browser returned <strong style="color:#111">encrypted payloads only</strong>. shadowRoot = null. .value = cipher.
+    If it works on <strong style="color:#111">Tor</strong> — the most restrictive browser in the world — it works everywhere.
+  </p>
 </section>
 
 <!-- SMART SUBMIT — ANTI-PHISHING -->
