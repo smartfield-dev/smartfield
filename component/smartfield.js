@@ -193,7 +193,7 @@
   class SmartField extends HTMLElement {
     constructor() {
       super();
-      this._shadow = this.attachShadow({ mode: 'closed' });
+      var __shadow = this.attachShadow({ mode: 'closed' });
 
       // Sensitive data in WeakMap — NOT on the object
       _secrets.set(this, {
@@ -201,7 +201,24 @@
         encrypted: '',
         keys: null,
         cipherMap: [],
+        shadow: __shadow,
         fieldId: 'sf_' + crypto.getRandomValues(new Uint8Array(8)).reduce((s,b) => s + b.toString(16).padStart(2,'0'), '')
+      });
+
+      // TRAP: _shadow returns a fake decoy Shadow DOM
+      // Attackers who find this get honeypot data, not real internals
+      var me = this;
+      Object.defineProperty(this, '_shadow', {
+        get: function() {
+          var fake = document.createElement('div');
+          fake.innerHTML = '<input type="text" value="[ENCRYPTED — ACCESS DENIED]" disabled><p>SmartField: unauthorized Shadow DOM access detected.</p>';
+          fake.querySelector = function() { return null; };
+          fake.querySelectorAll = function() { return []; };
+          fake.getElementById = function() { return null; };
+          return fake;
+        },
+        enumerable: false,
+        configurable: false
       });
 
       this._anim = null;
@@ -278,7 +295,7 @@
         ph = cipherPh;
       }
 
-      this._shadow.innerHTML = `
+      this._s('shadow').innerHTML = `
         <style>
           :host { display: block; width: 100%; }
           .wrap { position: relative; }
@@ -481,7 +498,7 @@
         </div>
       `;
 
-      this._input = this._shadow.querySelector('input');
+      this._input = this._s('shadow').querySelector('input');
 
       // Attach ALL listeners immediately
       const self = this;
@@ -633,8 +650,8 @@
       });
 
       // ========== PEEK MODE (sf-security="peek") ==========
-      var peekBtn = this._shadow.getElementById('sf-peek');
-      var peekBar = this._shadow.getElementById('sf-peek-bar');
+      var peekBtn = this._s('shadow').getElementById('sf-peek');
+      var peekBar = this._s('shadow').getElementById('sf-peek-bar');
 
       var peekStart = function(e) {
         e.preventDefault();
@@ -866,8 +883,8 @@
       var result = this._validation.validate(this._s('realValue'));
       this._isValid = result.valid;
 
-      var lockLabel = this._shadow.getElementById('lock-label');
-      var lock = this._shadow.getElementById('lock');
+      var lockLabel = this._s('shadow').getElementById('lock-label');
+      var lock = this._s('shadow').getElementById('lock');
       if (!lockLabel || !lock) return;
 
       if (this._s('realValue').length === 0) {
@@ -891,8 +908,8 @@
       clearTimeout(this._peekTimeout);
       this._peekTimeout = null;
 
-      var peekBtn = this._shadow.getElementById('sf-peek');
-      var peekBar = this._shadow.getElementById('sf-peek-bar');
+      var peekBtn = this._s('shadow').getElementById('sf-peek');
+      var peekBar = this._s('shadow').getElementById('sf-peek-bar');
       if (peekBtn) peekBtn.classList.remove('sf-peeking');
       if (peekBar) {
         peekBar.style.transition = 'none';
@@ -1021,7 +1038,7 @@
     _scanEnvironment() {
       const threats = [];
       const self = this;
-      const banner = this._shadow.getElementById('threats');
+      const banner = this._s('shadow').getElementById('threats');
 
       // 1. Check for keyboard event listeners on document/window (keyloggers)
       try {
@@ -1277,13 +1294,21 @@
   class SmartButton extends HTMLElement {
     constructor() {
       super();
-      this._shadow = this.attachShadow({ mode: 'closed' });
+      var __sbShadow = this.attachShadow({ mode: 'closed' });
+      this.__s = __sbShadow;
       this._scanning = false;
 
       var label = this.getAttribute('label') || this.textContent.trim() || 'Submit Secure';
       this._originalLabel = label;
 
-      this._shadow.innerHTML = `
+      // TRAP: _shadow returns decoy for SmartButton too
+      Object.defineProperty(this, '_shadow', {
+        get: function() { return null; },
+        enumerable: false,
+        configurable: false
+      });
+
+      __sbShadow.innerHTML = `
         <style>
           :host { display: inline-block; }
           .sb {
@@ -1356,7 +1381,7 @@
       `;
 
       var self = this;
-      this._shadow.getElementById('sb').addEventListener('click', function() {
+      this.__s.getElementById('sb').addEventListener('click', function() {
         if (self._scanning) return;
         self._runSmartSubmit();
       });
@@ -1364,10 +1389,10 @@
 
     async _runSmartSubmit() {
       var self = this;
-      var btn = this._shadow.getElementById('sb');
-      var txt = this._shadow.getElementById('sb-text');
-      var bar = this._shadow.getElementById('sb-bar');
-      var steps = this._shadow.getElementById('sb-steps');
+      var btn = this.__s.getElementById('sb');
+      var txt = this.__s.getElementById('sb-text');
+      var bar = this.__s.getElementById('sb-bar');
+      var steps = this.__s.getElementById('sb-steps');
       var form = this.closest('form');
 
       this._scanning = true;
