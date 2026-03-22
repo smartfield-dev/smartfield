@@ -1,3 +1,5 @@
 .smartfield/
 node_modules/
 *.log
+INTERNAL-MAP.md
+.licenses/

@@ -1,17 +1,17 @@
-# @smartfield/server
+# @smartfield-dev/server
 
 Server-side SDK for [SmartField](https://smartfield.dev) — decrypt encrypted form data from `<smart-field>` components.
 
 ## Installation
 
 ```bash
-npm install @smartfield/server
+npm install @smartfield-dev/server
 ```
 
 ## Quick Start
 
 ```javascript
-const sf = require('@smartfield/server');
+const sf = require('@smartfield-dev/server');
 const express = require('express');
 const app = express();
 
@@ -37,7 +37,12 @@ app.listen(3000);
 ## Frontend Setup
 
 ```html
-<script src="https://cdn.smartfield.dev/v1/smartfield.js"></script>
+<!-- Recommended: with SRI (Subresource Integrity) -->
+<script src="https://cdn.smartfield.dev/v1/smartfield.js"
+        integrity="sha384-HASH_HERE"
+        crossorigin="anonymous"></script>
+
+<!-- Get your current SRI hash from: GET /api/sri -->
 
 <smart-field
   type="password"
@@ -109,6 +114,7 @@ console.log(sf.status());
 - **We NEVER see user data.** All decryption happens on YOUR server.
 - **Auto .gitignore.** The SDK automatically adds `.smartfield/` to your `.gitignore`.
 - **File permissions.** Private key is saved with mode `0600` (owner read/write only).
+- **SRI support.** Load the script with `integrity` attribute to verify it hasn't been tampered with.
 
 ## Encryption Details
 

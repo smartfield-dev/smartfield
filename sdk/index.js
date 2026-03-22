@@ -25,7 +25,8 @@
 
 'use strict';
 
-const { subtle } = globalThis.crypto;
+const { webcrypto } = require('crypto');
+const subtle = webcrypto.subtle;
 const fs = require('fs');
 const path = require('path');
 

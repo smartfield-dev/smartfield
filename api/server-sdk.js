@@ -5,7 +5,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const sf = require('../sdk'); // In production: require('@smartfield/server')
+const sf = require('../sdk');           // In production: require('@smartfield/server')
+const license = require('../sdk/license');  // License validation
 
 const app = express();
 app.use(cors());
@@ -19,7 +20,37 @@ app.use('/component', express.static(path.join(__dirname, '..', 'component')));
 app.use('/landing', express.static(path.join(__dirname, '..', 'landing')));
 app.use('/usecases', express.static(path.join(__dirname, '..', 'landing')));
 app.use('/demo', express.static(path.join(__dirname, '..', 'demo')));
-app.use('/demo', express.static(path.join(__dirname, '..', 'demo')));
+
+// ========== LICENSE VALIDATION ==========
+
+app.get('/api/validate', (req, res) => {
+  const key = req.query.key || '';
+  const domain = req.query.domain || '';
+  const origin = req.get('Origin') || req.get('Referer') || '';
+  const ip = req.ip || req.connection.remoteAddress || '';
+
+  const result = license.validateKey({ key, domain, origin, ip });
+  res.json(result);
+});
+
+// ========== DEMO: Generate a test key ==========
+
+app.post('/api/generate-key', (req, res) => {
+  const { domain, plan, owner, test } = req.body;
+  try {
+    const result = license.generateKey({ domain, plan, owner, test });
+    console.log(`[License] Key generated: ${result.key.substring(0, 16)}... for ${domain} (${plan})`);
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ========== DEMO: List keys ==========
+
+app.get('/api/keys', (req, res) => {
+  res.json(license.listKeys());
+});
 
 // SmartField login (encrypted)
 app.post('/api/login', async (req, res) => {
@@ -52,17 +83,40 @@ app.post('/api/login-normal', (req, res) => {
   res.json({ success: true, message: 'Server received your data IN PLAIN TEXT', received: req.body, warning: 'This password was visible to every middleware, proxy, and log' });
 });
 
+// SRI hash endpoint — clients use this to get the current integrity hash
+app.get('/api/sri', (req, res) => {
+  const crypto = require('crypto');
+  const fs = require('fs');
+  const filePath = path.join(__dirname, '..', 'component', 'smartfield.js');
+  const content = fs.readFileSync(filePath);
+  const hash = crypto.createHash('sha384').update(content).digest('base64');
+  const integrity = 'sha384-' + hash;
+  res.json({
+    integrity,
+    script: '<script src="https://cdn.smartfield.dev/v1/smartfield.js" integrity="' + integrity + '" crossorigin="anonymous"></script>'
+  });
+});
+
 // Health
-app.get('/api/health', (req, res) => res.json({ ...sf.status(), server: 'ok' }));
+app.get('/api/health', (req, res) => res.json({ ...sf.status(), license: { initialized: true }, server: 'ok' }));
 
 // Start
 const PORT = process.env.PORT || 3333;
 
 sf.init().then(() => {
+  license.init({ licensesDir: path.join(__dirname, '..', '.licenses') });
+
+  // Auto-generate a demo test key if none exist
+  if (license.listKeys().length === 0) {
+    const demoKey = license.generateKey({ domain: 'localhost', plan: 'pro', owner: 'demo', test: true });
+    console.log(`[License] Demo test key: ${demoKey.key}`);
+  }
+
   app.listen(PORT, () => {
     console.log(`\n[Server] Running at http://localhost:${PORT}`);
-    console.log(`[Server] Landing: http://localhost:${PORT}/landing`);
+    console.log(`[Server] Landing:    http://localhost:${PORT}/landing`);
     console.log(`[Server] Public key: http://localhost:${PORT}/api/public-key`);
-    console.log(`[Server] Status: http://localhost:${PORT}/api/health\n`);
+    console.log(`[Server] Validate:   http://localhost:${PORT}/api/validate?key=YOUR_KEY`);
+    console.log(`[Server] Health:     http://localhost:${PORT}/api/health\n`);
   });
 });

@@ -1,5 +1,6 @@
 /**
- * SmartField v0.1 - Secure encrypted input
+ * SmartField v2.6.0 - Secure encrypted input
+ * Every keystroke encrypted with AES-256-GCM + RSA-2048
  */
 (function () {
   'use strict';
@@ -7,7 +8,156 @@
   const CHARS = 'ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
   const randChar = () => CHARS[Math.floor(Math.random() * CHARS.length)];
 
-  // Crypto
+  // ========== LICENSE SYSTEM ==========
+
+  const License = {
+    _state: null,       // { plan, maxFields, badge, sig, ts, exp }
+    _fieldCount: 0,     // active smart-field instances on page
+    _validated: false,
+    _validating: false,
+
+    // Read data-key from the <script> tag that loaded this file
+    getDataKey: function() {
+      var scripts = document.querySelectorAll('script[src]');
+      for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].src && scripts[i].src.indexOf('smartfield') !== -1) {
+          return scripts[i].getAttribute('data-key') || null;
+        }
+      }
+      return null;
+    },
+
+    // Check sessionStorage cache
+    getCached: function() {
+      try {
+        var cached = sessionStorage.getItem('sf_license');
+        if (!cached) return null;
+        var data = JSON.parse(cached);
+        // Check expiry
+        if (data.exp && Date.now() > data.exp) {
+          sessionStorage.removeItem('sf_license');
+          return null;
+        }
+        return data;
+      } catch(e) { return null; }
+    },
+
+    // Cache validation result
+    setCache: function(data) {
+      try {
+        sessionStorage.setItem('sf_license', JSON.stringify(data));
+      } catch(e) {}
+    },
+
+    // Validate license against server
+    validate: function(callback) {
+      if (this._validated && this._state) {
+        callback(this._state);
+        return;
+      }
+
+      // Check cache first
+      var cached = this.getCached();
+      if (cached) {
+        this._state = cached;
+        this._validated = true;
+        callback(cached);
+        return;
+      }
+
+      var dataKey = this.getDataKey();
+
+      // No key = free plan (no server call needed)
+      if (!dataKey) {
+        this._state = { valid: true, plan: 'free', maxFields: 3, badge: true, domain: '*' };
+        this._validated = true;
+        callback(this._state);
+        return;
+      }
+
+      // Prevent duplicate validation requests
+      if (this._validating) {
+        var self = this;
+        setTimeout(function() { self.validate(callback); }, 100);
+        return;
+      }
+      this._validating = true;
+
+      // Build validation URL
+      var validateUrl = this._getValidateUrl();
+      var domain = window.location.hostname;
+      var url = validateUrl + '?key=' + encodeURIComponent(dataKey) + '&domain=' + encodeURIComponent(domain);
+
+      var self = this;
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          self._validating = false;
+          if (data.valid) {
+            self._state = data;
+            self._validated = true;
+            self.setCache(data);
+          } else {
+            // Invalid key — fallback to free
+            self._state = { valid: true, plan: 'free', maxFields: 3, badge: true, domain: '*', warning: data.error };
+            self._validated = true;
+          }
+          callback(self._state);
+        })
+        .catch(function() {
+          // Server unreachable — graceful fallback to free
+          self._validating = false;
+          self._state = { valid: true, plan: 'free', maxFields: 3, badge: true, domain: '*', fallback: true };
+          self._validated = true;
+          callback(self._state);
+        });
+    },
+
+    // Determine validation API URL
+    _getValidateUrl: function() {
+      // Check for explicit validate-url on script tag
+      var scripts = document.querySelectorAll('script[src]');
+      for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].src && scripts[i].src.indexOf('smartfield') !== -1) {
+          var url = scripts[i].getAttribute('data-validate-url');
+          if (url) return url;
+        }
+      }
+      // Default: same origin
+      return '/api/validate';
+    },
+
+    // Check if a new field can be registered
+    canAddField: function() {
+      if (!this._state) return true; // Not validated yet, allow (will check later)
+      if (this._state.maxFields === -1) return true; // Unlimited
+      return this._fieldCount < this._state.maxFields;
+    },
+
+    // Register a new field
+    registerField: function() {
+      this._fieldCount++;
+    },
+
+    // Unregister a field (on disconnect)
+    unregisterField: function() {
+      this._fieldCount = Math.max(0, this._fieldCount - 1);
+    },
+
+    // Should show badge?
+    shouldShowBadge: function() {
+      if (!this._state) return true; // Default to badge until validated
+      return this._state.badge === true;
+    },
+
+    // Get plan name
+    getPlan: function() {
+      return this._state ? this._state.plan : 'free';
+    }
+  };
+
+  // ========== CRYPTO ==========
+
   const Crypto = {
     async generateKeys() {
       const rsa = await crypto.subtle.generateKey(
@@ -34,13 +184,7 @@
       const b = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
       return btoa(JSON.stringify({ v: 1, iv: b(iv), key: b(encKey), data: b(enc) }));
     },
-    async decrypt(privateKey, payload) {
-      const p = JSON.parse(atob(payload));
-      const ub = s => { const b = atob(s); const a = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; };
-      const rawKey = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privateKey, ub(p.key));
-      const aesKey = await crypto.subtle.importKey('raw', rawKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
-      return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: ub(p.iv) }, aesKey, ub(p.data)));
-    }
+    // decrypt() removed — decryption must only happen server-side
   };
 
   // Store sensitive data OUTSIDE the element — invisible to JSON.stringify and property enumeration
@@ -61,6 +205,11 @@
       });
 
       this._anim = null;
+      this._disabled = false; // License limit reached
+      this._securityMode = 'max'; // max | peek | brief
+      this._isPeeking = false;
+      this._peekTimeout = null;
+      this._briefRevealed = new Set(); // indices currently showing real chars
 
       // Protect .value from Object.defineProperty attacks
       var me = this;
@@ -86,8 +235,19 @@
       this._sfType = null;
       this._validation = this._getValidationRules(null);
       this._isValid = false;
+      this._stealthMode = this.hasAttribute('sf-stealth');
+      this._realPlaceholder = this.getAttribute('placeholder') || this._validation.placeholder || '';
+      this._stealthPlaceholderTimer = null;
 
-      const ph = this.getAttribute('placeholder') || this._validation.placeholder || '';
+      // Generate cipher placeholder for stealth mode
+      var ph = this._realPlaceholder;
+      if (this._stealthMode && ph) {
+        var cipherPh = '';
+        for (var ci = 0; ci < Math.min(ph.length, 12); ci++) {
+          cipherPh += (ph[ci] === ' ') ? ' ' : randChar();
+        }
+        ph = cipherPh;
+      }
 
       this._shadow.innerHTML = `
         <style>
@@ -129,6 +289,10 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
+          }
+          input.sf-disabled {
+            opacity: 0.3;
+            pointer-events: none;
           }
           .lock {
             position: absolute;
@@ -188,10 +352,86 @@
             opacity: 0.9;
             margin-top: 2px;
           }
+          .sf-badge {
+            display: block;
+            text-align: right;
+            padding: 3px 8px 0;
+            font-size: 9px;
+            font-family: -apple-system, sans-serif;
+            letter-spacing: 0.3px;
+          }
+          .sf-badge a {
+            color: var(--sf-badge-color, #64748b);
+            text-decoration: none;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+          }
+          .sf-badge a:hover { opacity: 1; }
+          .sf-peek {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: 1.5px solid var(--sf-cipher-color, #22c55e);
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: opacity 0.2s, background 0.2s, box-shadow 0.2s;
+            padding: 0;
+            pointer-events: auto;
+            z-index: 2;
+          }
+          .sf-peek:hover { opacity: 0.7; }
+          .sf-peek:active, .sf-peek.sf-peeking {
+            opacity: 1;
+            background: rgba(34,197,94,0.1);
+            box-shadow: 0 0 12px rgba(34,197,94,0.3);
+          }
+          .sf-peek svg {
+            width: 16px; height: 16px;
+            stroke: var(--sf-cipher-color, #22c55e);
+            fill: none; stroke-width: 1.5;
+            stroke-linecap: round; stroke-linejoin: round;
+            transition: transform 0.2s;
+          }
+          .sf-peek.sf-peeking svg { transform: scale(1.15); }
+          .sf-peek-timer {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(34,197,94,0.2);
+            border-radius: 0 0 6px 6px;
+            overflow: hidden;
+          }
+          .sf-peek-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--sf-cipher-color, #22c55e);
+            transform-origin: left;
+            transition: transform linear;
+          }
+          :host([sf-security="peek"]) .sf-peek { display: flex; }
+          :host([sf-security="peek"]) input { padding-left: 50px; }
+          .sf-brief-char {
+            color: var(--sf-cipher-color, #22c55e);
+            text-shadow: 0 0 12px var(--sf-cipher-color, #22c55e);
+          }
         </style>
 
         <div class="wrap">
           <div class="threats" id="threats" style="display:none"></div>
+          <button type="button" class="sf-peek" id="sf-peek" tabindex="-1" aria-label="Hold to reveal">
+            <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/><line x1="12" y1="10" x2="12" y2="14"/><circle cx="12" cy="10" r="0.5" fill="currentColor"/></svg>
+            <div class="sf-peek-timer"><div class="sf-peek-bar" id="sf-peek-bar"></div></div>
+          </button>
           <input type="text" placeholder="${ph}"
             autocomplete="off" autocorrect="off" autocapitalize="off"
             spellcheck="false"
@@ -207,10 +447,12 @@
             <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           </div>
         </div>
+        <div class="sf-badge" id="sf-badge" style="display:none">
+          <a href="https://smartfield.dev" target="_blank" rel="noopener">&#x1f512; Protected by SmartField</a>
+        </div>
       `;
 
       this._input = this._shadow.querySelector('input');
-      console.log('[SmartField] input element:', this._input ? 'found' : 'NOT FOUND');
 
       // Attach ALL listeners immediately
       const self = this;
@@ -219,6 +461,9 @@
       input.addEventListener('keydown', function(e) {
         e.preventDefault();
         e.stopPropagation();
+
+        // If field is disabled by license limit, block all input
+        if (self._disabled) return;
 
         if (e.key === 'Backspace') {
           if (self._s('realValue').length > 0) {
@@ -258,7 +503,13 @@
 
         self._validateField();
 
-        self._showCipher();
+        // Display based on security mode
+        if (self._securityMode === 'brief' && e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+          // Brief mode: show new char for 1 second
+          self._briefReveal(self._s('cipherMap').length - 1);
+        } else {
+          self._showCipher();
+        }
         if (self._s('cipherMap').length > 0 && !self._anim) self._startAnim(100);
         self._doEncrypt().then(function() { self._emit(); });
       });
@@ -272,8 +523,86 @@
         }, true);
       });
 
-      input.addEventListener('focus', function() { self._startAnim(100); });
-      input.addEventListener('blur', function() { self._startAnim(400); });
+      input.addEventListener('focus', function() {
+        self._startAnim(100);
+        // Stealth mode: briefly show real placeholder on focus
+        if (self._stealthMode && self._s('realValue').length === 0) {
+          input.placeholder = self._realPlaceholder;
+          input.style.setProperty('--sf-ph-opacity', '1');
+          clearTimeout(self._stealthPlaceholderTimer);
+          self._stealthPlaceholderTimer = setTimeout(function() {
+            if (self._s('realValue').length === 0) {
+              // Fade back to cipher placeholder
+              var cipherPh = '';
+              for (var ci = 0; ci < Math.min(self._realPlaceholder.length, 12); ci++) {
+                cipherPh += (self._realPlaceholder[ci] === ' ') ? ' ' : randChar();
+              }
+              input.placeholder = cipherPh;
+            }
+          }, 2000);
+        }
+      });
+      input.addEventListener('blur', function() {
+        self._startAnim(400);
+        // Force hide on blur for all modes
+        if (self._isPeeking) self._peekEnd();
+        // Stealth: restore cipher placeholder
+        if (self._stealthMode && self._s('realValue').length === 0) {
+          clearTimeout(self._stealthPlaceholderTimer);
+          var cipherPh = '';
+          for (var ci = 0; ci < Math.min(self._realPlaceholder.length, 12); ci++) {
+            cipherPh += (self._realPlaceholder[ci] === ' ') ? ' ' : randChar();
+          }
+          input.placeholder = cipherPh;
+        }
+      });
+
+      // ========== PEEK MODE (sf-security="peek") ==========
+      var peekBtn = this._shadow.getElementById('sf-peek');
+      var peekBar = this._shadow.getElementById('sf-peek-bar');
+
+      var peekStart = function(e) {
+        e.preventDefault();
+        if (self._securityMode !== 'peek') return;
+        if (self._s('realValue').length === 0) return;
+        self._isPeeking = true;
+        peekBtn.classList.add('sf-peeking');
+
+        // Show real value
+        self._input.value = self._s('realValue');
+        self._input.style.letterSpacing = '2px';
+        self._input.style.color = '#e2e8f0';
+        self._input.style.textShadow = 'none';
+        clearInterval(self._anim);
+        self._anim = null;
+
+        // Start 5-second countdown
+        peekBar.style.transition = 'none';
+        peekBar.style.transform = 'scaleX(1)';
+        requestAnimationFrame(function() {
+          peekBar.style.transition = 'transform 5s linear';
+          peekBar.style.transform = 'scaleX(0)';
+        });
+
+        // Auto-hide after 5 seconds
+        self._peekTimeout = setTimeout(function() {
+          self._peekEnd();
+        }, 5000);
+      };
+
+      var peekEnd = function(e) {
+        if (e) e.preventDefault();
+        self._peekEnd();
+      };
+
+      // Mouse events
+      peekBtn.addEventListener('mousedown', peekStart);
+      peekBtn.addEventListener('mouseup', peekEnd);
+      peekBtn.addEventListener('mouseleave', peekEnd);
+      // Touch events
+      peekBtn.addEventListener('touchstart', peekStart);
+      peekBtn.addEventListener('touchend', peekEnd);
+      peekBtn.addEventListener('touchcancel', peekEnd);
 
       // === ANTI-SCREENSHOT ===
       // When page loses visibility (screenshot, app switch, screen share), scramble faster
@@ -321,19 +650,41 @@
         // Read sf-type for validation
         self._sfType = self.getAttribute('sf-type') || null;
         self._validation = self._getValidationRules(self._sfType);
-        console.log('[SmartField] sf-type:', self._sfType, 'maxLength:', self._validation.maxLength);
+
+        // Read security mode: max (default), peek, brief
+        var secMode = self.getAttribute('sf-security') || 'max';
+        if (secMode === 'peek' || secMode === 'brief' || secMode === 'max') {
+          self._securityMode = secMode;
+        }
+
+        // Read placeholder + stealth (re-read here because constructor may miss attributes)
+        var phAttr = self.getAttribute('placeholder') || self._validation.placeholder || '';
+        if (phAttr) {
+          self._realPlaceholder = phAttr;
+          self._stealthMode = self.hasAttribute('sf-stealth');
+          if (self._stealthMode) {
+            var cipherPh = '';
+            for (var ci = 0; ci < Math.min(phAttr.length, 12); ci++) {
+              cipherPh += (phAttr[ci] === ' ') ? ' ' : randChar();
+            }
+            input.placeholder = cipherPh;
+          } else {
+            input.placeholder = phAttr;
+          }
+        }
 
         var keyUrl = self.getAttribute('encrypt-key');
 
         if (keyUrl) {
-          console.log('[SmartField] Fetching server key...');
+          if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && keyUrl.indexOf('https://') !== 0) {
+            console.error('[SmartField] encrypt-key URL must use HTTPS in production');
+            return;
+          }
           fetch(keyUrl)
             .then(function(r) {
-              console.log('[SmartField] Key response status:', r.status);
               return r.json();
             })
             .then(function(jwk) {
-              console.log('[SmartField] Got JWK, importing...');
               return crypto.subtle.importKey(
                 'jwk', jwk,
                 { name: 'RSA-OAEP', hash: 'SHA-256' },
@@ -342,19 +693,15 @@
             })
             .then(function(pubKey) {
               self._s('keys', { publicKey: pubKey, fromServer: true });
-              console.log('[SmartField] SERVER key loaded OK');
             })
-            .catch(function(e) {
-              console.error('[SmartField] Server key FAILED:', e);
+            .catch(function() {
               Crypto.generateKeys().then(function(keys) {
                 self._s('keys', keys);
-                console.log('[SmartField] Fallback: local keys');
               });
             });
         } else {
           Crypto.generateKeys().then(function(keys) {
             self._s('keys', keys);
-            console.log('[SmartField] Local keys (no encrypt-key attr)');
           });
         }
       }, 100);
@@ -457,10 +804,62 @@
       }
     }
 
+    _peekEnd() {
+      if (!this._isPeeking) return;
+      this._isPeeking = false;
+      clearTimeout(this._peekTimeout);
+      this._peekTimeout = null;
+
+      var peekBtn = this._shadow.getElementById('sf-peek');
+      var peekBar = this._shadow.getElementById('sf-peek-bar');
+      if (peekBtn) peekBtn.classList.remove('sf-peeking');
+      if (peekBar) {
+        peekBar.style.transition = 'none';
+        peekBar.style.transform = 'scaleX(1)';
+      }
+
+      // Restore cipher display
+      this._input.style.letterSpacing = '4px';
+      this._input.style.color = '';
+      this._input.style.textShadow = '';
+      this._showCipher();
+      if (this._s('cipherMap').length > 0) this._startAnim(100);
+    }
+
     _showCipher() {
+      if (this._isPeeking) return; // Don't override during peek
       this._updating = true;
-      this._input.value = this._s('cipherMap').join('');
+
+      if (this._securityMode === 'brief' && this._briefRevealed.size > 0) {
+        // Brief mode: show real chars for revealed indices, cipher for the rest
+        var realVal = this._s('realValue');
+        var cMap = this._s('cipherMap');
+        var display = [];
+        for (var i = 0; i < cMap.length; i++) {
+          display.push(this._briefRevealed.has(i) ? realVal[i] : cMap[i]);
+        }
+        this._input.value = display.join('');
+      } else {
+        this._input.value = this._s('cipherMap').join('');
+      }
+
       this._updating = false;
+    }
+
+    // Brief mode: show the real char at position for 1 second, then cipher
+    _briefReveal(index) {
+      if (this._securityMode !== 'brief') return;
+      var self = this;
+
+      // Mark this index as revealed
+      this._briefRevealed.add(index);
+      this._showCipher();
+
+      // After 1 second, hide it
+      setTimeout(function() {
+        self._briefRevealed.delete(index);
+        self._showCipher();
+      }, 1000);
     }
 
     _startAnim(speed) {
@@ -469,6 +868,8 @@
       this._anim = setInterval(function() {
         if (self._s('cipherMap').length === 0) return;
         var idx = Math.floor(Math.random() * self._s('cipherMap').length);
+        // In brief mode, don't mutate chars that are currently revealed
+        if (self._securityMode === 'brief' && self._briefRevealed.has(idx)) return;
         self._s('cipherMap')[idx] = randChar();
         self._showCipher();
       }, speed || 150);
@@ -494,6 +895,30 @@
           // NO name, NO length, NO empty flag
         }
       }));
+    }
+
+    // ========== LICENSE ENFORCEMENT ==========
+
+    _applyLicense() {
+      var self = this;
+      License.validate(function(lic) {
+        // Check field limit
+        if (!License.canAddField()) {
+          self._disabled = true;
+          self._input.classList.add('sf-disabled');
+          self._input.placeholder = 'Upgrade to SmartField Pro for more fields';
+          self._input.disabled = true;
+          return;
+        }
+
+        License.registerField();
+
+        // Show badge for free plan
+        if (License.shouldShowBadge()) {
+          var badge = self._shadow.getElementById('sf-badge');
+          if (badge) badge.style.display = 'block';
+        }
+      });
     }
 
     // Public API - only encrypted
@@ -525,7 +950,6 @@
         }
       } catch(e) {
         // getEventListeners only works in DevTools, use alternative
-        // Check if there are suspicious global handlers
       }
 
       // 2. Check for known trackers/recorders
@@ -611,6 +1035,9 @@
     }
 
     connectedCallback() {
+      // Validate license and apply limits
+      this._applyLicense();
+
       // Scan environment when component mounts
       var self = this;
       setTimeout(function() { self._scanEnvironment(); }, 500);
@@ -632,7 +1059,13 @@
       });
     }
 
-    disconnectedCallback() { clearInterval(this._anim); this._anim = null; }
+    disconnectedCallback() {
+      clearInterval(this._anim);
+      this._anim = null;
+      clearTimeout(this._peekTimeout);
+      this._briefRevealed.clear();
+      if (!this._disabled) License.unregisterField();
+    }
   }
 
   customElements.define('smart-field', SmartField);

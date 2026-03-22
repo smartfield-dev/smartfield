@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: smartfield-app
+    restart: unless-stopped
+    ports:
+      - "3002:3333"
+    networks:
+      - eurocomply360_eurocomply-network
+    environment:
+      - NODE_ENV=production
+      - PORT=3333
+    volumes:
+      - smartfield-keys:/app/api/.smartfield
+      - smartfield-licenses:/app/.licenses
+
+volumes:
+  smartfield-keys:
+  smartfield-licenses:
+
+networks:
+  eurocomply360_eurocomply-network:
+    external: true

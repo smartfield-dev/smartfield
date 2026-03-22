@@ -1,16 +1,40 @@
 {
-  "name": "@smartfield/server",
+  "name": "@smartfield-dev/server",
   "version": "2.6.0",
-  "description": "Server-side SDK for SmartField — decrypt encrypted form data from SmartField components",
+  "description": "Server-side SDK for SmartField — decrypt encrypted form data from <smart-field> components. AES-256-GCM + RSA-2048.",
   "main": "index.js",
-  "keywords": ["encryption", "security", "input", "web-component", "aes", "rsa", "form", "password"],
-  "author": "SmartField",
+  "keywords": [
+    "encryption",
+    "security",
+    "input",
+    "web-component",
+    "aes-256",
+    "rsa-2048",
+    "form",
+    "password",
+    "shadow-dom",
+    "pci",
+    "hipaa",
+    "smartfield",
+    "decrypt",
+    "encrypt"
+  ],
+  "author": "SmartField <hello@smartfield.dev>",
   "license": "MIT",
+  "homepage": "https://smartfield.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smartfield-dev/smartfield"
+  },
+  "bugs": {
+    "url": "https://github.com/smartfield-dev/smartfield/issues"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
   "files": [
     "index.js",
+    "license.js",
     "README.md"
   ]
 }
