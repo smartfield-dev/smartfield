@@ -722,15 +722,20 @@
         var keyUrl = self.getAttribute('encrypt-key');
 
         if (keyUrl) {
-          if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && keyUrl.indexOf('https://') !== 0) {
+          // Relative URLs (e.g. "/api/public-key") are OK — they use the page's protocol
+          // Only block absolute HTTP URLs in production
+          if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && keyUrl.indexOf('http://') === 0) {
             console.error('[SmartField] encrypt-key URL must use HTTPS in production');
             return;
           }
-          fetch(keyUrl)
+          var fetchUrl = keyUrl.indexOf('//') === -1 ? (window.location.origin + keyUrl) : keyUrl;
+          fetch(fetchUrl)
             .then(function(r) {
+              if (!r.ok) throw new Error('HTTP ' + r.status);
               return r.json();
             })
             .then(function(jwk) {
+              if (!jwk || !jwk.kty) throw new Error('Invalid JWK');
               return crypto.subtle.importKey(
                 'jwk', jwk,
                 { name: 'RSA-OAEP', hash: 'SHA-256' },
@@ -740,7 +745,8 @@
             .then(function(pubKey) {
               self._s('keys', { publicKey: pubKey, fromServer: true });
             })
-            .catch(function() {
+            .catch(function(err) {
+              console.warn('[SmartField] Key fetch failed:', err.message || err, '— generating local keys');
               Crypto.generateKeys().then(function(keys) {
                 self._s('keys', keys);
               });
