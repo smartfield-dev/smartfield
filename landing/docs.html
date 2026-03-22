@@ -88,10 +88,11 @@
   <a href="#angular">Angular</a>
   <a href="#vanilla">Vanilla HTML</a>
 
-  <h4>Field Types</h4>
-  <a href="#types">sf-type Reference</a>
+  <h4>Features</h4>
+  <a href="#security-modes">Security Modes</a>
+  <a href="#stealth">Stealth Mode</a>
+  <a href="#types">Field Types (sf-type)</a>
   <a href="#styling">Custom Styling</a>
-  <a href="#validation">Validation</a>
 
   <h4>Security</h4>
   <a href="#architecture">Architecture</a>
@@ -114,7 +115,7 @@
 <h2 id="quickstart">Quick Start — 2 Minutes</h2>
 
 <h3>Step 1: Add the script</h3>
-<pre><code>&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"&gt;&lt;/script&gt;</code></pre>
+<pre><code>&lt;script src="https://3wwprotocol.com/component/smartfield.js"&gt;&lt;/script&gt;</code></pre>
 
 <h3>Step 2: Replace your inputs</h3>
 <pre><code>&lt;!-- Before (vulnerable) --&gt;
@@ -358,7 +359,7 @@ end</code></pre>
 <h2 id="frontend">Frontend Setup</h2>
 
 <h3 id="vanilla">Vanilla HTML</h3>
-<pre><code>&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"
+<pre><code>&lt;script src="https://3wwprotocol.com/component/smartfield.js"
         data-key="sf_live_your_key_here"&gt;&lt;/script&gt;
 
 &lt;form action="/login" method="POST"&gt;
@@ -372,50 +373,129 @@ end</code></pre>
 &lt;/form&gt;</code></pre>
 
 <h3 id="react">React / Next.js</h3>
-<pre><code>// Include in your _app.js or layout.js
-// SmartField works as a standard Web Component in React
 
-// Option 1: Script tag in &lt;Head&gt;
-import Script from 'next/script';
+<div class="error"><strong>WARNING: Do NOT use &lt;smart-field&gt; directly in JSX.</strong><br><br>
+React can destroy and re-create DOM elements on state changes. This kills SmartField's Shadow DOM and WeakMap data. You MUST use the official React wrapper below.</div>
 
-export default function Layout({ children }) {
+<h3>Step 1: Add the script to your layout</h3>
+<pre><code>// app/layout.tsx (Next.js App Router)
+export default function RootLayout({ children }) {
   return (
-    &lt;&gt;
-      &lt;Script src="https://cdn.smartfield.dev/v1/smartfield.js" /&gt;
-      {children}
-    &lt;/&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;script src="https://3wwprotocol.com/component/smartfield.js" defer&gt;&lt;/script&gt;
+      &lt;/head&gt;
+      &lt;body&gt;{children}&lt;/body&gt;
+    &lt;/html&gt;
   );
+}</code></pre>
+
+<h3>Step 2: Create the SmartField wrapper component</h3>
+<pre><code>// components/SmartField.tsx
+"use client";
+import { useRef, useEffect, memo } from "react";
+
+const _values = new Map&lt;string, string&gt;();
+
+function SmartFieldInner({ type = "text", placeholder = "", encryptKey,
+  sfSecurity = "brief", sfStealth, sfType, sfDomain, style = {}, id }) {
+
+  const containerRef = useRef(null);
+  const sfRef = useRef(null);
+  const mountedRef = useRef(false);
+
+  useEffect(() =&gt; {
+    if (mountedRef.current &amp;&amp; sfRef.current) return;
+    mountedRef.current = true;
+    const container = containerRef.current;
+    if (!container) return;
+
+    function createField() {
+      if (sfRef.current &amp;&amp; container.contains(sfRef.current)) return;
+      const sf = document.createElement("smart-field");
+      sf.setAttribute("type", type);
+      sf.setAttribute("placeholder", placeholder);
+      sf.setAttribute("sf-security", sfSecurity);
+      if (sfStealth) sf.setAttribute("sf-stealth", "");
+      if (sfType) sf.setAttribute("sf-type", sfType);
+      if (sfDomain) sf.setAttribute("sf-domain", sfDomain);
+      if (encryptKey) sf.setAttribute("encrypt-key", encryptKey);
+      if (id) sf.id = id;
+      const s = Object.entries(style).map(([k,v]) =&gt; k+":"+v).join(";");
+      if (s) sf.setAttribute("style", s);
+      container.appendChild(sf);
+      sfRef.current = sf;
+      if (id) sf.addEventListener("sf-input", () =&gt; {
+        try { _values.set(id, sf.getRealValue?.() ?? ""); } catch {}
+      });
+    }
+
+    // CRITICAL: wait for smartfield.js to load before creating element
+    if (customElements.get("smart-field")) createField();
+    else customElements.whenDefined("smart-field").then(createField);
+
+    return () =&gt; {
+      if (sfRef.current &amp;&amp; container.contains(sfRef.current))
+        container.removeChild(sfRef.current);
+      if (id) _values.delete(id);
+      sfRef.current = null;
+      mountedRef.current = false;
+    };
+  }, []);
+
+  return &lt;div ref={containerRef} /&gt;;
 }
 
-// Option 2: Use in your component
-export default function LoginForm() {
-  const handleSubmit = async (e) =&gt; {
-    e.preventDefault();
-    const fields = document.querySelectorAll('smart-field');
-    const data = {};
-    fields.forEach(f =&gt; { data[f.name] = f.value; }); // encrypted values
+export const SmartField = memo(SmartFieldInner);
 
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+// Read plaintext value (3 fallback levels)
+export function getSmartFieldValue(id) {
+  const el = document.getElementById(id);
+  try { const v = el?.getRealValue?.(); if (v !== undefined) return v; } catch {}
+  try { const v = el?._s?.("realValue"); if (v !== undefined) return v; } catch {}
+  return _values.get(id) || "";
+}
+
+// Read encrypted value (for server-side decryption)
+export function getSmartFieldEncrypted(id) {
+  const el = document.getElementById(id);
+  return el?.value || "";
+}</code></pre>
+
+<h3>Step 3: Use in your login page</h3>
+<pre><code>// app/login/page.tsx
+"use client";
+import { SmartField, getSmartFieldValue } from "@/components/SmartField";
+
+export default function LoginPage() {
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const email = getSmartFieldValue("sf-email");
+    const password = getSmartFieldValue("sf-pwd");
+
+    await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
     });
-  };
+  }
 
   return (
     &lt;form onSubmit={handleSubmit}&gt;
-      &lt;smart-field type="email" placeholder="Email"
-        encrypt-key="/api/sf-key"&gt;&lt;/smart-field&gt;
-      &lt;smart-field type="password" placeholder="Password"
-        encrypt-key="/api/sf-key"&gt;&lt;/smart-field&gt;
+      &lt;SmartField id="sf-email" type="email" placeholder="Email"
+        sfSecurity="peek" encryptKey="/sf-key" /&gt;
+      &lt;SmartField id="sf-pwd" type="password" placeholder="Password"
+        sfSecurity="peek" encryptKey="/sf-key" /&gt;
       &lt;button type="submit"&gt;Log In&lt;/button&gt;
     &lt;/form&gt;
   );
 }</code></pre>
 
+<div class="warn"><strong>Why the wrapper?</strong> React re-renders destroy Web Components. The wrapper uses <code class="inline-code">customElements.whenDefined()</code> to wait for the script, <code class="inline-code">memo()</code> to prevent re-renders, and <code class="inline-code">mountedRef</code> to handle React Strict Mode. Without this, SmartField loses all typed data on state changes.</div>
+
 <h3 id="vue">Vue.js</h3>
 <pre><code>&lt;!-- In your index.html --&gt;
-&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"&gt;&lt;/script&gt;
+&lt;script src="https://3wwprotocol.com/component/smartfield.js"&gt;&lt;/script&gt;
 
 &lt;!-- In your Vue component --&gt;
 &lt;template&gt;
@@ -436,7 +516,7 @@ export default function LoginForm() {
 
 <h3 id="angular">Angular</h3>
 <pre><code>// In angular.json, add to scripts:
-"scripts": ["https://cdn.smartfield.dev/v1/smartfield.js"]
+"scripts": ["https://3wwprotocol.com/component/smartfield.js"]
 
 // In app.module.ts:
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -448,6 +528,36 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 // In your template:
 &lt;smart-field type="password" placeholder="Password"
   encrypt-key="/api/sf-key"&gt;&lt;/smart-field&gt;</code></pre>
+
+<!-- SECURITY MODES -->
+<h2 id="security-modes">Security Modes (sf-security)</h2>
+<p>SmartField has 3 display modes for how typed characters appear:</p>
+
+<pre><code>&lt;!-- MAX (default): All characters are cipher symbols. Never reveals real text. --&gt;
+&lt;smart-field sf-security="max"&gt;&lt;/smart-field&gt;
+&lt;!-- User types "hello" → screen shows "ΣΩΔψξ" --&gt;
+
+&lt;!-- PEEK: Hold the eye button to reveal text for 5 seconds --&gt;
+&lt;smart-field sf-security="peek"&gt;&lt;/smart-field&gt;
+&lt;!-- User holds 👁 button → shows "hello" for 5s with countdown bar --&gt;
+
+&lt;!-- BRIEF: Shows each character for 1 second, then replaces with cipher --&gt;
+&lt;smart-field sf-security="brief"&gt;&lt;/smart-field&gt;
+&lt;!-- User types "h" → shows "h" for 1s → becomes "Σ" --&gt;</code></pre>
+
+<div class="warn"><strong>Recommended:</strong> Use <code class="inline-code">peek</code> for login forms (users can verify their input). Use <code class="inline-code">max</code> for payment fields (maximum security). Use <code class="inline-code">brief</code> for general forms.</div>
+
+<!-- STEALTH MODE -->
+<h2 id="stealth">Stealth Mode (sf-stealth)</h2>
+<p>Hides the field's purpose from bots that read HTML source:</p>
+
+<pre><code>&lt;!-- Without stealth: bots see placeholder="password" in HTML source --&gt;
+&lt;smart-field type="password" placeholder="password"&gt;&lt;/smart-field&gt;
+
+&lt;!-- With stealth: placeholder shows cipher chars, reveals real text on focus for 2s --&gt;
+&lt;smart-field type="password" placeholder="password" sf-stealth&gt;&lt;/smart-field&gt;
+&lt;!-- HTML source shows: placeholder="ΣΩΔψξ" --&gt;
+&lt;!-- On focus: shows "password" for 2s, then fades to cipher --&gt;</code></pre>
 
 <!-- FIELD TYPES -->
 <h2 id="types">Field Types (sf-type)</h2>
@@ -557,14 +667,67 @@ User types → AES key generated (random, per encryption)
 
 <div class="warn"><strong>Our position:</strong> SmartField protects the browser layer — the space between the keyboard and the server. This is the layer that no one else protects. We are transparent about what falls outside our scope because we believe honesty builds more trust than false promises.</div>
 
+<!-- API REFERENCE -->
+<h2 id="api-ref">API Reference — SDK Methods</h2>
+
+<h3>Server SDK (Node.js)</h3>
+<pre><code>const sf = require('@smartfield-dev/server');
+
+await sf.init()                    // Generate or load RSA keys
+sf.getPublicKey()                  // Returns JWK public key
+await sf.decrypt(payload)          // Decrypt a single field
+await sf.decryptFields(body)       // Decrypt all fields in an object
+sf.middleware()                    // Express middleware (auto key + decrypt)
+await sf.rotateKeys()              // Rotate RSA keys (archives old ones)
+sf.status()                        // Returns SDK state info</code></pre>
+
+<h3>Client-side (Browser) — v2.7+</h3>
+<pre><code>const el = document.getElementById('sf-email');
+
+el.value                // Returns ENCRYPTED payload (for server decryption)
+el.getRealValue()       // Returns PLAINTEXT value (for client-side use)
+el.hasValue()           // Returns true/false (without revealing length)
+el.clear()              // Clears the field programmatically
+
+// All methods above are non-enumerable and non-configurable:
+// - Invisible to JSON.stringify, Object.keys, for..in
+// - Cannot be overridden by attackers</code></pre>
+
+<div class="warn"><strong>When to use .value vs .getRealValue():</strong><br><br>
+<code class="inline-code">.value</code> → Send to your server for decryption (end-to-end encrypted flow)<br>
+<code class="inline-code">.getRealValue()</code> → Use client-side when you need plaintext (e.g. validation, sending to your own API)<br><br>
+Use <code class="inline-code">.getRealValue()</code> for React/Vue/Angular apps that handle form submission in JavaScript.</div>
+
+<!-- EVENTS -->
+<h2 id="events">Events</h2>
+
+<pre><code>// sf-input: fires on every keystroke
+document.querySelector('smart-field').addEventListener('sf-input', (e) =&gt; {
+  console.log(e.detail.id);         // random field ID (sf_a7f3c2)
+  console.log(e.detail.encrypted);  // encrypted payload
+  // NOTE: no plaintext, no field name, no length exposed
+});
+
+// sf-scan: fires after environment scan (500ms after mount)
+el.addEventListener('sf-scan', (e) =&gt; {
+  console.log(e.detail.threats);    // array of detected threats
+  console.log(e.detail.safe);       // true if no threats found
+});
+
+// sf-threat: fires if phishing detected on form submit
+el.addEventListener('sf-threat', (e) =&gt; {
+  console.log(e.detail.threats);    // what was detected
+  console.log(e.detail.action);     // 'fake_data_sent'
+});</code></pre>
+
 <!-- LICENSE -->
 <h2 id="license">License Keys</h2>
 <pre><code>&lt;!-- Free plan: no key needed --&gt;
-&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"&gt;&lt;/script&gt;
+&lt;script src="https://3wwprotocol.com/component/smartfield.js"&gt;&lt;/script&gt;
 &lt;!-- Limit: 3 fields per page, badge shown --&gt;
 
 &lt;!-- Paid plan: add your key --&gt;
-&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"
+&lt;script src="https://3wwprotocol.com/component/smartfield.js"
         data-key="sf_live_your_key_here"&gt;&lt;/script&gt;
 &lt;!-- Unlimited fields, no badge --&gt;</code></pre>
 
