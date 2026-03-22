@@ -514,6 +514,52 @@
         self._doEncrypt().then(function() { self._emit(); });
       });
 
+      // Mobile support: beforeinput catches virtual keyboard input that keydown misses
+      input.addEventListener('beforeinput', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (self._disabled) return;
+
+        if (e.inputType === 'deleteContentBackward') {
+          if (self._s('realValue').length > 0) {
+            self._s('realValue', self._s('realValue').slice(0, -1));
+            self._s('cipherMap').pop();
+          }
+        } else if (e.inputType === 'insertText' && e.data) {
+          var chars = e.data;
+          for (var ci = 0; ci < chars.length; ci++) {
+            var ch = chars[ci];
+            var v = self._validation;
+            if (v.maxLength && self._s('realValue').length >= v.maxLength) break;
+            if (v.allowOnly === 'digits' && !/[0-9]/.test(ch)) continue;
+            if (v.allowOnly === 'digits-slash' && !/[0-9/]/.test(ch)) continue;
+
+            self._s('realValue', self._s('realValue') + ch);
+            self._s('cipherMap').push(randChar());
+
+            if (v.autoFormat) {
+              var formatted = v.autoFormat(self._s('realValue'));
+              if (formatted !== self._s('realValue')) {
+                self._s('realValue', formatted);
+                while (self._s('cipherMap').length < self._s('realValue').length) self._s('cipherMap').push(randChar());
+                while (self._s('cipherMap').length > self._s('realValue').length) self._s('cipherMap').pop();
+              }
+            }
+          }
+        } else {
+          return;
+        }
+
+        self._validateField();
+        if (self._securityMode === 'brief' && e.inputType === 'insertText') {
+          self._briefReveal(self._s('cipherMap').length - 1);
+        } else {
+          self._showCipher();
+        }
+        if (self._s('cipherMap').length > 0 && !self._anim) self._startAnim(100);
+        self._doEncrypt().then(function() { self._emit(); });
+      });
+
       // Block ALL clipboard and selection
       ['copy', 'cut', 'paste', 'select', 'selectstart', 'contextmenu',
        'dragstart', 'drag', 'drop'].forEach(function(evt) {
