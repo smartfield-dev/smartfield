@@ -1,6 +1,6 @@
 {
   "name": "@smartfield-dev/server",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Server-side SDK for SmartField — decrypt encrypted form data from <smart-field> components. AES-256-GCM + RSA-2048.",
   "main": "index.js",
   "keywords": [
