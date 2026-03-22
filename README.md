@@ -125,7 +125,7 @@ That's it. Every keystroke is now encrypted end-to-end.
   │  └───────────────┘  │
   │                     │               SmartField (us)
   │  Screen shows:      │               ┌─────────────────────┐
-  │  ΣΩΔψξλμπ          │               │  ZERO data          │
+  │  ΣΩΔψξλμπ           │               │  ZERO data          │
   │                     │               │  ZERO keys          │
   └─────────────────────┘               │  ZERO access        │
                                         └─────────────────────┘
