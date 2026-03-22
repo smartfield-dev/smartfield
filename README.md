@@ -76,7 +76,9 @@ AES key encrypted with server's RSA-2048 public key
 .value returns encrypted payload — ONLY your server can decrypt
 ```
 
+<div align="center">
 <img src="https://raw.githubusercontent.com/smartfield-dev/smartfield/main/assets/normal-vs-smartfield.gif" alt="Normal Input vs SmartField" width="720">
+</div>
 
 ---
 
