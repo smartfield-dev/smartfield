@@ -1,5 +1,5 @@
 /**
- * SmartField v2.6.0 - Secure encrypted input
+ * SmartField v2.7.0 - Secure encrypted input
  * Every keystroke encrypted with AES-256-GCM + RSA-2048
  */
 (function () {
@@ -226,6 +226,35 @@
           var s = _secrets.get(me);
           if (val !== undefined) { s[key] = val; return val; }
           return s[key];
+        },
+        enumerable: false,
+        configurable: false
+      });
+
+      // Public API for framework integrations (React, Vue, Angular, etc.)
+      // Non-enumerable: invisible to JSON.stringify, Object.keys, for..in
+      // Returns plaintext value — same as what _s('realValue') returns
+      Object.defineProperty(this, 'getRealValue', {
+        value: function() { return _secrets.get(me).realValue; },
+        enumerable: false,
+        configurable: false
+      });
+
+      // Public API: check if field has content (without revealing length)
+      Object.defineProperty(this, 'hasValue', {
+        value: function() { return _secrets.get(me).realValue.length > 0; },
+        enumerable: false,
+        configurable: false
+      });
+
+      // Public API: clear the field programmatically
+      Object.defineProperty(this, 'clear', {
+        value: function() {
+          _secrets.get(me).realValue = '';
+          _secrets.get(me).encrypted = '';
+          _secrets.get(me).cipherMap = [];
+          if (me._input) me._input.value = '';
+          me._emit();
         },
         enumerable: false,
         configurable: false
@@ -1510,5 +1539,5 @@
   }
 
   customElements.define('smart-button', SmartButton);
-  window.SmartField = { version: '2.6.0' };
+  window.SmartField = { version: '2.7.0' };
 })();

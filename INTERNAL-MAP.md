@@ -7,12 +7,13 @@
 
 | Area | Estado | Version |
 |------|--------|---------|
-| Componente (smartfield.js) | Funcional, auditado | v2.6.0 |
-| SDK Server (@smartfield-dev/server) | Publicado en npm | v2.6.0 |
+| Componente (smartfield.js) | Funcional, auditado | v2.7.0 |
+| SDK Server (@smartfield-dev/server) | Publicado en npm | v2.7.0 |
 | Landing page | Funcional | - |
 | Demo + Hacker Challenge | Funcional, 20/20 | - |
 | Security Audit | PASADO, 0 bugs | March 22, 2026 |
-| License System | IMPLEMENTADO | v2.6.0 |
+| License System | IMPLEMENTADO | v2.7.0 |
+| React wrapper (sdk/react.tsx) | IMPLEMENTADO | v2.7.0 |
 | SRI (Subresource Integrity) | IMPLEMENTADO | - |
 | HTTPS Enforcement | IMPLEMENTADO (bug M2) | - |
 | Deploy VPS | LIVE | 3wwprotocol.com (temporal) |
@@ -359,7 +360,7 @@ Nota:         Se necesita token granular de npm con permisos read/write
 | B5 | VPS y local tienen .licenses/ separados → keys no se comparten | Key generada en local no funciona en producción | Documentar: generar keys en el entorno donde se van a usar |
 | B6 | nginx default server sirve EuroComply360 si server_name no matchea | Si el cert SSL falla, cae a EuroComply360 | Arreglar: agregar default_server block que devuelva 444 |
 | B7 | Responsive mobile básico — grids de 2 columnas no se adaptan bien | Secciones se ven mal en móvil | EN PROGRESO: agregado media queries básicas |
-| B10 | React/Next.js: re-render destruye SmartFields creados con useEffect/dangerouslySetInnerHTML | SmartField desaparece o se vacía cuando React actualiza state | NECESITA: paquete @smartfield-dev/react con wrapper que use useRef + shouldComponentUpdate o memo para proteger el Web Component del re-render |
+| B10 | React/Next.js: re-render destruye SmartFields creados con useEffect/dangerouslySetInnerHTML | SmartField desaparece o se vacía cuando React actualiza state | RESUELTO v2.7.0: (1) Componente: añadidos métodos públicos getRealValue(), hasValue(), clear() non-enumerable. (2) React wrapper (sdk/react.tsx): usa customElements.whenDefined() para evitar race condition con defer script, mountedRef para Strict Mode double-mount, Map externo para tracking de valores via sf-input events, getSmartFieldValue() con 3 fallbacks (getRealValue → _s → event store). Probado con InPrices (Next.js 16 + React 19). |
 | B8 | sf-stealth no oculta placeholder en HTML source — solo en el browser (JS) | Un bot que lee HTML raw ve placeholder="password" y sabe qué campo es | Documentar: con sf-stealth usar placeholders genéricos ("..." o vacío) y depender del label. Considerar: encriptar placeholder en server-side render |
 | B9 | Placeholders descriptivos en la landing exponen tipo de campo en HTML | "password", "email", "card number" visibles en view-source | Cambiar a placeholders genéricos en todos los SmartFields con sf-stealth |
 
