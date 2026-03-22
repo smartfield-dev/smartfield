@@ -37,6 +37,8 @@ let _publicKey = null;
 let _publicKeyJwk = null;
 let _initialized = false;
 let _keysDir = null;
+let _archivedKeys = [];  // { privateKey, expiresAt }
+let _rotationTimer = null;
 
 // ========== INIT ==========
 
@@ -65,7 +67,7 @@ async function init(options = {}) {
       _privateKey = await subtle.importKey(
         'jwk', privJwk,
         { name: 'RSA-OAEP', hash: 'SHA-256' },
-        false, ['decrypt']
+        true, ['decrypt']
       );
 
       _publicKey = await subtle.importKey(
@@ -77,7 +79,9 @@ async function init(options = {}) {
       _publicKeyJwk = pubJwk;
       _initialized = true;
 
+      await _loadArchivedKeys();
       console.log('[SmartField] Keys loaded from', _keysDir);
+      if (_archivedKeys.length > 0) console.log('[SmartField]', _archivedKeys.length, 'archived key(s) for decryption');
       return;
     } catch (e) {
       console.warn('[SmartField] Could not load existing keys, generating new ones:', e.message);
@@ -155,45 +159,34 @@ async function decrypt(encryptedPayload) {
     return '';
   }
 
+  let payload;
   try {
-    // Decode the payload
-    const payload = JSON.parse(Buffer.from(encryptedPayload, 'base64').toString('utf8'));
-
-    if (payload.v !== 1) {
-      throw new Error('Unsupported payload version: ' + payload.v);
-    }
-
-    const iv = Buffer.from(payload.iv, 'base64');
-    const encryptedKey = Buffer.from(payload.key, 'base64');
-    const encryptedData = Buffer.from(payload.data, 'base64');
-
-    // Step 1: Decrypt the AES key using RSA private key
-    const rawAesKey = await subtle.decrypt(
-      { name: 'RSA-OAEP' },
-      _privateKey,
-      new Uint8Array(encryptedKey)
-    );
-
-    // Step 2: Import the AES key
-    const aesKey = await subtle.importKey(
-      'raw',
-      rawAesKey,
-      { name: 'AES-GCM', length: 256 },
-      false,
-      ['decrypt']
-    );
-
-    // Step 3: Decrypt the data using AES
-    const decrypted = await subtle.decrypt(
-      { name: 'AES-GCM', iv: new Uint8Array(iv) },
-      aesKey,
-      new Uint8Array(encryptedData)
-    );
-
-    return new TextDecoder().decode(decrypted);
+    payload = JSON.parse(Buffer.from(encryptedPayload, 'base64').toString('utf8'));
   } catch (e) {
-    throw new Error('[SmartField] Decryption failed: ' + e.message);
+    throw new Error('[SmartField] Invalid payload format');
   }
+
+  if (payload.v !== 1) throw new Error('Unsupported payload version: ' + payload.v);
+
+  const iv = Buffer.from(payload.iv, 'base64');
+  const encryptedKey = Buffer.from(payload.key, 'base64');
+  const encryptedData = Buffer.from(payload.data, 'base64');
+
+  // Try current key first, then archived keys
+  const keysToTry = [_privateKey, ..._archivedKeys.map(k => k.privateKey)];
+
+  for (const key of keysToTry) {
+    try {
+      const rawAesKey = await subtle.decrypt({ name: 'RSA-OAEP' }, key, new Uint8Array(encryptedKey));
+      const aesKey = await subtle.importKey('raw', rawAesKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      const decrypted = await subtle.decrypt({ name: 'AES-GCM', iv: new Uint8Array(iv) }, aesKey, new Uint8Array(encryptedData));
+      return new TextDecoder().decode(decrypted);
+    } catch (e) {
+      continue;
+    }
+  }
+
+  throw new Error('[SmartField] Decryption failed: no matching key (' + keysToTry.length + ' tried)');
 }
 
 /**
@@ -259,6 +252,119 @@ function middleware(options = {}) {
   };
 }
 
+// ========== KEY ROTATION ==========
+
+/**
+ * Rotate keys: generate new RSA key pair, archive the current one.
+ * Old keys kept for decrypting data encrypted before rotation.
+ *
+ * @param {Object} options
+ * @param {number} options.keepDays - Days to keep archived keys (default: 90)
+ * @returns {Promise<Object>} { rotatedAt, archivedKeys }
+ */
+async function rotateKeys(options = {}) {
+  if (!_initialized) throw new Error('[SmartField] Not initialized.');
+  const keepDays = options.keepDays || 90;
+  const archiveDir = path.join(_keysDir, 'archive');
+  if (!fs.existsSync(archiveDir)) fs.mkdirSync(archiveDir, { recursive: true });
+
+  // Archive current key
+  const currentPrivJwk = await subtle.exportKey('jwk', _privateKey);
+  const record = {
+    private: currentPrivJwk,
+    public: _publicKeyJwk,
+    archivedAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + keepDays * 24 * 60 * 60 * 1000).toISOString()
+  };
+  fs.writeFileSync(path.join(archiveDir, 'key_' + Date.now() + '.json'), JSON.stringify(record, null, 2), { mode: 0o600 });
+
+  // Keep in memory for decryption
+  const archivedKey = await subtle.importKey('jwk', currentPrivJwk, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+  _archivedKeys.push({ privateKey: archivedKey, expiresAt: record.expiresAt });
+
+  // Generate new keys
+  const keyPair = await subtle.generateKey(
+    { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
+    true, ['encrypt', 'decrypt']
+  );
+  _privateKey = keyPair.privateKey;
+  _publicKey = keyPair.publicKey;
+  _publicKeyJwk = await subtle.exportKey('jwk', keyPair.publicKey);
+
+  // Save new keys + metadata
+  const privJwk = await subtle.exportKey('jwk', keyPair.privateKey);
+  fs.writeFileSync(path.join(_keysDir, 'private.json'), JSON.stringify(privJwk, null, 2), { mode: 0o600 });
+  fs.writeFileSync(path.join(_keysDir, 'public.json'), JSON.stringify(_publicKeyJwk, null, 2));
+  const metaPath = path.join(_keysDir, 'meta.json');
+  const rotCount = fs.existsSync(metaPath) ? (JSON.parse(fs.readFileSync(metaPath, 'utf8')).rotationCount || 0) + 1 : 1;
+  fs.writeFileSync(metaPath, JSON.stringify({ createdAt: new Date().toISOString(), rotationCount: rotCount }, null, 2));
+
+  // Purge expired
+  _purgeExpired(archiveDir);
+
+  console.log('[SmartField] Keys rotated. Old key archived until', record.expiresAt);
+  return { rotatedAt: new Date().toISOString(), archivedKeys: _archivedKeys.length };
+}
+
+/**
+ * Enable automatic key rotation.
+ * @param {Object} options
+ * @param {string} options.every - Interval: '7d', '30d', '90d' (default: '30d')
+ * @param {number} options.keepDays - Days to keep old keys (default: 90)
+ */
+function autoRotate(options = {}) {
+  if (!_initialized) throw new Error('[SmartField] Not initialized.');
+  const intervalDays = parseInt((options.every || '30d').match(/(\d+)/)[1], 10);
+  const keepDays = options.keepDays || 90;
+
+  // Check if rotation is due now
+  const metaPath = path.join(_keysDir, 'meta.json');
+  if (fs.existsSync(metaPath)) {
+    const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+    const daysSince = (Date.now() - new Date(meta.createdAt).getTime()) / (24 * 60 * 60 * 1000);
+    if (daysSince >= intervalDays) rotateKeys({ keepDays });
+  }
+
+  // Check daily
+  clearInterval(_rotationTimer);
+  _rotationTimer = setInterval(function() {
+    if (fs.existsSync(metaPath)) {
+      const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+      const days = (Date.now() - new Date(meta.createdAt).getTime()) / (24 * 60 * 60 * 1000);
+      if (days >= intervalDays) rotateKeys({ keepDays });
+    }
+  }, 24 * 60 * 60 * 1000);
+}
+
+async function _loadArchivedKeys() {
+  const archiveDir = path.join(_keysDir, 'archive');
+  if (!fs.existsSync(archiveDir)) return;
+  const files = fs.readdirSync(archiveDir).filter(f => f.endsWith('.json'));
+  for (const file of files) {
+    try {
+      const record = JSON.parse(fs.readFileSync(path.join(archiveDir, file), 'utf8'));
+      if (new Date(record.expiresAt) < new Date()) continue;
+      const pk = await subtle.importKey('jwk', record.private, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+      _archivedKeys.push({ privateKey: pk, expiresAt: record.expiresAt });
+    } catch (e) {}
+  }
+}
+
+function _purgeExpired(archiveDir) {
+  if (!fs.existsSync(archiveDir)) return;
+  const now = new Date();
+  for (const file of fs.readdirSync(archiveDir).filter(f => f.endsWith('.json'))) {
+    try {
+      const r = JSON.parse(fs.readFileSync(path.join(archiveDir, file), 'utf8'));
+      if (new Date(r.expiresAt) < now) {
+        fs.unlinkSync(path.join(archiveDir, file));
+        console.log('[SmartField] Purged expired key:', file);
+      }
+    } catch (e) {}
+  }
+  _archivedKeys = _archivedKeys.filter(k => new Date(k.expiresAt) > now);
+}
+
 // ========== STATUS ==========
 
 /**
@@ -271,6 +377,7 @@ function status() {
     keysDir: _keysDir,
     hasPrivateKey: !!_privateKey,
     hasPublicKey: !!_publicKey,
+    archivedKeys: _archivedKeys.length,
     version: '2.6.0'
   };
 }
@@ -283,5 +390,7 @@ module.exports = {
   decrypt,
   decryptFields,
   middleware,
+  rotateKeys,
+  autoRotate,
   status
 };
