@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartField — Every Keystroke, Encrypted</title>
-  <script src="/component/smartfield.js"></script>
+  <script src="/component/smartfield.js" data-key="sf_test_765d7b744742dd8c0ebc6c8313d53e15"></script>
   <script src="/landing/cookie-banner.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -700,6 +700,104 @@
   </div>
 </section>
 
+<!-- SMART SUBMIT — ANTI-PHISHING -->
+<section id="smart-submit" style="background:#f8fafc;padding:80px 40px">
+  <div style="max-width:900px;margin:0 auto">
+    <h2 class="section-title">Smart Submit — Anti-Phishing Honeypot</h2>
+    <p class="section-sub">A hacker clones your site. Your user types real data. SmartField sends fake data to the hacker.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px;position:relative">
+
+      <!-- LEGITIMATE -->
+      <div style="background:#fff;border:2px solid #22c55e;border-radius:16px;padding:28px">
+        <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(34,197,94,0.1);color:#166534;margin-bottom:12px">LEGITIMATE SITE</div>
+        <h3 style="font-size:18px;margin-bottom:4px">Real Bank Login</h3>
+        <div style="font-family:'Fira Code',monospace;font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(34,197,94,0.08);color:#166534;display:inline-block;margin-bottom:20px">https://banco.com/login</div>
+
+        <form id="ss-form-real" onsubmit="return ssHandleReal(event)">
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Email</div>
+            <smart-field sf-security="brief" sf-domain="localhost" type="email" placeholder="email" encrypt-key="/api/public-key"></smart-field>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Password</div>
+            <smart-field sf-security="brief" sf-domain="localhost" type="password" placeholder="password" encrypt-key="/api/public-key"></smart-field>
+          </div>
+          <div style="margin-bottom:16px">
+            <div style="font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Card Number</div>
+            <smart-field sf-type="card" sf-security="brief" sf-domain="localhost" placeholder="card number" encrypt-key="/api/public-key"></smart-field>
+          </div>
+          <button type="submit" style="width:100%;padding:12px;background:#22c55e;color:#000;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Submit (Legitimate)</button>
+        </form>
+
+        <div id="ss-result-real" style="display:none;margin-top:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#166534;margin-bottom:8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Server received REAL data
+          </div>
+          <div id="ss-result-real-data" style="font-family:'Fira Code',monospace;font-size:11px;color:#166534;line-height:1.6"></div>
+        </div>
+      </div>
+
+      <!-- VS badge -->
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:36px;height:36px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#64748b;z-index:2">VS</div>
+
+      <!-- PHISHING -->
+      <div style="background:#fff;border:2px solid #ef4444;border-radius:16px;padding:28px">
+        <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(239,68,68,0.1);color:#dc2626;margin-bottom:12px">PHISHING SITE</div>
+        <h3 style="font-size:18px;margin-bottom:4px">Fake Bank Login</h3>
+        <div style="font-family:'Fira Code',monospace;font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(239,68,68,0.08);color:#dc2626;display:inline-block;margin-bottom:20px">https://banc0.com/login <span style="font-size:10px">(FAKE)</span></div>
+
+        <form id="ss-form-fake" onsubmit="return ssHandleFake(event)">
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Email</div>
+            <smart-field sf-security="brief" sf-domain="banco.com" type="email" placeholder="email" encrypt-key="/api/public-key"></smart-field>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Password</div>
+            <smart-field sf-security="brief" sf-domain="banco.com" type="password" placeholder="password" encrypt-key="/api/public-key"></smart-field>
+          </div>
+          <div style="margin-bottom:16px">
+            <div style="font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Card Number</div>
+            <smart-field sf-type="card" sf-security="brief" sf-domain="banco.com" placeholder="card number" encrypt-key="/api/public-key"></smart-field>
+          </div>
+          <button type="submit" style="width:100%;padding:12px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Submit (Phishing)</button>
+        </form>
+
+        <div id="ss-result-fake" style="display:none;margin-top:16px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:16px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#dc2626;margin-bottom:8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Hacker received FAKE data
+          </div>
+          <div id="ss-result-fake-data" style="font-family:'Fira Code',monospace;font-size:11px;color:#dc2626;line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow explanation -->
+    <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;text-align:center;margin-top:40px">
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;color:#111">User Types Real Data</div>
+        <div style="font-size:11px;color:#666">"Carlos Perez"<br>"4532 1234 5678 9012"</div>
+      </div>
+      <div style="color:#ccc;font-size:24px">→</div>
+      <div style="background:#fff;border:1px solid #22c55e;border-radius:12px;padding:16px">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;color:#166534">SmartField Scans Page</div>
+        <div style="font-size:11px;color:#666">Domain? Scripts?<br>Iframes? HTTPS? Form action?</div>
+      </div>
+      <div style="color:#ccc;font-size:24px">→</div>
+      <div style="background:#fff;border:1px solid #ef4444;border-radius:12px;padding:16px">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;color:#dc2626">Hacker Gets Garbage</div>
+        <div style="font-size:11px;color:#666">"Maria Garcia"<br>"4916 7382 0194 5537"</div>
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:24px;font-size:14px;color:#666;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">
+      Both forms look identical. The user types the same data. But SmartField detects the phishing site and sends <strong>realistic but completely fake data</strong>. The hacker never knows.
+    </p>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section id="pricing">
   <h2 class="section-title">Simple Pricing</h2>
@@ -1180,6 +1278,52 @@ function setBilling(type) {
 }
 
 log('Type in both forms. Click "Simulate Attack" to see what hackers get.','dim');
+
+// ========== SMART SUBMIT DEMO ==========
+async function ssHandleReal(e) {
+  e.preventDefault();
+  var fields = [];
+  document.querySelectorAll('#ss-form-real smart-field').forEach(function(sf) {
+    fields.push({ id: sf.name, encrypted: sf.value });
+  });
+  var res = await fetch(API + '/api/login', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: fields })
+  }).then(function(r) { return r.json(); });
+  var el = document.getElementById('ss-result-real');
+  el.style.display = 'block';
+  var data = '';
+  for (var k in res.decrypted) data += k.substring(0, 10) + '...: "' + res.decrypted[k] + '"<br>';
+  document.getElementById('ss-result-real-data').innerHTML = data + '<br>&#10003; Your REAL data — only your server sees it.';
+  return false;
+}
+
+async function ssHandleFake(e) {
+  e.preventDefault();
+  var fields = [];
+  var sfs = document.querySelectorAll('#ss-form-fake smart-field');
+  for (var i = 0; i < sfs.length; i++) {
+    var sf = sfs[i];
+    var fakeData = sf._generateFakeData();
+    var origVal = sf._s('realValue');
+    sf._s('realValue', fakeData);
+    await sf._doEncrypt();
+    var fakeEnc = sf._s('encrypted');
+    sf._s('realValue', origVal);
+    await sf._doEncrypt();
+    fields.push({ id: sf.name, encrypted: fakeEnc });
+  }
+  var res = await fetch(API + '/api/login', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: fields })
+  }).then(function(r) { return r.json(); });
+  var el = document.getElementById('ss-result-fake');
+  el.style.display = 'block';
+  var data = '';
+  for (var k in res.decrypted) data += k.substring(0, 10) + '...: "' + res.decrypted[k] + '"<br>';
+  document.getElementById('ss-result-fake-data').innerHTML = data + '<br>&#10007; ALL FAKE. Hacker got garbage. Real data was never sent.';
+  return false;
+}
 </script>
 </body>
 </html>
