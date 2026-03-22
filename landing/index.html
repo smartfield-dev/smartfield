@@ -281,8 +281,8 @@
       <h3>&lt;smart-field&gt; <span class="tag tag-green">Encrypted</span></h3>
       <p class="desc">Same look. AES-256 + RSA-2048 on every keystroke.</p>
       <form id="smart-form">
-        <div class="fg"><label>Email</label><smart-field type="email" name="email" placeholder="type here..." encrypt-key="/api/public-key"></smart-field></div>
-        <div class="fg"><label>Password</label><smart-field type="password" name="password" placeholder="type here..." encrypt-key="/api/public-key"></smart-field></div>
+        <div class="fg"><label>Email</label><smart-field type="email" name="email" sf-security="brief" sf-stealth placeholder="type here..." encrypt-key="/api/public-key"></smart-field></div>
+        <div class="fg"><label>Password</label><smart-field type="password" name="password" sf-security="peek" sf-stealth placeholder="type here..." encrypt-key="/api/public-key"></smart-field></div>
         <button type="button" class="dbtn dbtn-g" onclick="submitSmart()">Log In</button>
       </form>
     </div>
@@ -932,10 +932,10 @@
     <h3>Create Your Account</h3>
     <p class="signup-sub">Your data is encrypted as you type. Even we can't see it.</p>
     <form id="signup-form">
-      <div class="sfg"><label>Full Name</label><smart-field name="name" placeholder="your name..." encrypt-key="/api/public-key"></smart-field></div>
-      <div class="sfg"><label>Email</label><smart-field type="email" name="signup-email" placeholder="you@company.com" encrypt-key="/api/public-key"></smart-field></div>
-      <div class="sfg"><label>Password</label><smart-field type="password" name="signup-pwd" placeholder="create a password..." encrypt-key="/api/public-key"></smart-field></div>
-      <div class="sfg"><label>Company</label><smart-field name="company" placeholder="your company..." encrypt-key="/api/public-key"></smart-field></div>
+      <div class="sfg"><label>Full Name</label><smart-field name="name" sf-security="brief" sf-stealth placeholder="your name..." encrypt-key="/api/public-key"></smart-field></div>
+      <div class="sfg"><label>Email</label><smart-field type="email" name="signup-email" sf-security="brief" sf-stealth placeholder="you@company.com" encrypt-key="/api/public-key"></smart-field></div>
+      <div class="sfg"><label>Password</label><smart-field type="password" name="signup-pwd" sf-security="peek" sf-stealth placeholder="create a password..." encrypt-key="/api/public-key"></smart-field></div>
+      <div class="sfg"><label>Company</label><smart-field name="company" sf-security="brief" sf-stealth placeholder="your company..." encrypt-key="/api/public-key"></smart-field></div>
       <button type="button" class="price-btn price-btn-primary" style="margin-top:8px" onclick="submitSignup()">Create Account — It's Free</button>
     </form>
     <p class="signup-note">🔒 This form is protected by SmartField. Right-click → Inspect to verify.</p>
