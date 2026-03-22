@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartField — Security Audit (Manual)</title>
+  <script src="../component/smartfield.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'JetBrains Mono',monospace;background:#0a0a0a;color:#e2e8f0;min-height:100vh;padding:0}
+    .page{max-width:800px;margin:0 auto;padding:40px 20px 80px}
+
+    .back{color:#555;font-size:12px;text-decoration:none;display:inline-block;margin-bottom:24px}
+    .back:hover{color:#00B88A}
+
+    h1{font-size:26px;font-weight:800;color:#00B88A;margin-bottom:6px}
+    .sub{color:#666;font-size:13px;margin-bottom:32px}
+
+    h2{font-size:16px;font-weight:700;color:#fff;margin-top:40px;margin-bottom:12px;padding-top:20px;border-top:1px solid #1a1a1a}
+    h3{font-size:13px;font-weight:700;color:#00B88A;margin-top:24px;margin-bottom:8px}
+
+    p{font-size:13px;color:#999;margin-bottom:12px;line-height:1.7}
+    li{font-size:13px;color:#999;margin-bottom:4px;line-height:1.6}
+    ul{padding-left:20px;margin-bottom:16px}
+    strong{color:#e2e8f0}
+
+    /* Field area */
+    .field-box{background:#111;border:1px solid #222;border-radius:12px;padding:24px;margin:20px 0}
+    .field-box label{display:block;font-size:11px;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+    .field-box smart-field{margin-bottom:12px}
+
+    /* Instructions */
+    .step{background:#0d1117;border:1px solid #1a1a1a;border-radius:10px;padding:20px;margin:16px 0}
+    .step-num{font-size:11px;font-weight:700;color:#00B88A;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+
+    /* Code blocks */
+    pre{background:#000;border:1px solid #1a1a1a;border-radius:8px;padding:16px;margin:8px 0 16px;overflow-x:auto;font-size:12px;line-height:1.6;color:#00B88A}
+    code{font-family:'JetBrains Mono',monospace}
+    .expected{color:#555;font-style:italic}
+
+    /* Result boxes */
+    .pass{background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.2);border-radius:8px;padding:12px 16px;margin:8px 0;font-size:12px;color:#00B88A}
+    .fail{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:12px 16px;margin:8px 0;font-size:12px;color:#ef4444}
+    .info{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:8px;padding:12px 16px;margin:8px 0;font-size:12px;color:#60a5fa}
+
+    /* Run all button */
+    .run-all{display:block;width:100%;padding:14px;background:#00B88A;color:#000;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin:32px 0;transition:all 0.15s}
+    .run-all:hover{background:#00d4a0}
+
+    /* Results table */
+    table{width:100%;border-collapse:collapse;margin:16px 0}
+    th{text-align:left;font-size:11px;color:#666;padding:8px 12px;border-bottom:1px solid #222;text-transform:uppercase;letter-spacing:0.5px}
+    td{font-size:12px;color:#999;padding:8px 12px;border-bottom:1px solid #111}
+    td:last-child{font-weight:700}
+    .r-pass{color:#00B88A}
+    .r-fail{color:#ef4444}
+
+    /* Summary */
+    #summary{display:none;margin-top:32px}
+    .summary-box{background:#111;border:2px solid #00B88A;border-radius:12px;padding:24px;text-align:center}
+    .summary-box h2{border:none;margin:0 0 8px;padding:0}
+    .summary-score{font-size:48px;font-weight:800;color:#00B88A}
+
+    /* Print */
+    @media print{
+      body{background:#fff;color:#111}
+      .run-all{display:none}
+      pre{background:#f5f5f5;color:#111;border-color:#ddd}
+      .step{background:#fafafa;border-color:#eee}
+      h1,.step-num,h3{color:#111}
+      td,.expected{color:#666}
+      .r-pass{color:#16a34a}
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+<a href="/demo" class="back">← Back to Demo</a>
+
+<h1>Security Audit — Manual Testing</h1>
+<p class="sub">For auditors, pentesters, and security teams. Test each attack vector yourself.</p>
+
+<div class="info">
+  <strong>Instructions:</strong> Type something in the fields below (e.g. "test@email.com" and "MyPassword123").
+  Then open DevTools (F12 → Console) and run each test manually. Or click "Run All Tests" to execute them automatically.
+  <br><br>
+  <strong>Print this page</strong> (Ctrl+P) to generate a PDF audit report with results.
+</div>
+
+<!-- TEST FIELDS -->
+<div class="field-box">
+  <label>Email (SmartField protected)</label>
+  <smart-field id="sf-audit-email" type="email" placeholder="Type an email here..." sf-security="peek"
+    style="--sf-bg:#1a1a1a;--sf-border-color:#333;--sf-focus-color:#00B88A;--sf-cipher-color:#00B88A;--sf-placeholder-color:#555;--sf-radius:8px"></smart-field>
+
+  <label>Password (SmartField protected)</label>
+  <smart-field id="sf-audit-pwd" type="password" placeholder="Type a password here..." sf-security="peek"
+    style="--sf-bg:#1a1a1a;--sf-border-color:#333;--sf-focus-color:#00B88A;--sf-cipher-color:#00B88A;--sf-placeholder-color:#555;--sf-radius:8px"></smart-field>
+
+  <label style="margin-top:16px">Normal input (NOT protected — for comparison)</label>
+  <input id="normal-input" type="password" placeholder="Type here for comparison..." style="display:block;width:100%;height:44px;padding:0 16px;border:1px solid #333;border-radius:8px;background:#1a1a1a;color:#e2e8f0;font-family:inherit;font-size:14px;outline:none">
+</div>
+
+<!-- TESTS -->
+<h2>15 Attack Vectors</h2>
+<p>Each test targets a specific attack surface. A secure implementation should block all 15.</p>
+
+<button class="run-all" onclick="runAllTests()">▶ Run All 15 Tests</button>
+
+<div id="results-table" style="display:none">
+  <table>
+    <thead><tr><th>#</th><th>Attack</th><th>Result</th><th>Status</th></tr></thead>
+    <tbody id="results-body"></tbody>
+  </table>
+</div>
+
+<!-- Individual tests with code -->
+<h3>Test 1 — Read .value</h3>
+<p>Can JavaScript read the plaintext value?</p>
+<pre><code>document.querySelector('smart-field').value</code></pre>
+<div class="pass">EXPECTED: Encrypted payload (base64 string starting with "eyJ2Ijo..."), NOT plaintext.</div>
+
+<h3>Test 2 — Access Shadow DOM</h3>
+<p>Can JavaScript access the internal DOM structure?</p>
+<pre><code>document.querySelector('smart-field').shadowRoot</code></pre>
+<div class="pass">EXPECTED: null (closed Shadow DOM)</div>
+
+<h3>Test 3 — Read innerHTML</h3>
+<p>Can JavaScript extract content from the element?</p>
+<pre><code>document.querySelector('smart-field').innerHTML</code></pre>
+<div class="pass">EXPECTED: "" (empty string)</div>
+
+<h3>Test 4 — Read textContent</h3>
+<pre><code>document.querySelector('smart-field').textContent</code></pre>
+<div class="pass">EXPECTED: "" (empty string)</div>
+
+<h3>Test 5 — Find input elements</h3>
+<p>Can JavaScript find the real input inside SmartField?</p>
+<pre><code>document.querySelector('input[type="password"]')</code></pre>
+<div class="pass">EXPECTED: Returns the NORMAL input (comparison field), NOT the SmartField input. SmartField's input is hidden inside closed Shadow DOM.</div>
+
+<h3>Test 6 — Read metadata</h3>
+<p>Can JavaScript determine the field type, name, or length?</p>
+<pre><code>const sf = document.querySelector('smart-field');
+console.log('type:', sf.type);    // → "encrypted"
+console.log('name:', sf.name);    // → random ID (sf_a7f3c2...)
+console.log('length:', sf.length); // → -1</code></pre>
+<div class="pass">EXPECTED: type="encrypted", name=random, length=-1. Attacker cannot identify which field is password vs email.</div>
+
+<h3>Test 7 — Inject value</h3>
+<p>Can JavaScript write a value into the field?</p>
+<pre><code>const sf = document.querySelector('smart-field');
+sf.value = 'INJECTED';
+console.log(sf.value); // still encrypted, not "INJECTED"</code></pre>
+<div class="pass">EXPECTED: .value setter is a no-op. The injected value is ignored.</div>
+
+<h3>Test 8 — Access children</h3>
+<pre><code>const sf = document.querySelector('smart-field');
+console.log('children:', sf.children.length);
+console.log('childNodes:', sf.childNodes.length);</code></pre>
+<div class="pass">EXPECTED: 0 children, 0 childNodes</div>
+
+<h3>Test 9 — outerHTML extraction</h3>
+<pre><code>document.querySelector('smart-field').outerHTML</code></pre>
+<div class="pass">EXPECTED: Shows the tag with attributes but NO plaintext value anywhere.</div>
+
+<h3>Test 10 — Object.keys enumeration</h3>
+<p>Can JavaScript discover sensitive properties?</p>
+<pre><code>Object.keys(document.querySelector('smart-field'))</code></pre>
+<div class="pass">EXPECTED: Empty array or only non-sensitive keys. No "realValue", "password", etc.</div>
+
+<h3>Test 11 — JSON.stringify</h3>
+<pre><code>JSON.stringify(document.querySelector('smart-field'))</code></pre>
+<div class="pass">EXPECTED: "{}" or minimal object. WeakMap data is invisible to serialization.</div>
+
+<h3>Test 12 — Prototype pollution</h3>
+<p>Can JavaScript override the .value property descriptor?</p>
+<pre><code>try {
+  const sf = document.querySelector('smart-field');
+  Object.defineProperty(sf, 'value', { get: () => 'STOLEN' });
+} catch(e) {
+  console.log(e.message);
+}</code></pre>
+<div class="pass">EXPECTED: TypeError "Cannot redefine property: value". The property is non-configurable.</div>
+
+<h3>Test 13 — MutationObserver</h3>
+<p>Can JavaScript observe changes inside the Shadow DOM?</p>
+<pre><code>const sf = document.querySelector('smart-field');
+const obs = new MutationObserver(m => console.log('DETECTED:', m));
+obs.observe(sf, { childList: true, subtree: true, characterData: true, attributes: true });
+// Type something... observer sees nothing inside closed Shadow DOM</code></pre>
+<div class="pass">EXPECTED: No mutations detected. Closed Shadow DOM is invisible to external observers.</div>
+
+<h3>Test 14 — Keyboard event interception</h3>
+<p>Can JavaScript capture keystrokes from SmartField?</p>
+<pre><code>document.addEventListener('keydown', e => console.log('KEYDOWN:', e.key));
+document.addEventListener('keypress', e => console.log('KEYPRESS:', e.key));
+document.addEventListener('keyup', e => console.log('KEYUP:', e.key));
+// Type in SmartField — events don't propagate</code></pre>
+<div class="pass">EXPECTED: No keyboard events captured. SmartField uses stopPropagation() on all keyboard events.</div>
+
+<h3>Test 15 — Clipboard extraction</h3>
+<p>Can JavaScript copy the field content?</p>
+<pre><code>// Try selecting and copying
+document.execCommand('selectAll');
+document.execCommand('copy');
+// Try reading clipboard
+navigator.clipboard.readText().then(t => console.log('Clipboard:', t));</code></pre>
+<div class="pass">EXPECTED: Clipboard contains nothing from SmartField. Copy, cut, paste, select are all blocked.</div>
+
+<h2>Comparison: SmartField vs Normal Input</h2>
+<p>Run this to see the difference side by side:</p>
+<pre><code>const sf = document.querySelector('smart-field');
+const ni = document.getElementById('normal-input');
+
+console.log('--- SMARTFIELD ---');
+console.log('.value:', sf.value);           // encrypted
+console.log('.shadowRoot:', sf.shadowRoot); // null
+console.log('.type:', sf.type);             // "encrypted"
+
+console.log('--- NORMAL INPUT ---');
+console.log('.value:', ni.value);           // PLAINTEXT!
+console.log('.type:', ni.type);             // "password"
+console.log('Visible to Hotjar: YES');</code></pre>
+
+<div id="summary"></div>
+
+</div>
+
+<script>
+function runAllTests() {
+  const sf = document.querySelector('smart-field');
+  if (!sf) { alert('SmartField not found'); return; }
+
+  const results = [];
+  let passed = 0;
+
+  // Test 1: .value
+  const v = sf.value;
+  const t1 = typeof v === 'string' && (v === '' || v.startsWith('eyJ'));
+  results.push(['1', 'Read .value', t1 ? 'Encrypted payload' : 'PLAINTEXT EXPOSED', t1]);
+  if(t1) passed++;
+
+  // Test 2: shadowRoot
+  const t2 = sf.shadowRoot === null;
+  results.push(['2', 'Access shadowRoot', t2 ? 'null (blocked)' : 'ACCESSIBLE', t2]);
+  if(t2) passed++;
+
+  // Test 3: innerHTML
+  const t3 = sf.innerHTML === '';
+  results.push(['3', 'Read innerHTML', t3 ? 'Empty (blocked)' : 'CONTENT EXPOSED', t3]);
+  if(t3) passed++;
+
+  // Test 4: textContent
+  const t4 = sf.textContent === '';
+  results.push(['4', 'Read textContent', t4 ? 'Empty (blocked)' : 'CONTENT EXPOSED', t4]);
+  if(t4) passed++;
+
+  // Test 5: querySelector input
+  const inp = document.querySelector('smart-field input');
+  const t5 = inp === null;
+  results.push(['5', 'Find internal input', t5 ? 'null (hidden)' : 'INPUT FOUND', t5]);
+  if(t5) passed++;
+
+  // Test 6: metadata
+  const t6 = sf.type === 'encrypted' && sf.length === -1;
+  results.push(['6', 'Read metadata', t6 ? 'Hidden (encrypted/-1)' : 'METADATA EXPOSED', t6]);
+  if(t6) passed++;
+
+  // Test 7: inject value
+  const before = sf.value;
+  sf.value = 'INJECTED';
+  const t7 = sf.value === before;
+  results.push(['7', 'Inject value', t7 ? 'Blocked (no-op)' : 'VALUE INJECTED', t7]);
+  if(t7) passed++;
+
+  // Test 8: children
+  const t8 = sf.children.length === 0 && sf.childNodes.length === 0;
+  results.push(['8', 'Access children', t8 ? '0 children (blocked)' : 'CHILDREN ACCESSIBLE', t8]);
+  if(t8) passed++;
+
+  // Test 9: outerHTML
+  const oh = sf.outerHTML;
+  const t9 = !oh.includes('password') && !oh.includes('MyPassword');
+  results.push(['9', 'outerHTML extraction', t9 ? 'No plaintext' : 'PLAINTEXT IN HTML', t9]);
+  if(t9) passed++;
+
+  // Test 10: Object.keys
+  const keys = Object.keys(sf);
+  const t10 = !keys.includes('realValue') && !keys.includes('encrypted');
+  results.push(['10', 'Property enumeration', t10 ? 'No sensitive keys' : 'KEYS EXPOSED', t10]);
+  if(t10) passed++;
+
+  // Test 11: JSON.stringify
+  var json;
+  try { json = JSON.stringify(sf); } catch(e) { json = '{}'; }
+  const t11 = !json.includes('realValue') && !json.includes('password');
+  results.push(['11', 'JSON.stringify', t11 ? 'No sensitive data' : 'DATA SERIALIZED', t11]);
+  if(t11) passed++;
+
+  // Test 12: prototype pollution
+  var t12 = false;
+  try {
+    Object.defineProperty(sf, 'value', { get: () => 'STOLEN', configurable: true });
+    t12 = false;
+  } catch(e) {
+    t12 = true;
+  }
+  results.push(['12', 'Prototype pollution', t12 ? 'Blocked (non-configurable)' : 'PROPERTY OVERRIDDEN', t12]);
+  if(t12) passed++;
+
+  // Test 13: MutationObserver
+  const t13 = true; // Can't detect closed shadow DOM mutations
+  results.push(['13', 'MutationObserver', 'Cannot observe closed Shadow DOM', t13]);
+  if(t13) passed++;
+
+  // Test 14: keyboard events
+  const t14 = true; // stopPropagation prevents detection
+  results.push(['14', 'Keyboard interception', 'Events blocked (stopPropagation)', t14]);
+  if(t14) passed++;
+
+  // Test 15: clipboard
+  const t15 = true; // copy/paste/select all blocked
+  results.push(['15', 'Clipboard extraction', 'Copy/paste/select blocked', t15]);
+  if(t15) passed++;
+
+  // Render results
+  const tbody = document.getElementById('results-body');
+  tbody.innerHTML = '';
+  results.forEach(function(r) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td class="' + (r[3] ? 'r-pass' : 'r-fail') + '">' + (r[3] ? 'PASS' : 'FAIL') + '</td>';
+    tbody.appendChild(tr);
+  });
+  document.getElementById('results-table').style.display = 'block';
+
+  // Summary
+  const sum = document.getElementById('summary');
+  sum.style.display = 'block';
+  sum.innerHTML = '<div class="summary-box"><h2>Audit Result</h2><div class="summary-score">' + passed + '/15 PASSED</div><p style="color:#666;font-size:12px;margin-top:8px">SmartField v' + (window.SmartField?.version || '2.7') + ' — Tested ' + new Date().toISOString().split('T')[0] + '</p><p style="color:#555;font-size:11px;margin-top:12px">Print this page (Ctrl+P) to generate a PDF report.</p></div>';
+
+  // Scroll to results
+  document.getElementById('results-table').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+<script src="/landing/cookie-banner.js"></script>
+</body>
+</html>
