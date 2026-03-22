@@ -104,6 +104,7 @@
   <a href="#api-ref">SDK Methods</a>
   <a href="#events">Events</a>
   <a href="#license">License Keys</a>
+  <a href="#faq">FAQ</a>
 </nav>
 
 <!-- CONTENT -->
@@ -881,6 +882,40 @@ el.addEventListener('sf-threat', (e) =&gt; {
 &lt;!-- Unlimited fields, no badge --&gt;</code></pre>
 
 <div class="warn"><strong>License key is tied to your domain.</strong> If someone copies your key to another domain, SmartField falls back to the free plan on that domain. Your key only works on the domain you registered.</div>
+
+<!-- FAQ -->
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Why doesn't browser autofill work with SmartField?</h3>
+<p><strong>This is intentional, not a bug.</strong></p>
+<p>Browser autofill is a security risk. When Chrome, Firefox, or Safari autofill your login form, the password is stored in the browser and inserted as plaintext into the DOM. This means:</p>
+<ul>
+  <li><strong>Anyone with access to your computer</strong> can open Chrome and the autofill gives them your password — no authentication required</li>
+  <li><strong>Any JavaScript on the page</strong> can read the autofilled value instantly</li>
+  <li><strong>Trackers and extensions</strong> can capture autofilled data before you even click "Log In"</li>
+  <li><strong>Shared/public computers</strong> may have previous users' credentials stored</li>
+</ul>
+<p>SmartField blocks autofill by design: the input lives inside a closed Shadow DOM with <code class="inline-code">autocomplete="off"</code>, password manager ignore flags, and <code class="inline-code">type="text"</code> (not "password"). The browser cannot detect, fill, or save the field.</p>
+<div class="success"><strong>The trade-off:</strong> Users type their password manually every time. Use <code class="inline-code">sf-security="peek"</code> so they can hold the eye icon to verify what they typed — this replaces the convenience of autofill with a secure alternative.</div>
+
+<h3>Can I use SmartField alongside normal inputs?</h3>
+<p>Yes. You don't have to encrypt every field. Use SmartField for sensitive fields (passwords, card numbers, SSN) and normal <code class="inline-code">&lt;input&gt;</code> for non-sensitive fields (username, search, preferences). SmartField will even warn you if it detects unprotected <code class="inline-code">&lt;input type="password"&gt;</code> fields on the same page.</p>
+
+<h3>Does SmartField work on mobile?</h3>
+<p>Yes. SmartField supports both physical keyboards (<code class="inline-code">keydown</code>) and virtual keyboards (<code class="inline-code">beforeinput</code>) on iOS and Android. The cipher animation, peek mode, and encryption all work on mobile browsers.</p>
+
+<h3>What happens if the SmartField server goes down?</h3>
+<p>If you're using the free plan (no <code class="inline-code">data-key</code>), SmartField works 100% offline — it generates encryption keys locally in the browser. No server call needed.</p>
+<p>If you're using a paid plan, SmartField caches the license in <code class="inline-code">sessionStorage</code> for 24 hours. If the license server is unreachable, it falls back gracefully to the free plan (3 fields, badge shown). Your forms never break.</p>
+
+<h3>Can attackers decrypt the data if they steal my public key?</h3>
+<p>No. The public key is <strong>public by design</strong> — it's served to every browser that loads your page. It can only <strong>encrypt</strong>, never decrypt. Only your server's private key (stored in <code class="inline-code">.smartfield/</code>) can decrypt. This is standard RSA asymmetric cryptography.</p>
+
+<h3>Why do field names show as random IDs (sf_a7f3c2)?</h3>
+<p>To prevent attackers from identifying which field contains the password. If the field name was "password", an attacker could target that specific field. Random IDs make all SmartField fields look identical — an attacker cannot distinguish the email from the password from the SSN.</p>
+
+<h3>Does SmartField slow down my page?</h3>
+<p>The SmartField script is ~15KB. Encryption uses the browser's native Web Crypto API (hardware-accelerated on most devices). Each keystroke encryption takes &lt;1ms. There is no noticeable performance impact.</p>
 
 </div>
 </div>
