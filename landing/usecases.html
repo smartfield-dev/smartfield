@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartField — Real World Use Cases</title>
-  <script src="/component/smartfield.js"></script>
+  <script src="/component/smartfield.js" data-key="sf_test_765d7b744742dd8c0ebc6c8313d53e15"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:#020617;color:#e2e8f0}
@@ -181,8 +181,8 @@
 
       <!-- SmartField Login -->
       <div style="font-size:10px;color:#2f3192;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600">Secure Login</div>
-      <div style="margin-bottom:8px"><smart-field type="email" placeholder="account or email" style="--sf-bg:#f5f5fa;--sf-border-color:#d8d9e8;--sf-radius:8px;--sf-focus-color:#2f3192;--sf-cipher-color:#2f3192;--sf-focus-ring:rgba(47,49,146,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
-      <div style="margin-bottom:12px"><smart-field type="password" placeholder="password" style="--sf-bg:#f5f5fa;--sf-border-color:#d8d9e8;--sf-radius:8px;--sf-focus-color:#2f3192;--sf-cipher-color:#2f3192;--sf-focus-ring:rgba(47,49,146,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><smart-field type="email" sf-security="brief" sf-stealth placeholder="account or email" encrypt-key="/api/public-key" style="--sf-bg:#f5f5fa;--sf-border-color:#d8d9e8;--sf-radius:8px;--sf-focus-color:#2f3192;--sf-cipher-color:#2f3192;--sf-focus-ring:rgba(47,49,146,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><smart-field type="password" sf-security="peek" sf-stealth placeholder="password" encrypt-key="/api/public-key" style="--sf-bg:#f5f5fa;--sf-border-color:#d8d9e8;--sf-radius:8px;--sf-focus-color:#2f3192;--sf-cipher-color:#2f3192;--sf-focus-ring:rgba(47,49,146,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
 
       <!-- Account Statement -->
       <div style="font-size:10px;color:#2f3192;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:600">Account Overview</div>
@@ -246,10 +246,10 @@
         <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:6px"><span>Shipping</span><span style="color:#00B88A">Free</span></div>
         <div style="border-top:1px solid #e2e8f0;padding-top:8px;margin-top:6px;display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:#1a1a1a"><span>Total</span><span>$2,499.00</span></div>
       </div>
-      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Card Number</label><smart-field sf-type="card" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Card Number</label><smart-field sf-type="card" sf-security="brief" sf-stealth placeholder="card number" encrypt-key="/api/public-key" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Expiry</label><smart-field sf-type="expiry" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
-        <div><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">CVV</label><smart-field sf-type="cvv" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+        <div><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Expiry</label><smart-field sf-type="expiry" sf-security="brief" sf-stealth placeholder="MM/YY" encrypt-key="/api/public-key" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+        <div><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">CVV</label><smart-field sf-type="cvv" sf-security="brief" sf-stealth placeholder="CVV" encrypt-key="/api/public-key" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
       </div>
       <button style="width:100%;padding:14px;background:linear-gradient(135deg,#ee348e,#23073e);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(238,52,142,0.3)">Pay $2,499.00</button>
       <div style="text-align:center;margin-top:12px"><img src="/landing/img/ima_cre.png" alt="Visa Mastercard Amex Discover" style="height:24px;opacity:0.6"></div>
@@ -296,7 +296,7 @@
         <img src="/landing/img/ima_heal.png" alt="Medical Center" style="height:36px">
       </div>
       <div style="font-size:10px;color:#0f766e;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600">Patient Search</div>
-      <div style="margin-bottom:8px"><smart-field placeholder="patient ID or SSN" sf-type="ssn" style="--sf-bg:#f0fdfa;--sf-border-color:#ccfbf1;--sf-radius:8px;--sf-focus-color:#0d9488;--sf-cipher-color:#0f766e;--sf-focus-ring:rgba(13,148,136,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><smart-field placeholder="patient ID or SSN" sf-type="ssn" sf-security="brief" sf-stealth encrypt-key="/api/public-key" style="--sf-bg:#f0fdfa;--sf-border-color:#ccfbf1;--sf-radius:8px;--sf-focus-color:#0d9488;--sf-cipher-color:#0f766e;--sf-focus-ring:rgba(13,148,136,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
 
       <div style="font-size:10px;color:#666;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Confidential Patient Record</div>
       <!-- Medical records with cipher values -->
@@ -346,9 +346,9 @@
         <img src="/landing/img/ima_gove.png" alt="Government Portal" style="height:36px">
       </div>
       <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:11px;color:#1e40af;line-height:1.5">⚠ All fields are encrypted. Your tax information is protected from unauthorized access.</div>
-      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Social Security Number</label><smart-field sf-type="ssn" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
-      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Annual Income</label><smart-field name="gov-income" placeholder="$0.00" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
-      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Bank Account (for refund)</label><smart-field name="gov-bank" placeholder="IBAN or account number" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Social Security Number</label><smart-field sf-type="ssn" sf-security="brief" sf-stealth placeholder="SSN" encrypt-key="/api/public-key" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Annual Income</label><smart-field placeholder="annual income" sf-security="brief" sf-stealth encrypt-key="/api/public-key" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Bank Account (for refund)</label><smart-field placeholder="IBAN or account number" sf-security="brief" sf-stealth encrypt-key="/api/public-key" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
       <button style="width:100%;padding:14px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(30,64,175,0.3)">Submit Tax Declaration</button>
       <div style="text-align:center;margin-top:12px;font-size:10px;color:#cbd5e1;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> GDPR Protected by SmartField</div>
     </div>
@@ -392,8 +392,8 @@
         <img src="/landing/img/ima_crip.png" alt="Crypto Exchange" style="height:36px">
       </div>
       <div style="background:#f5f0ff;border:1px solid #e5e0f0;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:11px;color:#5b21b6;line-height:1.5">⚠ Your seed phrase is encrypted as you type. Not even this website can read it.</div>
-      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#7c3aed;margin-bottom:4px;text-transform:uppercase">Seed Phrase (12 or 24 words)</label><smart-field name="crypto-seed" placeholder="enter your recovery phrase..." style="--sf-bg:#faf8ff;--sf-border-color:#e5e0f0;--sf-radius:10px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
-      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#7c3aed;margin-bottom:4px;text-transform:uppercase">Wallet Password</label><smart-field type="password" name="crypto-pwd" placeholder="create a strong password..." style="--sf-bg:#faf8ff;--sf-border-color:#e5e0f0;--sf-radius:10px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#7c3aed;margin-bottom:4px;text-transform:uppercase">Seed Phrase (12 or 24 words)</label><smart-field sf-security="max" sf-stealth placeholder="enter your recovery phrase..." encrypt-key="/api/public-key" style="--sf-bg:#faf8ff;--sf-border-color:#e5e0f0;--sf-radius:10px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#7c3aed;margin-bottom:4px;text-transform:uppercase">Wallet Password</label><smart-field type="password" sf-security="peek" sf-stealth placeholder="create a strong password..." encrypt-key="/api/public-key" style="--sf-bg:#faf8ff;--sf-border-color:#e5e0f0;--sf-radius:10px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
       <button style="width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.2)">Import Wallet Securely</button>
       <div style="text-align:center;margin-top:12px;font-size:10px;color:#aaa;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Protected by SmartField</div>
     </div>
@@ -426,25 +426,11 @@
         <div style="font-size:10px;color:#999;text-align:right">New Employee<br><span style="color:#1e40af;font-weight:600">Onboarding</span></div>
       </div>
       <div style="font-size:10px;color:#1e40af;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600">Employee Details</div>
-      <div style="border:1px solid #e8eef8;border-radius:10px;overflow:hidden;margin-bottom:14px">
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f4fa">
-          <div style="font-size:12px;color:#666">Full Name</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#1e40af;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(30,64,175,0.2)" id="hr-name">ΣΩΔψξ∫∑μπ</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f4fa">
-          <div style="font-size:12px;color:#666">SSN</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#1e40af;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(30,64,175,0.2)" id="hr-ssn">∂∇≈≡αβγδΨ</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f4fa">
-          <div style="font-size:12px;color:#666">Annual Salary</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#1e40af;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(30,64,175,0.2)" id="hr-salary">λμπφψ§∞</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
-          <div style="font-size:12px;color:#666">Bank Account</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#1e40af;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(30,64,175,0.2)" id="hr-bank">ξΩΔΣ∑∏∂∇≈≡∫α</div>
-        </div>
-      </div>
-      <div style="background:#1e40af;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700">Submit Onboarding</div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Full Name</label><smart-field sf-security="brief" sf-stealth placeholder="full name" encrypt-key="/api/public-key" style="--sf-bg:#f0f4fa;--sf-border-color:#dbeafe;--sf-radius:8px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">SSN</label><smart-field sf-type="ssn" sf-security="brief" sf-stealth placeholder="social security" encrypt-key="/api/public-key" style="--sf-bg:#f0f4fa;--sf-border-color:#dbeafe;--sf-radius:8px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Annual Salary</label><smart-field sf-security="brief" sf-stealth placeholder="salary" encrypt-key="/api/public-key" style="--sf-bg:#f0f4fa;--sf-border-color:#dbeafe;--sf-radius:8px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Bank Account</label><smart-field sf-security="brief" sf-stealth placeholder="bank account" encrypt-key="/api/public-key" style="--sf-bg:#f0f4fa;--sf-border-color:#dbeafe;--sf-radius:8px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="background:#1e40af;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Submit Onboarding</div>
       <div style="text-align:center;margin-top:12px;font-size:9px;color:#bbb;display:flex;align-items:center;justify-content:center;gap:4px">
         <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         Protected by SmartField
@@ -467,21 +453,10 @@
         <div style="font-size:10px;color:#999;text-align:right">Claims Portal<br><span style="color:#b45309;font-weight:600">New Claim</span></div>
       </div>
       <div style="font-size:10px;color:#b45309;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600">Claim Details</div>
-      <div style="border:1px solid #fde68a;border-radius:10px;overflow:hidden;margin-bottom:14px">
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #fef3c7">
-          <div style="font-size:12px;color:#666">Policy #</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#b45309;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(180,83,9,0.2)" id="ins-policy">ΣΩΔψξ∫∑μπφ</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #fef3c7">
-          <div style="font-size:12px;color:#666">Medical Condition</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#b45309;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(180,83,9,0.2)" id="ins-medical">∂∇≈≡αβγδΨξ</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
-          <div style="font-size:12px;color:#666">Claim Amount</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#b45309;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(180,83,9,0.2)" id="ins-amount">§∞∑∏∂∇≈</div>
-        </div>
-      </div>
-      <div style="background:#b45309;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700">Submit Claim</div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Policy Number</label><smart-field sf-security="brief" sf-stealth placeholder="policy number" encrypt-key="/api/public-key" style="--sf-bg:#fffbeb;--sf-border-color:#fde68a;--sf-radius:8px;--sf-focus-color:#b45309;--sf-cipher-color:#b45309;--sf-focus-ring:rgba(180,83,9,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Medical Condition</label><smart-field sf-security="brief" sf-stealth placeholder="medical condition" encrypt-key="/api/public-key" style="--sf-bg:#fffbeb;--sf-border-color:#fde68a;--sf-radius:8px;--sf-focus-color:#b45309;--sf-cipher-color:#b45309;--sf-focus-ring:rgba(180,83,9,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Claim Amount</label><smart-field sf-security="brief" sf-stealth placeholder="claim amount" encrypt-key="/api/public-key" style="--sf-bg:#fffbeb;--sf-border-color:#fde68a;--sf-radius:8px;--sf-focus-color:#b45309;--sf-cipher-color:#b45309;--sf-focus-ring:rgba(180,83,9,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="background:#b45309;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Submit Claim</div>
       <div style="text-align:center;margin-top:12px;font-size:9px;color:#bbb;display:flex;align-items:center;justify-content:center;gap:4px">
         <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         Protected by SmartField
@@ -526,21 +501,10 @@
         <div style="font-size:10px;color:#999;text-align:right">Pre-Approval<br><span style="color:#059669;font-weight:600">Application</span></div>
       </div>
       <div style="font-size:10px;color:#059669;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600">Financial Information</div>
-      <div style="border:1px solid #a7f3d0;border-radius:10px;overflow:hidden;margin-bottom:14px">
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #d1fae5">
-          <div style="font-size:12px;color:#666">Annual Income</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#059669;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(5,150,105,0.2)" id="re-income">ΣΩΔψξ∫∑</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #d1fae5">
-          <div style="font-size:12px;color:#666">SSN</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#059669;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(5,150,105,0.2)" id="re-ssn">∂∇≈≡αβγδΨ</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
-          <div style="font-size:12px;color:#666">Employer</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#059669;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(5,150,105,0.2)" id="re-employer">λμπφψ§∞∑∏</div>
-        </div>
-      </div>
-      <div style="background:#059669;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700">Submit Application</div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Annual Income</label><smart-field sf-security="brief" sf-stealth placeholder="annual income" encrypt-key="/api/public-key" style="--sf-bg:#ecfdf5;--sf-border-color:#a7f3d0;--sf-radius:8px;--sf-focus-color:#059669;--sf-cipher-color:#059669;--sf-focus-ring:rgba(5,150,105,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">SSN</label><smart-field sf-type="ssn" sf-security="brief" sf-stealth placeholder="social security" encrypt-key="/api/public-key" style="--sf-bg:#ecfdf5;--sf-border-color:#a7f3d0;--sf-radius:8px;--sf-focus-color:#059669;--sf-cipher-color:#059669;--sf-focus-ring:rgba(5,150,105,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Employer</label><smart-field sf-security="brief" sf-stealth placeholder="employer name" encrypt-key="/api/public-key" style="--sf-bg:#ecfdf5;--sf-border-color:#a7f3d0;--sf-radius:8px;--sf-focus-color:#059669;--sf-cipher-color:#059669;--sf-focus-ring:rgba(5,150,105,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="background:#059669;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Submit Application</div>
       <div style="text-align:center;margin-top:12px;font-size:9px;color:#bbb;display:flex;align-items:center;justify-content:center;gap:4px">
         <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         Protected by SmartField
@@ -563,25 +527,11 @@
         <div style="font-size:10px;color:#999;text-align:right">Visa Portal<br><span style="color:#7c3aed;font-weight:600">Application</span></div>
       </div>
       <div style="font-size:10px;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600">Applicant Information</div>
-      <div style="border:1px solid #ddd6fe;border-radius:10px;overflow:hidden;margin-bottom:14px">
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ede9fe">
-          <div style="font-size:12px;color:#666">Passport #</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#7c3aed;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(124,58,237,0.2)" id="imm-passport">ΣΩΔψξ∫∑μπ</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ede9fe">
-          <div style="font-size:12px;color:#666">Nationality</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#7c3aed;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(124,58,237,0.2)" id="imm-nation">∂∇≈≡αβγδ</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ede9fe">
-          <div style="font-size:12px;color:#666">Travel History</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#7c3aed;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(124,58,237,0.2)" id="imm-travel">λμπφψ§∞∑∏∂∇</div>
-        </div>
-        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
-          <div style="font-size:12px;color:#666">Visa Type</div>
-          <div style="font-family:'Fira Code',monospace;font-size:13px;color:#7c3aed;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(124,58,237,0.2)" id="imm-visa">ξΩΔΣ∑∏</div>
-        </div>
-      </div>
-      <div style="background:#7c3aed;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700">Submit Application</div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Passport Number</label><smart-field sf-security="brief" sf-stealth placeholder="passport number" encrypt-key="/api/public-key" style="--sf-bg:#f5f3ff;--sf-border-color:#ddd6fe;--sf-radius:8px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Nationality</label><smart-field sf-security="brief" sf-stealth placeholder="nationality" encrypt-key="/api/public-key" style="--sf-bg:#f5f3ff;--sf-border-color:#ddd6fe;--sf-radius:8px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Travel History</label><smart-field sf-security="brief" sf-stealth placeholder="countries visited" encrypt-key="/api/public-key" style="--sf-bg:#f5f3ff;--sf-border-color:#ddd6fe;--sf-radius:8px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:3px">Visa Type</label><smart-field sf-security="brief" sf-stealth placeholder="visa type" encrypt-key="/api/public-key" style="--sf-bg:#f5f3ff;--sf-border-color:#ddd6fe;--sf-radius:8px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="background:#7c3aed;color:#fff;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Submit Application</div>
       <div style="text-align:center;margin-top:12px;font-size:9px;color:#bbb;display:flex;align-items:center;justify-content:center;gap:4px">
         <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         Protected by SmartField
