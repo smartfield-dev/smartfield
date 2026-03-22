@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — SmartField</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,'Segoe UI',sans-serif;background:#fff;color:#111;line-height:1.7}
+
+    .layout{display:flex;min-height:100vh}
+
+    /* Sidebar */
+    .sidebar{width:260px;background:#f8fafb;border-right:1px solid #eee;padding:24px 0;position:fixed;height:100vh;overflow-y:auto}
+    .sidebar-logo{display:flex;align-items:center;gap:8px;padding:0 20px;margin-bottom:24px;text-decoration:none}
+    .sidebar-logo span{font-size:16px;font-weight:800;color:#0B1120}
+    .sidebar h4{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1.5px;padding:16px 20px 8px}
+    .sidebar a{display:block;padding:6px 20px;font-size:13px;color:#666;text-decoration:none;transition:all 0.1s;border-left:3px solid transparent}
+    .sidebar a:hover{color:#00B88A;background:rgba(0,184,138,0.04)}
+    .sidebar a.active{color:#00B88A;border-left-color:#00B88A;font-weight:600;background:rgba(0,184,138,0.06)}
+
+    /* Content */
+    .content{margin-left:260px;padding:40px 60px;max-width:860px}
+    .content h1{font-size:32px;font-weight:800;color:#0B1120;margin-bottom:8px}
+    .content h2{font-size:22px;font-weight:700;color:#0B1120;margin-top:48px;margin-bottom:12px;padding-top:24px;border-top:1px solid #f0f0f0}
+    .content h3{font-size:16px;font-weight:700;color:#0B1120;margin-top:32px;margin-bottom:8px}
+    .content p{font-size:14px;color:#444;margin-bottom:16px}
+    .content li{font-size:14px;color:#444;margin-bottom:6px}
+    .content ul{padding-left:20px;margin-bottom:16px}
+
+    /* Code blocks */
+    pre{background:#0B1120;color:#e2e8f0;border-radius:10px;padding:20px;margin:12px 0 20px;overflow-x:auto;font-size:13px;line-height:1.6}
+    code{font-family:'Fira Code','Consolas',monospace}
+    .inline-code{background:#f0f0f0;color:#0B1120;padding:2px 6px;border-radius:4px;font-size:12px}
+
+    /* Language tabs */
+    .lang-tabs{display:flex;gap:2px;margin-top:16px;margin-bottom:-1px;position:relative;z-index:1}
+    .lang-tab{padding:8px 16px;background:#f0f0f0;border:1px solid #ddd;border-bottom:none;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;cursor:pointer;color:#666}
+    .lang-tab.active{background:#0B1120;color:#00B88A;border-color:#0B1120}
+    .lang-content{display:none}
+    .lang-content.active{display:block}
+
+    /* Warning/Error boxes */
+    .warn{background:#fef3cd;border:1px solid #ffc107;border-radius:8px;padding:14px 16px;margin:12px 0;font-size:13px;color:#856404}
+    .warn strong{color:#664d03}
+    .error{background:#f8d7da;border:1px solid #f5c6cb;border-radius:8px;padding:14px 16px;margin:12px 0;font-size:13px;color:#721c24}
+    .error strong{color:#491217}
+    .success{background:#d4edda;border:1px solid #c3e6cb;border-radius:8px;padding:14px 16px;margin:12px 0;font-size:13px;color:#155724}
+    .badge-lang{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;margin-left:8px}
+    .badge-node{background:#026e00;color:white}
+    .badge-python{background:#3776ab;color:white}
+    .badge-java{background:#f89820;color:white}
+    .badge-php{background:#777bb4;color:white}
+    .badge-go{background:#00add8;color:white}
+    .badge-ruby{background:#cc342d;color:white}
+
+    @media(max-width:768px){.sidebar{display:none}.content{margin-left:0;padding:20px}}
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <a href="/landing" class="sidebar-logo">
+    <svg width="20" height="20" viewBox="0 0 56 56" fill="none"><rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/></svg>
+    <span>SmartField</span>
+  </a>
+
+  <h4>Getting Started</h4>
+  <a href="#quickstart" class="active">Quick Start</a>
+  <a href="#installation">Installation</a>
+  <a href="#frontend">Frontend Setup</a>
+  <a href="#server">Server Setup</a>
+
+  <h4>Server SDKs</h4>
+  <a href="#nodejs">Node.js</a>
+  <a href="#python">Python</a>
+  <a href="#java">Java / Spring</a>
+  <a href="#php">PHP / Laravel</a>
+  <a href="#go">Go</a>
+  <a href="#ruby">Ruby / Rails</a>
+
+  <h4>Frontend Frameworks</h4>
+  <a href="#react">React / Next.js</a>
+  <a href="#vue">Vue.js</a>
+  <a href="#angular">Angular</a>
+  <a href="#vanilla">Vanilla HTML</a>
+
+  <h4>Field Types</h4>
+  <a href="#types">sf-type Reference</a>
+  <a href="#styling">Custom Styling</a>
+  <a href="#validation">Validation</a>
+
+  <h4>Security</h4>
+  <a href="#architecture">Architecture</a>
+  <a href="#mistakes">Common Mistakes</a>
+  <a href="#attacks">Attack Resistance</a>
+
+  <h4>API Reference</h4>
+  <a href="#api-ref">SDK Methods</a>
+  <a href="#events">Events</a>
+  <a href="#license">License Keys</a>
+</nav>
+
+<!-- CONTENT -->
+<div class="content">
+
+<h1>SmartField Documentation</h1>
+<p>Every keystroke, encrypted. Invisible to JavaScript, trackers, and hackers.</p>
+
+<!-- QUICK START -->
+<h2 id="quickstart">Quick Start — 2 Minutes</h2>
+
+<h3>Step 1: Add the script</h3>
+<pre><code>&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"&gt;&lt;/script&gt;</code></pre>
+
+<h3>Step 2: Replace your inputs</h3>
+<pre><code>&lt;!-- Before (vulnerable) --&gt;
+&lt;input type="password" name="password"&gt;
+
+&lt;!-- After (encrypted) --&gt;
+&lt;smart-field type="password"&gt;&lt;/smart-field&gt;</code></pre>
+
+<h3>Step 3: Decrypt on your server</h3>
+<pre><code>// Node.js
+const sf = require('@smartfield/server');
+await sf.init();
+
+// Serve public key (SmartField fetches this automatically)
+app.get('/sf-key', (req, res) =&gt; res.json(sf.getPublicKey()));
+
+// Decrypt — fields arrive with random IDs, not "password"
+app.post('/login', async (req, res) =&gt; {
+  const data = await sf.decryptFields(req.body);
+  // data = { sf_a7f3c2: "user@email.com", sf_b9e1d4: "mypassword" }
+  const values = Object.values(data);
+  const email = values[0];
+  const password = values[1];
+});</code></pre>
+
+<div class="success">That's it. Your form is now encrypted end-to-end. Every keystroke is protected with AES-256-GCM + RSA-2048.</div>
+
+<!-- COMMON MISTAKES -->
+<h2 id="mistakes">Common Mistakes — Don't Do This</h2>
+
+<div class="error"><strong>MISTAKE #1: Using descriptive field names</strong><br><br>
+<code class="inline-code">&lt;smart-field name="password"&gt;</code> ← WRONG<br>
+<code class="inline-code">&lt;smart-field name="credit_card"&gt;</code> ← WRONG<br>
+<code class="inline-code">&lt;smart-field name="ssn"&gt;</code> ← WRONG<br><br>
+SmartField automatically generates random IDs (sf_a7f3c2e1). If you set <code class="inline-code">name="password"</code>, an attacker can identify which field is the password by reading the DOM attribute. <strong>Don't name your fields.</strong> SmartField handles field identification internally.</div>
+
+<div class="error"><strong>MISTAKE #2: Reading .value and expecting plaintext</strong><br><br>
+<code class="inline-code">const pwd = document.querySelector('smart-field').value;</code><br>
+This returns <strong>encrypted data</strong>, not the password. You MUST decrypt on the server.</div>
+
+<div class="error"><strong>MISTAKE #3: Using console.log on decrypted values</strong><br><br>
+<code class="inline-code">console.log("Password:", decryptedPassword);</code> ← NEVER<br><br>
+This defeats the purpose. Decrypted values should only be used for authentication/processing, never logged.</div>
+
+<div class="error"><strong>MISTAKE #4: Storing the private key in your frontend code</strong><br><br>
+The private key MUST stay on your server. Never include it in JavaScript, environment variables accessible to the frontend, or client-side code.</div>
+
+<div class="error"><strong>MISTAKE #5: Not using sf-type for structured data</strong><br><br>
+<code class="inline-code">&lt;smart-field&gt;</code> ← For card numbers, use sf-type<br>
+<code class="inline-code">&lt;smart-field sf-type="card"&gt;</code> ← Validates 16 digits, blocks letters<br><br>
+Without sf-type, the field accepts any input. Use sf-type for cards, expiry, CVV, SSN, phone.</div>
+
+<div class="warn"><strong>BEST PRACTICE: Field mapping on the server</strong><br><br>
+SmartField sends random IDs (sf_a7f3c2, sf_b9e1d4). Your server maps these to field names by their order in the form:<br><br>
+Field 1 → email<br>
+Field 2 → password<br><br>
+Or use the server SDK's <code class="inline-code">decryptFields()</code> which handles this automatically.</div>
+
+<!-- SERVER SDKs -->
+<h2 id="server">Server Setup</h2>
+<p>Choose your language. All SDKs use the same encryption format and key management.</p>
+
+<h3 id="nodejs">Node.js <span class="badge-lang badge-node">Node.js</span></h3>
+<pre><code>npm install @smartfield/server</code></pre>
+<pre><code>const sf = require('@smartfield/server');
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+// Initialize — generates keys on YOUR server
+await sf.init();
+
+// Serve public key to frontend
+app.get('/sf-key', (req, res) =&gt; res.json(sf.getPublicKey()));
+
+// Decrypt form submission
+app.post('/login', async (req, res) =&gt; {
+  const fields = await sf.decryptFields(req.body);
+  // fields = { sf_a7f3c2: "user@email.com", sf_b9e1d4: "password123" }
+
+  const email = Object.values(fields)[0];    // first field
+  const password = Object.values(fields)[1]; // second field
+
+  // Authenticate...
+});
+
+// Or use middleware (auto-serves key + auto-decrypts)
+app.use(sf.middleware());</code></pre>
+
+<h3 id="python">Python <span class="badge-lang badge-python">Python</span></h3>
+<pre><code>pip install smartfield</code></pre>
+<pre><code>from smartfield import SmartField
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+sf = SmartField()
+sf.init()  # generates keys in .smartfield/
+
+@app.route('/sf-key')
+def public_key():
+    return jsonify(sf.get_public_key())
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    email = sf.decrypt(data['email'])
+    password = sf.decrypt(data['password'])
+
+    # Authenticate...
+    return jsonify({"status": "ok"})</code></pre>
+
+<h3 id="java">Java <span class="badge-lang badge-java">Java / Spring</span></h3>
+<pre><code>// Maven
+&lt;dependency&gt;
+  &lt;groupId&gt;dev.smartfield&lt;/groupId&gt;
+  &lt;artifactId&gt;smartfield-server&lt;/artifactId&gt;
+  &lt;version&gt;0.1.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+<pre><code>import dev.smartfield.SmartField;
+
+@RestController
+public class AuthController {
+
+    private final SmartField sf = new SmartField();
+
+    @PostConstruct
+    public void init() {
+        sf.init(); // generates keys in .smartfield/
+    }
+
+    @GetMapping("/sf-key")
+    public Map&lt;String, Object&gt; publicKey() {
+        return sf.getPublicKey();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity&lt;?&gt; login(@RequestBody Map&lt;String, String&gt; body) {
+        String email = sf.decrypt(body.get("email"));
+        String password = sf.decrypt(body.get("password"));
+
+        // Authenticate...
+        return ResponseEntity.ok().build();
+    }
+}</code></pre>
+
+<h3 id="php">PHP <span class="badge-lang badge-php">PHP / Laravel</span></h3>
+<pre><code>composer require smartfield/server</code></pre>
+<pre><code>use SmartField\SmartField;
+
+$sf = new SmartField();
+$sf-&gt;init(); // generates keys in .smartfield/
+
+// Laravel route
+Route::get('/sf-key', function() use ($sf) {
+    return response()-&gt;json($sf-&gt;getPublicKey());
+});
+
+Route::post('/login', function(Request $request) use ($sf) {
+    $email = $sf-&gt;decrypt($request-&gt;input('email'));
+    $password = $sf-&gt;decrypt($request-&gt;input('password'));
+
+    // Authenticate...
+});</code></pre>
+
+<h3 id="go">Go <span class="badge-lang badge-go">Go</span></h3>
+<pre><code>go get github.com/smartfield/smartfield-go</code></pre>
+<pre><code>package main
+
+import (
+    "github.com/smartfield/smartfield-go"
+    "net/http"
+    "encoding/json"
+)
+
+func main() {
+    sf := smartfield.New()
+    sf.Init() // generates keys in .smartfield/
+
+    http.HandleFunc("/sf-key", func(w http.ResponseWriter, r *http.Request) {
+        json.NewEncoder(w).Encode(sf.GetPublicKey())
+    })
+
+    http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+        var body map[string]string
+        json.NewDecoder(r.Body).Decode(&amp;body)
+
+        email := sf.Decrypt(body["email"])
+        password := sf.Decrypt(body["password"])
+
+        // Authenticate...
+    })
+
+    http.ListenAndServe(":8080", nil)
+}</code></pre>
+
+<h3 id="ruby">Ruby / Rails <span class="badge-lang badge-ruby">Ruby</span></h3>
+<pre><code>gem install smartfield</code></pre>
+<pre><code>require 'smartfield'
+
+sf = SmartField.new
+sf.init # generates keys in .smartfield/
+
+# Rails controller
+class AuthController &lt; ApplicationController
+  def public_key
+    render json: sf.get_public_key
+  end
+
+  def login
+    email = sf.decrypt(params[:email])
+    password = sf.decrypt(params[:password])
+
+    # Authenticate...
+  end
+end</code></pre>
+
+<!-- FRONTEND FRAMEWORKS -->
+<h2 id="frontend">Frontend Setup</h2>
+
+<h3 id="vanilla">Vanilla HTML</h3>
+<pre><code>&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"
+        data-key="sf_live_your_key_here"&gt;&lt;/script&gt;
+
+&lt;form action="/login" method="POST"&gt;
+  &lt;smart-field type="email" placeholder="Email"
+    encrypt-key="/sf-key"&gt;&lt;/smart-field&gt;
+
+  &lt;smart-field type="password" placeholder="Password"
+    encrypt-key="/sf-key"&gt;&lt;/smart-field&gt;
+
+  &lt;button type="submit"&gt;Log In&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+<h3 id="react">React / Next.js</h3>
+<pre><code>// Include in your _app.js or layout.js
+// SmartField works as a standard Web Component in React
+
+// Option 1: Script tag in &lt;Head&gt;
+import Script from 'next/script';
+
+export default function Layout({ children }) {
+  return (
+    &lt;&gt;
+      &lt;Script src="https://cdn.smartfield.dev/v1/smartfield.js" /&gt;
+      {children}
+    &lt;/&gt;
+  );
+}
+
+// Option 2: Use in your component
+export default function LoginForm() {
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    const fields = document.querySelectorAll('smart-field');
+    const data = {};
+    fields.forEach(f =&gt; { data[f.name] = f.value; }); // encrypted values
+
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;smart-field type="email" placeholder="Email"
+        encrypt-key="/api/sf-key"&gt;&lt;/smart-field&gt;
+      &lt;smart-field type="password" placeholder="Password"
+        encrypt-key="/api/sf-key"&gt;&lt;/smart-field&gt;
+      &lt;button type="submit"&gt;Log In&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h3 id="vue">Vue.js</h3>
+<pre><code>&lt;!-- In your index.html --&gt;
+&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"&gt;&lt;/script&gt;
+
+&lt;!-- In your Vue component --&gt;
+&lt;template&gt;
+  &lt;form @submit.prevent="handleLogin"&gt;
+    &lt;smart-field type="email" placeholder="Email"
+      encrypt-key="/api/sf-key" ref="email"&gt;&lt;/smart-field&gt;
+    &lt;smart-field type="password" placeholder="Password"
+      encrypt-key="/api/sf-key" ref="password"&gt;&lt;/smart-field&gt;
+    &lt;button type="submit"&gt;Log In&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+// Tell Vue to ignore smart-field as a custom element
+// In vite.config.js:
+// vue({ template: { compilerOptions: { isCustomElement: tag =&gt; tag === 'smart-field' } } })
+&lt;/script&gt;</code></pre>
+
+<h3 id="angular">Angular</h3>
+<pre><code>// In angular.json, add to scripts:
+"scripts": ["https://cdn.smartfield.dev/v1/smartfield.js"]
+
+// In app.module.ts:
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]  // allows smart-field tag
+})
+
+// In your template:
+&lt;smart-field type="password" placeholder="Password"
+  encrypt-key="/api/sf-key"&gt;&lt;/smart-field&gt;</code></pre>
+
+<!-- FIELD TYPES -->
+<h2 id="types">Field Types (sf-type)</h2>
+
+<pre><code>&lt;!-- Credit card: 16 digits only, blocks letters --&gt;
+&lt;smart-field sf-type="card"&gt;&lt;/smart-field&gt;
+
+&lt;!-- Expiry: MM/YY auto-format, validates month 01-12 --&gt;
+&lt;smart-field sf-type="expiry"&gt;&lt;/smart-field&gt;
+
+&lt;!-- CVV: 3-4 digits only --&gt;
+&lt;smart-field sf-type="cvv"&gt;&lt;/smart-field&gt;
+
+&lt;!-- SSN: 9 digits only --&gt;
+&lt;smart-field sf-type="ssn"&gt;&lt;/smart-field&gt;
+
+&lt;!-- Phone: 10-15 digits --&gt;
+&lt;smart-field sf-type="phone"&gt;&lt;/smart-field&gt;
+
+&lt;!-- Password: any text --&gt;
+&lt;smart-field type="password"&gt;&lt;/smart-field&gt;
+
+&lt;!-- Free text: no restrictions --&gt;
+&lt;smart-field&gt;&lt;/smart-field&gt;</code></pre>
+
+<div class="warn"><strong>Important:</strong> sf-type only controls INPUT VALIDATION (what characters are accepted). It does NOT expose the field type to JavaScript. An attacker cannot read sf-type from the DOM — it's consumed during initialization and not stored as a readable attribute.</div>
+
+<!-- STYLING -->
+<h2 id="styling">Custom Styling</h2>
+<pre><code>/* SmartField uses CSS Custom Properties */
+smart-field {
+  --sf-bg: #ffffff;           /* background */
+  --sf-border-color: #e5e7eb; /* border */
+  --sf-radius: 10px;          /* border radius */
+  --sf-focus-color: #00B88A;  /* focus border color */
+  --sf-focus-ring: rgba(0,184,138,0.12); /* focus glow */
+  --sf-cipher-color: #00B88A; /* encrypted character color */
+  --sf-cipher-glow: rgba(0,184,138,0.3); /* character glow */
+  --sf-placeholder-color: #bbb;
+  --sf-font-size: 14px;
+  --sf-padding: 12px 16px;
+}</code></pre>
+
+<!-- ARCHITECTURE -->
+<h2 id="architecture">Security Architecture</h2>
+<pre><code>ENCRYPTION: Hybrid AES-256-GCM + RSA-OAEP-2048
+
+User types → AES key generated (random, per encryption)
+           → Data encrypted with AES-256-GCM
+           → AES key encrypted with server's RSA-2048 public key
+           → Payload: base64(JSON{version, iv, encryptedKey, encryptedData})
+           → Sent to server
+           → Server decrypts AES key with RSA private key
+           → Server decrypts data with AES key
+           → Plaintext available ONLY on server</code></pre>
+
+<h3>What SmartField blocks (20/20 verified)</h3>
+<pre><code>1.  .value                → returns encrypted payload
+2.  .shadowRoot            → returns null (closed)
+3.  .innerHTML             → returns ""
+4.  .textContent           → returns ""
+5.  .innerText             → returns ""
+6.  querySelector("input") → returns null
+7.  querySelectorAll("*")  → returns []
+8.  children / childNodes  → empty
+9.  outerHTML              → no plaintext value
+10. .type / .name / .length→ hidden (encrypted / random / -1)
+11. .value = "inject"      → blocked
+12. keydown event listener → events don't propagate
+13. Prototype pollution    → returns encrypted
+14. MutationObserver       → can't observe closed Shadow DOM
+15. getComputedStyle       → no data in CSS
+16. Input overlay attack   → keystrokes go to Shadow DOM
+17. document.execCommand   → blocked by Shadow DOM
+18. JSON.stringify         → sensitive data in WeakMap (invisible)
+19. Property enumeration   → no plaintext properties
+20. Accessibility APIs     → no data in ARIA</code></pre>
+
+<!-- WHAT WE PROTECT / DON'T PROTECT -->
+<h2 id="attacks">What SmartField Protects — And What It Doesn't</h2>
+<p>We believe in transparency. No security product is 100%. Here's exactly what SmartField covers and what it doesn't.</p>
+
+<h3>SmartField PROTECTS against:</h3>
+<table>
+  <tr><th>Attack</th><th>How</th></tr>
+  <tr><td>JavaScript reading .value</td><td>Returns encrypted payload only</td></tr>
+  <tr><td>Trackers (Hotjar, GA, FullStory)</td><td>Shadow DOM + event blocking</td></tr>
+  <tr><td>XSS attacks</td><td>Attacker gets encrypted gibberish</td></tr>
+  <tr><td>Screen recorders</td><td>Cipher characters + scramble on blur</td></tr>
+  <tr><td>Bots and AI agents</td><td>Shadow DOM blocks querySelector</td></tr>
+  <tr><td>Copy / paste / select</td><td>All clipboard events blocked</td></tr>
+  <tr><td>Prototype pollution</td><td>value property is non-configurable</td></tr>
+  <tr><td>JSON serialization</td><td>Sensitive data in WeakMap (invisible)</td></tr>
+  <tr><td>MutationObserver</td><td>Cannot observe closed Shadow DOM</td></tr>
+  <tr><td>Browser autofill / autosave</td><td>Input shows cipher chars, not real data</td></tr>
+</table>
+
+<h3>SmartField DOES NOT protect against:</h3>
+<table>
+  <tr><th>Attack</th><th>Why</th></tr>
+  <tr><td>Malicious browser extensions</td><td>Extensions with elevated permissions operate below the JavaScript layer. SmartField cannot block them. This is a browser-level limitation, not a SmartField limitation.</td></tr>
+  <tr><td>OS-level keyloggers</td><td>A keylogger installed on the operating system captures keystrokes before they reach the browser. No web technology can prevent this.</td></tr>
+  <tr><td>Physical access to the machine</td><td>Someone with physical access can install keyloggers, use hardware devices, or read the screen directly. This requires endpoint security, not web security.</td></tr>
+  <tr><td>Browser zero-day exploits</td><td>A vulnerability in Chrome/Firefox itself could bypass Shadow DOM. If this happens, the entire browser is compromised — not just SmartField.</td></tr>
+  <tr><td>RAM dump with root access</td><td>With root/admin access to the machine, an attacker could read browser process memory. This requires full system compromise.</td></tr>
+</table>
+
+<div class="warn"><strong>Our position:</strong> SmartField protects the browser layer — the space between the keyboard and the server. This is the layer that no one else protects. We are transparent about what falls outside our scope because we believe honesty builds more trust than false promises.</div>
+
+<!-- LICENSE -->
+<h2 id="license">License Keys</h2>
+<pre><code>&lt;!-- Free plan: no key needed --&gt;
+&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"&gt;&lt;/script&gt;
+&lt;!-- Limit: 3 fields per page, badge shown --&gt;
+
+&lt;!-- Paid plan: add your key --&gt;
+&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"
+        data-key="sf_live_your_key_here"&gt;&lt;/script&gt;
+&lt;!-- Unlimited fields, no badge --&gt;</code></pre>
+
+<div class="warn"><strong>License key is tied to your domain.</strong> If someone copies your key to another domain, SmartField falls back to the free plan on that domain. Your key only works on the domain you registered.</div>
+
+</div>
+</div>
+
+<script>
+// Sidebar active state
+document.querySelectorAll('.sidebar a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.querySelectorAll('.sidebar a').forEach(function(x) { x.classList.remove('active'); });
+    a.classList.add('active');
+  });
+});
+</script>
+<script src="/landing/cookie-banner.js"></script>
+</body>
+</html>

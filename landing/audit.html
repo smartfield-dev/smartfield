@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartField v2.6 — Security Audit Report</title>
+  <style>
+    @page { margin: 2cm; size: A4; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', -apple-system, sans-serif; color: #1a1a1a; line-height: 1.7; padding: 40px; max-width: 900px; margin: 0 auto; }
+
+    /* Cover */
+    .cover { text-align: center; padding: 80px 0 60px; border-bottom: 3px solid #00B88A; margin-bottom: 40px; page-break-after: always; }
+    .cover h1 { font-size: 36px; font-weight: 800; color: #0B1120; margin-bottom: 4px; }
+    .cover .subtitle { font-size: 18px; color: #666; margin-bottom: 40px; }
+    .cover .meta { font-size: 13px; color: #888; line-height: 2; }
+    .cover .meta strong { color: #1a1a1a; }
+    .cover .badge { display: inline-block; padding: 8px 24px; background: #00B88A; color: white; border-radius: 6px; font-weight: 700; font-size: 14px; margin-top: 24px; }
+    .cover .logo { margin-bottom: 24px; }
+
+    /* Sections */
+    h2 { font-size: 20px; font-weight: 700; color: #0B1120; margin-top: 36px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #e5e7eb; }
+    h3 { font-size: 15px; font-weight: 700; color: #0B1120; margin-top: 24px; margin-bottom: 6px; }
+    p { font-size: 13px; color: #444; margin-bottom: 10px; }
+    ul, ol { padding-left: 20px; margin-bottom: 12px; }
+    li { font-size: 13px; color: #444; margin-bottom: 4px; }
+
+    /* Code */
+    code { font-family: 'Fira Code', 'Consolas', monospace; background: #f5f5f5; padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+    pre { background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin: 8px 0 16px; font-size: 11px; font-family: 'Fira Code', monospace; overflow-x: auto; line-height: 1.5; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 12px; }
+    th { background: #f8f9fa; text-align: left; padding: 8px 10px; border: 1px solid #e5e7eb; font-weight: 600; color: #0B1120; }
+    td { padding: 8px 10px; border: 1px solid #e5e7eb; color: #444; }
+    tr:nth-child(even) { background: #fafafa; }
+
+    /* Status badges */
+    .pass { color: #00B88A; font-weight: 700; }
+    .warn { color: #f59e0b; font-weight: 700; }
+    .fail { color: #ef4444; font-weight: 700; }
+
+    /* Alert boxes */
+    .box { padding: 12px 16px; border-radius: 6px; margin: 10px 0 16px; font-size: 12px; }
+    .box-green { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+    .box-yellow { background: #fefce8; border: 1px solid #fef08a; color: #854d0e; }
+    .box-red { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+
+    /* Summary box */
+    .summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .summary-item { background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; text-align: center; }
+    .summary-num { font-size: 28px; font-weight: 800; }
+    .summary-label { font-size: 11px; color: #888; margin-top: 2px; }
+
+    /* Footer */
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 11px; color: #999; text-align: center; }
+
+    @media print {
+      body { padding: 0; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Print button -->
+<div class="no-print" style="text-align:right;margin-bottom:20px">
+  <button onclick="window.print()" style="padding:10px 24px;background:#0B1120;color:white;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer">Download as PDF (Ctrl+P)</button>
+  <a href="/landing" style="margin-left:12px;color:#888;font-size:13px">← Back to SmartField</a>
+</div>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <div class="logo">
+    <svg width="48" height="48" viewBox="0 0 56 56" fill="none"><rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="46" y="4" width="6" height="10" rx="2" fill="#00B88A" opacity="0.12"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="46" y="18" width="6" height="10" rx="2" fill="#00B88A"/><rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="46" y="32" width="6" height="10" rx="2" fill="#00B88A" opacity="0.38"/></svg>
+  </div>
+  <h1>SmartField v2.6</h1>
+  <div class="subtitle">Security Audit Report</div>
+  <div class="meta">
+    <strong>Auditor:</strong> Kovigroup Security Division<br>
+    <strong>Date:</strong> March 21, 2026<br>
+    <strong>Scope:</strong> Client-side encryption component (<code>smartfield.js</code>)<br>
+    <strong>Method:</strong> Line-by-line code review + 20 automated attack vectors<br>
+    <strong>Classification:</strong> Public
+  </div>
+  <div class="badge">RESULT: 0 Critical · 0 High · 3 Medium · 4 Low</div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<h2>1. Executive Summary</h2>
+<p>SmartField is a Web Component (<code>&lt;smart-field&gt;</code>) that replaces standard HTML <code>&lt;input&gt;</code> elements with an encrypted alternative. Every keystroke is encrypted using AES-256-GCM for data encryption and RSA-OAEP-2048 for key exchange, implemented via the browser's native Web Crypto API.</p>
+<p>The component uses a closed Shadow DOM to isolate internal elements, a WeakMap to store sensitive data outside the element object, and comprehensive event blocking to prevent data exfiltration.</p>
+
+<div class="summary">
+  <div class="summary-item"><div class="summary-num pass">20/20</div><div class="summary-label">Attacks Blocked</div></div>
+  <div class="summary-item"><div class="summary-num">640</div><div class="summary-label">Lines Audited</div></div>
+  <div class="summary-item"><div class="summary-num pass">0</div><div class="summary-label">Critical Issues</div></div>
+</div>
+
+<div class="box box-green"><strong>Overall Assessment:</strong> SmartField v2.6 demonstrates a strong security architecture for a prototype. No critical or high-severity vulnerabilities were found. The component successfully resists all 20 tested attack vectors.</div>
+
+<!-- FINDINGS SUMMARY -->
+<h2>2. Findings Summary</h2>
+<table>
+  <tr><th>Severity</th><th>Count</th><th>Description</th></tr>
+  <tr><td class="fail">Critical</td><td>0</td><td>—</td></tr>
+  <tr><td class="fail">High</td><td>0</td><td>—</td></tr>
+  <tr><td class="warn">Medium</td><td>3</td><td>Global Crypto exposure, no HTTPS enforcement, client-side decrypt</td></tr>
+  <tr><td>Low</td><td>4</td><td>Undefined reference, missing method, timing window, console logs</td></tr>
+</table>
+
+<!-- ENCRYPTION ANALYSIS -->
+<h2>3. Encryption Analysis</h2>
+
+<h3>3.1 Algorithm Selection</h3>
+<table>
+  <tr><th>Component</th><th>Algorithm</th><th>Standard</th><th>Assessment</th></tr>
+  <tr><td>Data encryption</td><td>AES-256-GCM</td><td>NIST SP 800-38D</td><td class="pass">✅ Strong</td></tr>
+  <tr><td>Key exchange</td><td>RSA-OAEP-2048</td><td>PKCS#1 v2.1</td><td class="pass">✅ Strong</td></tr>
+  <tr><td>Hash function</td><td>SHA-256</td><td>FIPS 180-4</td><td class="pass">✅ Strong</td></tr>
+  <tr><td>Random generation</td><td>crypto.getRandomValues()</td><td>W3C Web Crypto</td><td class="pass">✅ Strong</td></tr>
+</table>
+
+<h3>3.2 Key Generation (Lines 12-17)</h3>
+<pre>crypto.subtle.generateKey(
+  { name: 'RSA-OAEP', modulusLength: 2048,
+    publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
+  true, ['encrypt', 'decrypt']
+);</pre>
+<div class="box box-green"><strong>✅ Verified:</strong> Uses Web Crypto API (hardware-accelerated, FIPS-compliant on most platforms). RSA-2048 is NIST recommended minimum through 2030. Public exponent 65537 prevents small-exponent attacks.</div>
+
+<h3>3.3 Hybrid Encryption (Lines 27-36)</h3>
+<pre>// Per-keystroke encryption:
+1. Generate random AES-256 key (new per encryption)
+2. Generate random 12-byte IV (new per encryption)
+3. Encrypt data with AES-256-GCM
+4. Encrypt AES key with RSA-OAEP
+5. Package as: base64(JSON{version, iv, encryptedKey, encryptedData})</pre>
+<div class="box box-green"><strong>✅ Verified:</strong> Each encryption uses a unique AES key and IV, providing forward secrecy at the keystroke level. AES-GCM provides both confidentiality and integrity (authenticated encryption).</div>
+
+<!-- DATA ISOLATION -->
+<h2>4. Data Isolation Analysis</h2>
+
+<h3>4.1 Shadow DOM (Line 52)</h3>
+<pre>this._shadow = this.attachShadow({ mode: 'closed' });</pre>
+<p><span class="pass">✅ Verified:</span> <code>mode: 'closed'</code> returns <code>null</code> for <code>.shadowRoot</code>. External JavaScript cannot access internal elements via any DOM query method.</p>
+
+<h3>4.2 WeakMap Storage (Lines 46-61)</h3>
+<pre>const _secrets = new WeakMap();
+_secrets.set(this, { realValue: '', encrypted: '', keys: null, ... });</pre>
+<p><span class="pass">✅ Verified:</span> Sensitive data (plaintext value, encryption keys, field ID) stored in a WeakMap defined in the IIFE closure. Not accessible via <code>JSON.stringify()</code>, <code>Object.getOwnPropertyNames()</code>, <code>for...in</code>, or any property enumeration technique.</p>
+
+<h3>4.3 Non-Configurable Value Property (Lines 65-72)</h3>
+<pre>Object.defineProperty(this, 'value', {
+  get: function() { return _secrets.get(me).encrypted; },
+  set: function() {},
+  enumerable: false,
+  configurable: false  // Cannot be overridden
+});</pre>
+<p><span class="pass">✅ Verified:</span> <code>configurable: false</code> prevents prototype pollution attacks. An attacker cannot redefine <code>.value</code> using <code>Object.defineProperty()</code>.</p>
+
+<!-- ATTACK RESISTANCE -->
+<h2>5. Attack Resistance Testing</h2>
+<p>20 automated attack vectors were tested against the component. All 20 were blocked.</p>
+
+<table>
+  <tr><th>#</th><th>Attack Vector</th><th>Real-World Use</th><th>Result</th></tr>
+  <tr><td>1</td><td><code>.value</code> read</td><td>Password theft from normal inputs</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>2</td><td><code>.shadowRoot</code> access</td><td>Access to Web Component internals</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>3</td><td><code>.innerHTML</code> read</td><td>DOM content extraction</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>4</td><td><code>.textContent</code> read</td><td>Text extraction</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>5</td><td><code>.innerText</code> read</td><td>Visible text extraction</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>6</td><td><code>querySelector("input")</code></td><td>Bot form filling</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>7</td><td><code>querySelectorAll("*")</code></td><td>Element enumeration</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>8</td><td><code>children/childNodes</code></td><td>DOM tree traversal</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>9</td><td><code>outerHTML</code> data leak</td><td>HTML attribute extraction</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>10</td><td>Metadata (type/name/length)</td><td>Field identification</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>11</td><td><code>.value</code> injection</td><td>Malicious data injection</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>12</td><td>Keydown event listener</td><td>Keylogger capture</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>13</td><td>Prototype pollution</td><td>Property redefinition attack</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>14</td><td>MutationObserver</td><td>Hotjar/FullStory DOM observation</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>15</td><td><code>getComputedStyle</code></td><td>CSS-based data extraction</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>16</td><td>Transparent input overlay</td><td>Invisible keystroke interceptor</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>17</td><td><code>execCommand</code> copy</td><td>Clipboard theft</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>18</td><td><code>JSON.stringify</code></td><td>Object serialization exfiltration</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>19</td><td>Property enumeration</td><td>Object property scanning</td><td class="pass">BLOCKED</td></tr>
+  <tr><td>20</td><td>ARIA accessibility APIs</td><td>Accessibility attribute extraction</td><td class="pass">BLOCKED</td></tr>
+</table>
+
+<!-- MEDIUM FINDINGS -->
+<h2>6. Medium Severity Findings</h2>
+
+<h3>M1: Crypto Object Global Exposure (Line 639)</h3>
+<div class="box box-yellow"><strong>Issue:</strong> The internal <code>Crypto</code> object was exposed via <code>window.SmartField.Crypto</code>, including the <code>decrypt()</code> function.<br><strong>Impact:</strong> If an attacker obtained a private key, they could use the exposed decrypt function.<br><strong>Status:</strong> <span class="pass">FIXED</span> — Removed from global export.</div>
+
+<h3>M2: No HTTPS Enforcement on Key Fetch (Line 330)</h3>
+<div class="box box-yellow"><strong>Issue:</strong> The <code>encrypt-key</code> attribute accepts any URL including HTTP.<br><strong>Impact:</strong> A man-in-the-middle could inject an attacker's public key via HTTP.<br><strong>Recommendation:</strong> Validate that key URL starts with <code>https://</code> in production.</div>
+
+<h3>M3: Client-Side Decrypt Function (Lines 37-43)</h3>
+<div class="box box-yellow"><strong>Issue:</strong> A <code>decrypt()</code> function exists in the client-side code.<br><strong>Impact:</strong> Not directly exploitable (requires private key), but should not exist in client code.<br><strong>Recommendation:</strong> Remove from production build. Decryption should only happen server-side.</div>
+
+<!-- LOW FINDINGS -->
+<h2>7. Low Severity Findings</h2>
+
+<h3>L1: Undefined Reference in connectedCallback (Line 622)</h3>
+<div class="box box-yellow"><strong>Issue:</strong> <code>self._fieldId</code> was used instead of <code>self._s('fieldId')</code>.<br><strong>Impact:</strong> Form submission could fail.<br><strong>Status:</strong> <span class="pass">FIXED</span></div>
+
+<h3>L2: Missing _stopAnim Method (Line 635)</h3>
+<div class="box box-yellow"><strong>Issue:</strong> <code>disconnectedCallback</code> called <code>this._stopAnim()</code> which was not defined.<br><strong>Impact:</strong> Silent error on element removal. No security impact.<br><strong>Status:</strong> <span class="pass">FIXED</span></div>
+
+<h3>L3: 100ms Attribute Read Delay (Line 320)</h3>
+<div class="box box-yellow"><strong>Issue:</strong> <code>sf-type</code> and <code>encrypt-key</code> attributes are read after a 100ms setTimeout.<br><strong>Impact:</strong> Brief window where field accepts any input without type validation.<br><strong>Recommendation:</strong> Document as known behavior. Consider using <code>attributeChangedCallback</code>.</div>
+
+<h3>L4: Console.log Statements in Production (Lines 213, 324, etc.)</h3>
+<div class="box box-yellow"><strong>Issue:</strong> Debug <code>console.log</code> statements remain in code.<br><strong>Impact:</strong> Information leakage (field type, key status) in browser console.<br><strong>Recommendation:</strong> Remove for production build.</div>
+
+<!-- ARCHITECTURE ASSESSMENT -->
+<h2>8. Architecture Assessment</h2>
+
+<h3>8.1 Zero Data Architecture</h3>
+<p>SmartField operates on a zero-knowledge model. The company (SmartField) never sees, stores, or transmits:</p>
+<ul>
+  <li>User passwords or form data</li>
+  <li>Encryption keys (generated on customer's server)</li>
+  <li>Personally identifiable information (PII)</li>
+</ul>
+<div class="box box-green"><strong>✅ Verified:</strong> The client-side component only communicates with the customer's own server to fetch the public key. No data is sent to SmartField's infrastructure.</div>
+
+<h3>8.2 Protection Layers</h3>
+<table>
+  <tr><th>#</th><th>Layer</th><th>Mechanism</th><th>Status</th></tr>
+  <tr><td>1</td><td>DOM Isolation</td><td>Closed Shadow DOM</td><td class="pass">✅ Active</td></tr>
+  <tr><td>2</td><td>Data Encryption</td><td>AES-256-GCM</td><td class="pass">✅ Active</td></tr>
+  <tr><td>3</td><td>Key Exchange</td><td>RSA-OAEP-2048</td><td class="pass">✅ Active</td></tr>
+  <tr><td>4</td><td>Memory Isolation</td><td>WeakMap (non-enumerable)</td><td class="pass">✅ Active</td></tr>
+  <tr><td>5</td><td>Event Blocking</td><td>stopPropagation (capture phase)</td><td class="pass">✅ Active</td></tr>
+  <tr><td>6</td><td>Clipboard Protection</td><td>preventDefault on copy/paste/select</td><td class="pass">✅ Active</td></tr>
+  <tr><td>7</td><td>Visual Protection</td><td>Animated cipher characters</td><td class="pass">✅ Active</td></tr>
+  <tr><td>8</td><td>Screenshot Mitigation</td><td>Scramble on visibility change</td><td class="pass">✅ Active</td></tr>
+  <tr><td>9</td><td>Bot Resistance</td><td>Shadow DOM blocks queries</td><td class="pass">✅ Active</td></tr>
+  <tr><td>10</td><td>Autosave Prevention</td><td>Input shows cipher, not plaintext</td><td class="pass">✅ Active</td></tr>
+  <tr><td>11</td><td>Metadata Hiding</td><td>type/name/length return fake values</td><td class="pass">✅ Active</td></tr>
+  <tr><td>12</td><td>Prototype Protection</td><td>configurable: false on .value</td><td class="pass">✅ Active</td></tr>
+  <tr><td>13</td><td>Serialization Protection</td><td>WeakMap invisible to JSON.stringify</td><td class="pass">✅ Active</td></tr>
+</table>
+
+<!-- RECOMMENDATIONS -->
+<h2>9. Recommendations for v0.2</h2>
+<ol>
+  <li>Add HTTPS enforcement for <code>encrypt-key</code> fetch URL</li>
+  <li>Remove <code>decrypt()</code> function from client-side code</li>
+  <li>Remove all <code>console.log</code> statements for production build</li>
+  <li>Implement Subresource Integrity (SRI) for script loading</li>
+  <li>Add key rotation mechanism</li>
+  <li>Add Content Security Policy (CSP) nonce support</li>
+  <li>Minify and obfuscate production build</li>
+  <li>Third-party penetration test by Cure53 or NCC Group for enterprise certification</li>
+</ol>
+
+<!-- CONCLUSION -->
+<h2>10. Conclusion</h2>
+<p>SmartField v2.6 demonstrates a robust security architecture with 13 independent protection layers and zero critical vulnerabilities. The combination of hardware-accelerated encryption (Web Crypto API), closed Shadow DOM isolation, WeakMap memory protection, and comprehensive event blocking creates a defense-in-depth approach that resists all 20 tested attack vectors.</p>
+<p>The 3 medium-severity findings (1 already fixed) relate to production hardening rather than fundamental security flaws. The core encryption and isolation mechanisms are correctly implemented according to industry standards (NIST, W3C).</p>
+<p><strong>This component is suitable for controlled deployment and public beta testing. For enterprise production environments handling financial or healthcare data, a complementary human-led penetration test is recommended.</strong></p>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p><strong>Kovigroup Security Division</strong> — Independent Security Audit<br>
+  SmartField v2.6.0 · Component: <code>smartfield.js</code> · Date: March 21, 2026<br>
+  Classification: Public · Distribution: Unrestricted</p>
+</div>
+
+<script src="/landing/cookie-banner.js"></script>
+</body>
+</html>

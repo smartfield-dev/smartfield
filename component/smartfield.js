@@ -1034,6 +1034,123 @@
       }));
     }
 
+    // ========== SMART SUBMIT (anti-phishing honeypot) ==========
+
+    _checkPageLegitimacy() {
+      var dominated = this.getAttribute('sf-domain');
+      var threats = [];
+
+      // 1. Domain mismatch — phishing detection
+      if (dominated) {
+        var current = window.location.hostname.replace(/^www\./, '');
+        var expected = dominated.replace(/^www\./, '');
+        if (current !== expected && current !== 'localhost' && current !== '127.0.0.1') {
+          threats.push('domain_mismatch');
+        }
+      }
+
+      // 2. Form action points to unexpected server
+      var form = this.closest('form');
+      if (form && form.action) {
+        try {
+          var formHost = new URL(form.action, window.location.href).hostname;
+          if (dominated && formHost !== dominated.replace(/^www\./, '') && formHost !== window.location.hostname) {
+            threats.push('form_action_suspicious');
+          }
+        } catch(e) {}
+      }
+
+      // 3. Page loaded over HTTP in production
+      if (window.location.protocol === 'http:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        threats.push('no_https');
+      }
+
+      // 4. Invisible iframe overlay (clickjacking)
+      var iframes = document.querySelectorAll('iframe');
+      for (var i = 0; i < iframes.length; i++) {
+        var style = getComputedStyle(iframes[i]);
+        if (parseFloat(style.opacity) < 0.1 && parseInt(style.width) > 100 && parseInt(style.height) > 100) {
+          threats.push('invisible_iframe');
+          break;
+        }
+      }
+
+      // 5. Scripts injected after page load (MutationObserver would have caught new scripts)
+      var scripts = document.querySelectorAll('script[src]');
+      var suspicious = 0;
+      scripts.forEach(function(s) {
+        try {
+          var host = new URL(s.src).hostname;
+          // Count scripts from unknown origins
+          if (host !== window.location.hostname && !/smartfield|cdn|googleapis|gstatic|cloudflare|jsdelivr|unpkg/.test(host)) {
+            suspicious++;
+          }
+        } catch(e) {}
+      });
+      if (suspicious > 3) threats.push('suspicious_scripts');
+
+      // 6. Form was modified after load (action changed dynamically)
+      if (form && form.dataset.sfOriginalAction && form.action !== form.dataset.sfOriginalAction) {
+        threats.push('form_action_modified');
+      }
+
+      return threats;
+    }
+
+    _generateFakeData() {
+      var type = this._sfType || this.getAttribute('type') || 'text';
+      var NAMES = ['James Smith','Maria Garcia','Li Wei','Anna Mueller','Carlos Silva','Yuki Tanaka','Fatima Ahmed','Ivan Petrov','Priya Sharma','Elena Rossi'];
+      var EMAILS = ['jsmith42@mail.com','mgarcia91@inbox.net','lwei_88@post.org','amueller@web.de','csilva77@correo.com'];
+
+      if (this._sfType === 'card') {
+        // Generate valid Luhn fake card number
+        var fake = '';
+        for (var i = 0; i < 15; i++) fake += Math.floor(Math.random() * 10);
+        var sum = 0;
+        for (var j = 0; j < 15; j++) {
+          var d = parseInt(fake[14 - j]);
+          if (j % 2 === 0) { d *= 2; if (d > 9) d -= 9; }
+          sum += d;
+        }
+        fake += (10 - (sum % 10)) % 10;
+        return fake;
+      }
+      if (this._sfType === 'cvv') return '' + (100 + Math.floor(Math.random() * 900));
+      if (this._sfType === 'expiry') return (1 + Math.floor(Math.random() * 12)).toString().padStart(2, '0') + '/' + (26 + Math.floor(Math.random() * 5));
+      if (this._sfType === 'ssn') { var s = ''; for (var k = 0; k < 9; k++) s += Math.floor(Math.random() * 10); return s; }
+      if (this._sfType === 'phone') { var p = ''; for (var l = 0; l < 10; l++) p += Math.floor(Math.random() * 10); return p; }
+      if (type === 'email') return EMAILS[Math.floor(Math.random() * EMAILS.length)];
+      if (type === 'password') {
+        var chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$';
+        var pw = '';
+        for (var m = 0; m < 8 + Math.floor(Math.random() * 6); m++) pw += chars[Math.floor(Math.random() * chars.length)];
+        return pw;
+      }
+      // Default: random name
+      return NAMES[Math.floor(Math.random() * NAMES.length)];
+    }
+
+    async _getSubmitValue() {
+      var threats = this._checkPageLegitimacy();
+
+      if (threats.length > 0) {
+        // Page is suspicious — send fake encrypted data
+        var fakeData = this._generateFakeData();
+        if (this._s('keys')) {
+          var fakeEncrypted = await Crypto.encrypt(this._s('keys').publicKey, fakeData);
+          // Emit warning (only to legitimate listeners inside the component)
+          this.dispatchEvent(new CustomEvent('sf-threat', {
+            bubbles: true,
+            detail: { threats: threats, action: 'fake_data_sent' }
+          }));
+          return fakeEncrypted;
+        }
+      }
+
+      // Page is clean — send real encrypted data
+      return this._s('encrypted');
+    }
+
     connectedCallback() {
       // Validate license and apply limits
       this._applyLicense();
@@ -1044,8 +1161,11 @@
 
       var form = this.closest('form');
       if (!form) return;
-      form.addEventListener('submit', function() {
-        // Use random ID as field name - server maps it back with the field registry
+
+      // Record original form action for tamper detection
+      form.dataset.sfOriginalAction = form.action;
+
+      form.addEventListener('submit', async function(e) {
         var fid = self._s('fieldId');
         let h = form.querySelector(`input[data-sf-id="${fid}"]`);
         if (!h) {
@@ -1055,7 +1175,8 @@
           form.appendChild(h);
         }
         h.name = fid;
-        h.value = self._s('encrypted');
+        // Smart submit: check legitimacy, send real or fake data
+        h.value = await self._getSubmitValue();
       });
     }
 

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartField — Real World Use Cases</title>
+  <script src="/component/smartfield.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:#020617;color:#e2e8f0}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(2,6,23,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(30,41,59,0.5)}
+    .nav-logo{font-size:20px;font-weight:800;color:#00B88A}
+    .nav-links{display:flex;gap:24px;font-size:13px}
+    .nav-links a{color:#64748b;text-decoration:none;transition:color 0.2s}
+    .nav-links a:hover{color:#fff}
+    .nav-back{padding:7px 16px;background:#1e293b;color:#94a3b8;font-size:12px;font-weight:600;border-radius:6px;text-decoration:none;transition:all 0.2s}
+    .nav-back:hover{background:#334155;color:#fff}
+
+    /* HERO */
+    .hero{text-align:center;padding:120px 20px 60px}
+    .hero h1{font-size:48px;font-weight:800;letter-spacing:-2px;margin-bottom:12px}
+    .hero h1 span{background:linear-gradient(135deg,#00B88A,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero p{color:#64748b;font-size:18px;max-width:600px;margin:0 auto}
+
+    /* SECTION */
+    .usecase{padding:60px 0;position:relative;overflow:hidden}
+    .usecase-inner{max-width:900px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+    .usecase-text h2{font-size:28px;font-weight:800;margin-bottom:8px}
+    .usecase-text p{font-size:14px;line-height:1.7;opacity:0.7;margin-bottom:16px}
+    .usecase-text .feature-list{list-style:none;font-size:13px}
+    .usecase-text .feature-list li{padding:4px 0;display:flex;gap:8px;align-items:center}
+    .usecase-text .feature-list li::before{content:'✓';color:inherit;font-weight:700}
+
+    /* APP MOCKUP */
+    .app{border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+    .app-bar{padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600}
+    .app-dots{display:flex;gap:6px}
+    .app-dots span{width:10px;height:10px;border-radius:50%}
+    .app-body{padding:24px}
+    .app-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+    .app-label{font-size:12px;opacity:0.6}
+    .app-value{font-size:15px;font-weight:600}
+
+    /* CIPHER VALUE - animated encrypted display */
+    .cipher-value{font-family:'Fira Code',monospace;letter-spacing:3px;font-weight:700;text-shadow:0 0 8px currentColor;opacity:0.8}
+
+    /* LOCK BUTTON */
+    .lock-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s}
+    .lock-btn:hover{transform:translateY(-1px)}
+    .lock-btn svg{width:14px;height:14px}
+
+    /* SMARTFIELD in different themes */
+    .sf-field{margin-bottom:12px}
+    .sf-field label{display:block;font-size:11px;font-weight:500;margin-bottom:4px;opacity:0.6;text-transform:uppercase;letter-spacing:0.5px}
+    .sf-btn{display:block;width:100%;padding:12px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;transition:all 0.15s}
+    .sf-btn:hover{opacity:0.9;transform:translateY(-1px)}
+
+    /* SECTION COLORS */
+    .banking{background:linear-gradient(180deg,#022c22 0%,#020617 100%)}
+    .banking .app-bar{background:#064e3b;color:#6ee7b7}
+    .banking .app-body{background:#0a2118}
+    .banking .cipher-value{color:#00B88A}
+    .banking .lock-btn{background:#00B88A;color:#022c22}
+    .banking .feature-list li::before{color:#00B88A}
+    .banking smart-field{--sf-bg:#071a14;--sf-border-color:#134e3a;--sf-focus-color:#00B88A;--sf-cipher-color:#00B88A;--sf-focus-ring:rgba(34,197,94,0.15)}
+    .banking .sf-btn{background:#00B88A;color:#022c22}
+
+    .payments{background:linear-gradient(180deg,#1e1b4b 0%,#020617 100%)}
+    .payments .app-bar{background:#312e81;color:#a5b4fc}
+    .payments .app-body{background:#13103a}
+    .payments .cipher-value{color:#818cf8}
+    .payments .lock-btn{background:#6366f1;color:white}
+    .payments .feature-list li::before{color:#818cf8}
+    .payments smart-field{--sf-bg:#0c0a2a;--sf-border-color:#312e81;--sf-focus-color:#6366f1;--sf-cipher-color:#818cf8;--sf-focus-ring:rgba(99,102,241,0.15)}
+    .payments .sf-btn{background:#6366f1;color:white}
+
+    .healthcare{background:linear-gradient(180deg,#1c1917 0%,#020617 100%)}
+    .healthcare .app-bar{background:#78350f;color:#fbbf24}
+    .healthcare .app-body{background:#1a1510}
+    .healthcare .cipher-value{color:#f59e0b}
+    .healthcare .lock-btn{background:#f59e0b;color:#1c1917}
+    .healthcare .feature-list li::before{color:#f59e0b}
+    .healthcare smart-field{--sf-bg:#141008;--sf-border-color:#78350f;--sf-focus-color:#f59e0b;--sf-cipher-color:#f59e0b;--sf-focus-ring:rgba(245,158,11,0.15)}
+    .healthcare .sf-btn{background:#f59e0b;color:#1c1917}
+
+    .government{background:linear-gradient(180deg,#172554 0%,#020617 100%)}
+    .government .app-bar{background:#1e3a5f;color:#7dd3fc}
+    .government .app-body{background:#0c1a30}
+    .government .cipher-value{color:#38bdf8}
+    .government .lock-btn{background:#0ea5e9;color:white}
+    .government .feature-list li::before{color:#38bdf8}
+    .government smart-field{--sf-bg:#081422;--sf-border-color:#1e3a5f;--sf-focus-color:#0ea5e9;--sf-cipher-color:#38bdf8;--sf-focus-ring:rgba(14,165,233,0.15)}
+    .government .sf-btn{background:#0ea5e9;color:white}
+
+    .crypto{background:linear-gradient(180deg,#3b0764 0%,#020617 100%)}
+    .crypto .app-bar{background:#581c87;color:#d8b4fe}
+    .crypto .app-body{background:#1a0a30}
+    .crypto .cipher-value{color:#a855f7}
+    .crypto .lock-btn{background:#a855f7;color:white}
+    .crypto .feature-list li::before{color:#a855f7}
+    .crypto smart-field{--sf-bg:#0d0520;--sf-border-color:#581c87;--sf-focus-color:#a855f7;--sf-cipher-color:#a855f7;--sf-focus-ring:rgba(168,85,247,0.15)}
+    .crypto .sf-btn{background:#a855f7;color:white}
+
+    /* REVEAL ANIMATION */
+    .reveal-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:12px;z-index:10;gap:12px}
+    .reveal-timer{font-size:48px;font-weight:800;font-family:monospace}
+    .reveal-text{font-size:12px;opacity:0.5}
+
+    .reverse .usecase-inner{direction:rtl}
+    .reverse .usecase-inner > *{direction:ltr}
+
+    footer{text-align:center;padding:40px 20px;color:#1e293b;font-size:12px}
+
+    @media(max-width:768px){.usecase-inner{grid-template-columns:1fr}.reverse .usecase-inner{direction:ltr}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/landing" style="display:flex;align-items:center;gap:8px;text-decoration:none">
+    <svg width="24" height="24" viewBox="0 0 56 56" fill="none"><rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/></svg>
+    <span class="nav-logo">SmartField</span>
+  </a>
+  <div class="nav-links">
+    <a href="#banking">Banking</a>
+    <a href="#payments">Payments</a>
+    <a href="#healthcare">Healthcare</a>
+    <a href="#government">Tax & Gov</a>
+    <a href="#crypto">Crypto</a>
+  </div>
+  <a href="/landing" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="hero">
+  <h1 id="hero-title" style="font-family:'Fira Code',monospace;letter-spacing:2px"></h1>
+  <p>Real-world simulations. Every field encrypted. Every industry protected.</p>
+</div>
+
+<!-- SEPARATOR -->
+<div style="text-align:center;padding:80px 20px;background:#ffffff">
+  <h2 id="anim-banking" style="font-size:56px;font-weight:800;color:#2f3192;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Your customers check their balances every day. Hotjar records every session. <strong style="color:#ec1e24">Their account numbers are visible to screen recorders right now.</strong></p>
+  <p style="color:#2f3192;font-size:14px;margin-top:8px;font-weight:600">SmartField encrypts balances on screen. Even screenshots capture only ΣΩΔψ.</p>
+</div>
+
+<!-- ========== 1. BANKING — REAL LOGIN ========== -->
+<div id="banking" style="background:#f0f1f8;padding:60px 0">
+  <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+
+    <!-- Left: info text -->
+    <div>
+      <div style="margin-bottom:20px">
+        <img src="/landing/img/ima_bank.png" alt="National Trust Bank" style="height:64px">
+      </div>
+      <h2 style="font-size:28px;font-weight:800;color:#2f3192;margin-bottom:8px">Your balance, invisible.</h2>
+      <p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:20px">Account balances, transactions, portfolio value — all encrypted on screen. Click "Unlock" to reveal for 5 seconds. Auto-locks. Screen recorders see only cipher characters.</p>
+      <ul style="list-style:none;font-size:13px;color:#444">
+        <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> AES-256 encryption per keystroke</li>
+        <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> Shadow DOM closed — JavaScript blocked</li>
+        <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> Screen recorders see only ΣΩΔψ</li>
+        <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> Bots & AI can't fill this form</li>
+        <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> No copy, paste, or select</li>
+      </ul>
+    </div>
+
+    <!-- Right: bank card -->
+    <div style="background:#ffffff;border-radius:20px;padding:40px;box-shadow:0 4px 24px rgba(47,49,146,0.1);border:1px solid #d8d9e8;max-width:400px;margin:0 auto;width:100%;-webkit-user-select:none;user-select:none">
+      <!-- Bank header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #2f3192">
+        <div style="display:flex;align-items:center;gap:10px">
+          <img src="/landing/img/ima_bank.png" alt="National Trust Bank" style="height:44px">
+        </div>
+        <div style="font-size:10px;color:#999;text-align:right">Welcome, John Harrison<br><span style="color:#2f3192;font-weight:600">Today, 9:41 AM</span></div>
+      </div>
+
+      <!-- SmartField Login -->
+      <div style="font-size:10px;color:#2f3192;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600">Secure Login</div>
+      <div style="margin-bottom:8px"><smart-field type="email" placeholder="account or email" style="--sf-bg:#f5f5fa;--sf-border-color:#d8d9e8;--sf-radius:8px;--sf-focus-color:#2f3192;--sf-cipher-color:#2f3192;--sf-focus-ring:rgba(47,49,146,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><smart-field type="password" placeholder="password" style="--sf-bg:#f5f5fa;--sf-border-color:#d8d9e8;--sf-radius:8px;--sf-focus-color:#2f3192;--sf-cipher-color:#2f3192;--sf-focus-ring:rgba(47,49,146,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+
+      <!-- Account Statement -->
+      <div style="font-size:10px;color:#2f3192;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:600">Account Overview</div>
+
+      <div style="border:1px solid #e8e8f0;border-radius:10px;overflow:hidden;margin-bottom:16px">
+        <div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f0f5">
+          <div><div style="font-size:13px;font-weight:600;color:#2f3192">Checking Account</div><div style="font-size:11px;color:#aaa">****4892</div></div>
+          <div style="font-family:'Fira Code',monospace;font-size:15px;color:#2f3192;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(47,49,146,0.2)" id="bank-balance-1">ΣΩΔψξλ</div>
+        </div>
+        <div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f0f5">
+          <div><div style="font-size:13px;font-weight:600;color:#2f3192">Savings Account</div><div style="font-size:11px;color:#aaa">****7301</div></div>
+          <div style="font-family:'Fira Code',monospace;font-size:15px;color:#2f3192;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(47,49,146,0.2)" id="bank-balance-2">∫∑μπΩ∂</div>
+        </div>
+        <div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:13px;font-weight:600;color:#2f3192">Investment Portfolio</div><div style="font-size:11px;color:#aaa">****1156</div></div>
+          <div style="font-family:'Fira Code',monospace;font-size:15px;color:#2f3192;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(47,49,146,0.2)" id="bank-balance-3">αβγδΨ∇≈</div>
+        </div>
+      </div>
+
+      <!-- Recent transactions -->
+      <div style="font-size:10px;color:#2f3192;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600">Recent Transactions</div>
+      <div style="font-size:12px;color:#555;padding:6px 0;display:flex;justify-content:space-between;border-bottom:1px solid #f5f5f8"><span>Amazon.com</span><span style="font-family:'Fira Code',monospace;color:#2f3192;letter-spacing:2px" id="bank-tx1">∂∇≈</span></div>
+      <div style="font-size:12px;color:#555;padding:6px 0;display:flex;justify-content:space-between;border-bottom:1px solid #f5f5f8"><span>Salary Deposit</span><span style="font-family:'Fira Code',monospace;color:#2f3192;letter-spacing:2px" id="bank-tx2">ΣΩΔψξ</span></div>
+      <div style="font-size:12px;color:#555;padding:6px 0;display:flex;justify-content:space-between"><span>Netflix</span><span style="font-family:'Fira Code',monospace;color:#2f3192;letter-spacing:2px" id="bank-tx3">λμ</span></div>
+
+      <div style="text-align:center;margin-top:20px">
+        <button id="lock-btn" onclick="toggleBalances()" style="padding:12px 28px;background:#ec1e24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(236,30,36,0.3)">
+          <svg id="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span id="lock-text">Unlock Balances</span>
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;padding-top:12px;border-top:1px solid #f0f0f5">
+        <div style="font-size:10px;color:#bbb;display:flex;align-items:center;justify-content:center;gap:4px">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2f3192" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Protected by SmartField
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEPARATOR -->
+<div style="text-align:center;padding:80px 20px;background:#ffffff">
+  <h2 id="anim-payments" style="font-size:56px;font-weight:800;color:#23073e;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Every online purchase exposes card numbers in the DOM. <strong style="color:#ee348e">Any JavaScript on the checkout page can read your customers' credit card.</strong></p>
+  <p style="color:#23073e;font-size:14px;margin-top:8px;font-weight:600">SmartField encrypts card, CVV, and expiry at the keystroke level.</p>
+</div>
+
+<!-- ========== 2. PAYMENTS — REAL CHECKOUT ========== -->
+<div id="payments" style="background:#f0f4ff;padding:60px 0">
+  <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+    <!-- Checkout card -->
+    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #e2e8f0;max-width:420px;-webkit-user-select:none;user-select:none">
+      <div style="margin-bottom:20px">
+        <img src="/landing/img/ima_onl.png" alt="Online Store" style="height:36px">
+      </div>
+      <!-- Order summary -->
+      <div style="background:#f8fafc;border-radius:10px;padding:14px;margin-bottom:20px;border:1px solid #f1f5f9">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:6px"><span>MacBook Pro M4 × 1</span><span>$2,499.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:6px"><span>Shipping</span><span style="color:#00B88A">Free</span></div>
+        <div style="border-top:1px solid #e2e8f0;padding-top:8px;margin-top:6px;display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:#1a1a1a"><span>Total</span><span>$2,499.00</span></div>
+      </div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Card Number</label><smart-field sf-type="card" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Expiry</label><smart-field sf-type="expiry" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+        <div><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">CVV</label><smart-field sf-type="cvv" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#4f46e5;--sf-cipher-color:#4f46e5;--sf-focus-ring:rgba(79,70,229,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      </div>
+      <button style="width:100%;padding:14px;background:linear-gradient(135deg,#ee348e,#23073e);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(238,52,142,0.3)">Pay $2,499.00</button>
+      <div style="text-align:center;margin-top:12px"><img src="/landing/img/ima_cre.png" alt="Visa Mastercard Amex Discover" style="height:24px;opacity:0.6"></div>
+      <div style="text-align:center;margin-top:8px;font-size:10px;color:#cbd5e1;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ee348e" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Protected by SmartField</div>
+    </div>
+    <!-- Info -->
+    <div>
+      <h2 style="font-size:28px;font-weight:800;color:#1e293b;margin-bottom:8px">💳 Payments & Checkout</h2>
+      <p style="font-size:14px;color:#64748b;line-height:1.7;margin-bottom:20px">Card numbers, CVV, billing — encrypted before they touch the DOM. No Stripe iframe needed. PCI-DSS compliance built into every keystroke.</p>
+      <ul style="list-style:none;font-size:13px;color:#475569">
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#4f46e5;font-weight:700">✓</span> Card number never exists in plaintext</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#4f46e5;font-weight:700">✓</span> CVV invisible to any JavaScript</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#4f46e5;font-weight:700">✓</span> Works without Stripe, Adyen, or Braintree</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#4f46e5;font-weight:700">✓</span> PCI-DSS Level 1 ready</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SEPARATOR -->
+<div style="text-align:center;padding:80px 20px;background:#ffffff">
+  <h2 id="anim-healthcare" style="font-size:56px;font-weight:800;color:#049a75;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">A CEO opens their medical results. Hotjar is recording. <strong style="color:#049a75">The diagnosis is now in FullStory's servers forever.</strong></p>
+  <p style="color:#57b1e1;font-size:14px;margin-top:8px;font-weight:600">SmartField makes patient data invisible to every tracker on the page.</p>
+</div>
+
+<!-- ========== 3. HEALTHCARE — PATIENT PORTAL ========== -->
+<div id="healthcare" style="background:#f0fdfa;padding:60px 0">
+  <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+    <div>
+      <h2 style="font-size:28px;font-weight:800;color:#134e4a;margin-bottom:8px">🏥 Medical Records</h2>
+      <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:20px">Diagnoses, prescriptions, lab results — the CEO's cancer diagnosis invisible to Hotjar. HIPAA compliance by default.</p>
+      <ul style="list-style:none;font-size:13px;color:#475569">
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#0d9488;font-weight:700">✓</span> Patient data encrypted on screen</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#0d9488;font-weight:700">✓</span> Hotjar/FullStory see only cipher</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#0d9488;font-weight:700">✓</span> Auto-locks after 5 seconds</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#0d9488;font-weight:700">✓</span> HIPAA compliant display</li>
+      </ul>
+    </div>
+    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #ccfbf1;max-width:420px;-webkit-user-select:none;user-select:none">
+      <div style="margin-bottom:20px">
+        <img src="/landing/img/ima_heal.png" alt="Medical Center" style="height:36px">
+      </div>
+      <div style="font-size:10px;color:#0f766e;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600">Patient Search</div>
+      <div style="margin-bottom:8px"><smart-field placeholder="patient ID or SSN" sf-type="ssn" style="--sf-bg:#f0fdfa;--sf-border-color:#ccfbf1;--sf-radius:8px;--sf-focus-color:#0d9488;--sf-cipher-color:#0f766e;--sf-focus-ring:rgba(13,148,136,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+
+      <div style="font-size:10px;color:#666;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Confidential Patient Record</div>
+      <!-- Medical records with cipher values -->
+      <div style="border-bottom:1px solid #e5e7eb;padding:12px 0;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:#666;font-weight:500">Patient Name</span>
+        <span style="font-family:'Fira Code',monospace;font-size:14px;color:#0f766e;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(15,118,110,0.4)" id="med-name">ΣΩΔψξ∫∑μ</span>
+      </div>
+      <div style="border-bottom:1px solid #e5e7eb;padding:12px 0;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:#666;font-weight:500">SSN</span>
+        <span style="font-family:'Fira Code',monospace;font-size:14px;color:#0f766e;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(15,118,110,0.4)" id="med-ssn">∂∇≈λπφ</span>
+      </div>
+      <div style="border-bottom:1px solid #e5e7eb;padding:12px 0;display:flex;justify-content:space-between;align-items:center;background:#fef2f2;margin:0 -16px;padding-left:16px;padding-right:16px;border-radius:6px">
+        <span style="font-size:12px;color:#991b1b;font-weight:600">Diagnosis</span>
+        <span style="font-family:'Fira Code',monospace;font-size:14px;color:#dc2626;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(220,38,38,0.4)" id="med-diag">αβγδΨ∇≈≡∫μ</span>
+      </div>
+      <div style="border-bottom:1px solid #e5e7eb;padding:12px 0;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:#666;font-weight:500">Prescription</span>
+        <span style="font-family:'Fira Code',monospace;font-size:14px;color:#0f766e;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(15,118,110,0.4)" id="med-rx">ξλΩΔψ∑π</span>
+      </div>
+      <div style="padding:12px 0;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:#666;font-weight:500">Lab Results</span>
+        <span style="font-family:'Fira Code',monospace;font-size:14px;color:#0f766e;font-weight:700;letter-spacing:3px;text-shadow:0 0 8px rgba(15,118,110,0.4)" id="med-lab">μπφψΣΩ</span>
+      </div>
+      <div style="text-align:center;margin-top:16px">
+        <button onclick="revealMedical()" style="padding:10px 24px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:white;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(13,148,136,0.3)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Verify Identity to View (5s)
+        </button>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:10px;color:#666;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> HIPAA Protected by SmartField</div>
+    </div>
+  </div>
+</div>
+
+<!-- SEPARATOR -->
+<div style="text-align:center;padding:80px 20px;background:#ffffff">
+  <h2 id="anim-government" style="font-size:56px;font-weight:800;color:#383636;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">50 million citizens file taxes online. <strong style="color:#383636">Their social security numbers pass through Google Analytics on every government portal.</strong></p>
+  <p style="color:#1e40af;font-size:14px;margin-top:8px;font-weight:600">SmartField ensures SSN and tax data never exist in the DOM.</p>
+</div>
+
+<!-- ========== 4. GOVERNMENT — TAX PORTAL ========== -->
+<div id="government" style="background:#f8fafc;padding:60px 0">
+  <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+    <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #e2e8f0;max-width:420px;-webkit-user-select:none;user-select:none">
+      <div style="margin-bottom:20px">
+        <img src="/landing/img/ima_gove.png" alt="Government Portal" style="height:36px">
+      </div>
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:11px;color:#1e40af;line-height:1.5">⚠ All fields are encrypted. Your tax information is protected from unauthorized access.</div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Social Security Number</label><smart-field sf-type="ssn" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Annual Income</label><smart-field name="gov-income" placeholder="$0.00" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;text-transform:uppercase">Bank Account (for refund)</label><smart-field name="gov-bank" placeholder="IBAN or account number" style="--sf-bg:#f8fafc;--sf-border-color:#e2e8f0;--sf-radius:10px;--sf-focus-color:#1e40af;--sf-cipher-color:#1e40af;--sf-focus-ring:rgba(30,64,175,0.12);--sf-placeholder-color:#cbd5e1"></smart-field></div>
+      <button style="width:100%;padding:14px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(30,64,175,0.3)">Submit Tax Declaration</button>
+      <div style="text-align:center;margin-top:12px;font-size:10px;color:#cbd5e1;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> GDPR Protected by SmartField</div>
+    </div>
+    <div>
+      <h2 style="font-size:28px;font-weight:800;color:#1e293b;margin-bottom:8px">⚖️ Tax & Government</h2>
+      <p style="font-size:14px;color:#64748b;line-height:1.7;margin-bottom:20px">Social security numbers, tax IDs, income, bank accounts — the most sensitive government data, encrypted at input level.</p>
+      <ul style="list-style:none;font-size:13px;color:#475569">
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> SSN encrypted per keystroke</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> Income invisible to third-party scripts</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> Bank account never in DOM</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> GDPR compliant by design</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SEPARATOR -->
+<div style="text-align:center;padding:80px 20px;background:#ffffff">
+  <h2 id="anim-crypto" style="font-size:56px;font-weight:800;color:#7c3aed;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">One XSS attack on a DEX. One clipboard hijack. <strong style="color:#7c3aed">Your users' seed phrases are gone. Their wallets are drained.</strong></p>
+  <p style="color:#a855f7;font-size:14px;margin-top:8px;font-weight:600">SmartField makes seed phrases invisible to every script and extension.</p>
+</div>
+
+<!-- ========== 5. CRYPTO — DEX SWAP ========== -->
+<div id="crypto" style="background:#f5f0ff;padding:60px 0">
+  <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+    <div>
+      <h2 style="font-size:28px;font-weight:800;color:#3b0764;margin-bottom:8px">🪙 Crypto & Web3</h2>
+      <p style="font-size:14px;color:#666;line-height:1.7;margin-bottom:20px">Seed phrases, private key imports, wallet recovery — the most sensitive data in crypto, invisible to extensions and XSS.</p>
+      <ul style="list-style:none;font-size:13px;color:#475569">
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Seed phrase invisible to extensions</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Zero clipboard access — no paste attacks</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> XSS gets encrypted garbage</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Wallet import fully protected</li>
+      </ul>
+    </div>
+    <div style="background:#ffffff;border-radius:20px;padding:36px;border:1px solid #e5e0f0;max-width:420px;box-shadow:0 4px 24px rgba(124,58,237,0.08);-webkit-user-select:none;user-select:none">
+      <div style="margin-bottom:20px">
+        <img src="/landing/img/ima_crip.png" alt="Crypto Exchange" style="height:36px">
+      </div>
+      <div style="background:#f5f0ff;border:1px solid #e5e0f0;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:11px;color:#5b21b6;line-height:1.5">⚠ Your seed phrase is encrypted as you type. Not even this website can read it.</div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#7c3aed;margin-bottom:4px;text-transform:uppercase">Seed Phrase (12 or 24 words)</label><smart-field name="crypto-seed" placeholder="enter your recovery phrase..." style="--sf-bg:#faf8ff;--sf-border-color:#e5e0f0;--sf-radius:10px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:#7c3aed;margin-bottom:4px;text-transform:uppercase">Wallet Password</label><smart-field type="password" name="crypto-pwd" placeholder="create a strong password..." style="--sf-bg:#faf8ff;--sf-border-color:#e5e0f0;--sf-radius:10px;--sf-focus-color:#7c3aed;--sf-cipher-color:#7c3aed;--sf-focus-ring:rgba(124,58,237,0.12);--sf-placeholder-color:#bbb"></smart-field></div>
+      <button style="width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.2)">Import Wallet Securely</button>
+      <div style="text-align:center;margin-top:12px;font-size:10px;color:#aaa;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Protected by SmartField</div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE SECTION -->
+<div style="background:#ffffff;padding:80px 20px;text-align:center">
+  <h2 style="font-size:36px;font-weight:800;color:#0B1120;margin-bottom:8px">Works on Mobile Too</h2>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Your customers pay from their phone. They check balances on the bus. They log in from coffee shops. <strong style="color:#0B1120">Their data is exposed on every public WiFi, every screen recorder, every shoulder surfer.</strong></p>
+  <p style="color:#00B88A;font-size:14px;margin-top:8px;font-weight:600;margin-bottom:40px">SmartField encrypts on mobile exactly like desktop. No app. No SDK. Just HTML.</p>
+
+  <div style="display:inline-block;position:relative;width:280px;height:560px">
+    <!-- Phone frame image -->
+    <img src="/landing/img/ima_pho.png" alt="Phone" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;object-fit:contain">
+
+    <!-- Form inside the phone -->
+    <div style="position:absolute;top:40px;left:18px;right:18px;bottom:40px;z-index:1;background:#ffffff;overflow:hidden;padding:16px;-webkit-user-select:none;user-select:none">
+      <!-- Status bar -->
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:#999;margin-bottom:16px">
+        <span>9:41</span>
+        <span>●●●</span>
+      </div>
+
+      <!-- App header -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+        <div style="width:28px;height:28px;background:#00B88A;border-radius:6px;display:flex;align-items:center;justify-content:center">
+          <svg width="14" height="14" viewBox="0 0 56 56" fill="none"><rect x="4" y="4" width="10" height="10" rx="2" fill="#fff"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#fff"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#fff" opacity="0.38"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#fff"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#fff" opacity="0.2"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#fff"/></svg>
+        </div>
+        <span style="font-size:14px;font-weight:700;color:#111">Secure Login</span>
+      </div>
+
+      <!-- Form fields with cipher chars -->
+      <div style="margin-bottom:12px">
+        <div style="font-size:9px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Email</div>
+        <div style="background:#f8fafb;border:1.5px solid #e5e7eb;border-radius:6px;padding:10px;font-family:'Fira Code',monospace;font-size:12px;color:#00B88A;letter-spacing:2px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <span id="phone-f1">ΣΩΔψξ∫∑</span>
+          <span style="font-size:7px;color:#00B88A;opacity:0.4;font-family:sans-serif">ENC</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:9px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Password</div>
+        <div style="background:#f8fafb;border:1.5px solid #e5e7eb;border-radius:6px;padding:10px;font-family:'Fira Code',monospace;font-size:12px;color:#00B88A;letter-spacing:2px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <span id="phone-f2">∂∇≈≡αβ</span>
+          <span style="font-size:7px;color:#00B88A;opacity:0.4;font-family:sans-serif">ENC</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:9px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Card Number</div>
+        <div style="background:#f8fafb;border:1.5px solid #e5e7eb;border-radius:6px;padding:10px;font-family:'Fira Code',monospace;font-size:12px;color:#00B88A;letter-spacing:2px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+          <span id="phone-f3">λμΨ∂ξ∫∑Ω∇≈αβγδΣπ</span>
+          <span style="font-size:7px;color:#00B88A;opacity:0.4;font-family:sans-serif">✓</span>
+        </div>
+      </div>
+
+      <div style="background:#00B88A;color:#fff;text-align:center;padding:12px;border-radius:6px;font-size:12px;font-weight:700">Submit Securely</div>
+
+      <div style="text-align:center;margin-top:10px;font-size:8px;color:#ccc;display:flex;align-items:center;justify-content:center;gap:3px">
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00B88A" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Protected by SmartField
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div style="display:flex;justify-content:center;gap:40px;margin-top:40px;flex-wrap:wrap">
+    <div style="text-align:center;max-width:160px">
+      <svg width="28" height="28" viewBox="0 0 56 56" fill="none" style="margin-bottom:6px"><rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/></svg>
+      <div style="font-size:13px;font-weight:600;color:#0B1120">Touch Keyboards</div>
+      <div style="font-size:11px;color:#888">Every tap encrypted</div>
+    </div>
+    <div style="text-align:center;max-width:160px">
+      <svg width="28" height="28" viewBox="0 0 56 56" fill="none" style="margin-bottom:6px"><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="4" y="32" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="32" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="32" y="32" width="10" height="10" rx="2" fill="#00B88A"/></svg>
+      <div style="font-size:13px;font-weight:600;color:#0B1120">App Switching</div>
+      <div style="font-size:11px;color:#888">Auto-scrambles on background</div>
+    </div>
+    <div style="text-align:center;max-width:160px">
+      <svg width="28" height="28" viewBox="0 0 56 56" fill="none" style="margin-bottom:6px"><rect x="4" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="18" y="4" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="4" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.38"/><rect x="18" y="18" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="4" width="10" height="10" rx="2" fill="#00B88A"/><rect x="32" y="18" width="10" height="10" rx="2" fill="#00B88A" opacity="0.2"/></svg>
+      <div style="font-size:13px;font-weight:600;color:#0B1120">Zero Latency</div>
+      <div style="font-size:11px;color:#888">Hardware-accelerated</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div style="text-align:center;padding:80px 20px">
+  <h2 style="font-size:36px;font-weight:800;margin-bottom:12px">Every Industry. Every Form. <span style="color:#00B88A">Protected.</span></h2>
+  <p style="color:#64748b;margin-bottom:32px;font-size:16px">2 lines of code. Zero data exposure.</p>
+  <a href="/landing#signup" style="padding:14px 36px;background:#00B88A;color:#020617;font-size:15px;font-weight:700;border-radius:10px;text-decoration:none">Get Started Free</a>
+</div>
+
+<footer>SmartField v2.6 — Every keystroke, encrypted.</footer>
+
+<script>
+  var CHARS='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
+  function rc(){return CHARS[Math.floor(Math.random()*CHARS.length)]}
+  function scramble(id,len){var el=document.getElementById(id);if(!el)return;var s='';for(var i=0;i<len;i++)s+=rc();el.textContent=s}
+
+  // Hero decrypt animation
+  (function() {
+    var CH='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
+    var target='SmartField in Action';
+    var el=document.getElementById('hero-title');
+    var cur=[],rev=[];
+    for(var i=0;i<target.length;i++){
+      if(target[i]===' '){cur.push(' ');rev.push(true);}
+      else{cur.push(CH[Math.floor(Math.random()*CH.length)]);rev.push(false);}
+    }
+    function render(){
+      var h='';
+      for(var i=0;i<cur.length;i++){
+        if(rev[i]){
+          var isSF=i>=0&&i<=9;
+          if(isSF)h+='<span style="background:linear-gradient(135deg,#00B88A,#00D4A8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+cur[i]+'</span>';
+          else h+='<span style="font-family:-apple-system,sans-serif;letter-spacing:-2px">'+cur[i]+'</span>';
+        }else{
+          h+='<span style="color:#00B88A;text-shadow:0 0 8px rgba(0,184,138,0.4)">'+cur[i]+'</span>';
+        }
+      }
+      el.innerHTML=h;
+    }
+    var si=setInterval(function(){for(var i=0;i<cur.length;i++){if(!rev[i])cur[i]=CH[Math.floor(Math.random()*CH.length)];}render();},60);
+    setTimeout(function(){
+      var ri=0;
+      var riv=setInterval(function(){
+        while(ri<target.length&&rev[ri])ri++;
+        if(ri>=target.length){clearInterval(riv);clearInterval(si);el.style.fontFamily="-apple-system,'Segoe UI',sans-serif";el.style.letterSpacing="-2px";el.innerHTML='<span style="background:linear-gradient(135deg,#00B88A,#00D4A8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">SmartField</span> in Action';return;}
+        cur[ri]=target[ri];rev[ri]=true;ri++;render();
+      },50);
+    },1200);
+    render();
+  })();
+
+  // Section title decrypt animations
+  function animateTitle(elId, text, color1, color2, delay) {
+    var CH='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
+    var el=document.getElementById(elId);
+    if(!el) return;
+    var cur=[], rev=[];
+    for(var i=0;i<text.length;i++){
+      if(text[i]===' '){cur.push(' ');rev.push(true);}
+      else{cur.push(CH[Math.floor(Math.random()*CH.length)]);rev.push(false);}
+    }
+    function render(){
+      var h='';
+      for(var i=0;i<cur.length;i++){
+        if(rev[i]) h+='<span style="color:'+color1+';font-family:-apple-system,sans-serif;letter-spacing:-2px">'+cur[i]+'</span>';
+        else h+='<span style="color:'+color2+';text-shadow:0 0 12px '+color2+'44">'+cur[i]+'</span>';
+      }
+      el.innerHTML=h;
+    }
+    var si=setInterval(function(){for(var i=0;i<cur.length;i++){if(!rev[i])cur[i]=CH[Math.floor(Math.random()*CH.length)];}render();},60);
+    setTimeout(function(){
+      var ri=0;
+      var riv=setInterval(function(){
+        while(ri<text.length&&rev[ri])ri++;
+        if(ri>=text.length){clearInterval(riv);clearInterval(si);el.style.fontFamily="-apple-system,'Segoe UI',sans-serif";el.style.letterSpacing="-2px";el.innerHTML='<span style="color:'+color1+'">'+text+'</span>';return;}
+        cur[ri]=text[ri];rev[ri]=true;ri++;render();
+      },60);
+    },delay||1500);
+    render();
+  }
+
+  // Trigger when scrolled into view
+  var animated = {};
+  function checkAnimations() {
+    var sections = [
+      {id:'anim-banking', text:'Banking', c1:'#2f3192', c2:'#ec1e24'},
+      {id:'anim-payments', text:'Payments', c1:'#23073e', c2:'#ee348e'},
+      {id:'anim-healthcare', text:'Healthcare', c1:'#049a75', c2:'#57b1e1'},
+      {id:'anim-government', text:'Government', c1:'#383636', c2:'#1e40af'},
+      {id:'anim-crypto', text:'Crypto', c1:'#7c3aed', c2:'#a855f7'}
+    ];
+    sections.forEach(function(s) {
+      if(animated[s.id]) return;
+      var el = document.getElementById(s.id);
+      if(!el) return;
+      var rect = el.getBoundingClientRect();
+      if(rect.top < window.innerHeight && rect.bottom > 0) {
+        animated[s.id] = true;
+        animateTitle(s.id, s.text, s.c1, s.c2, 800);
+      }
+    });
+  }
+  window.addEventListener('scroll', checkAnimations);
+  setTimeout(checkAnimations, 500);
+
+  // Bank login demo
+  function bankLogin(){
+    var f=[];
+    document.querySelectorAll('#bank-login-form smart-field').forEach(function(s){
+      f.push({id:s.name,encrypted:s.value});
+    });
+    fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})})
+    .then(function(r){return r.json()})
+    .then(function(d){
+      var el=document.getElementById('bank-response');
+      el.style.display='block';
+      el.innerHTML='✓ Server decrypted successfully:<br>'+JSON.stringify(d.decrypted,null,2);
+    })
+    .catch(function(e){
+      var el=document.getElementById('bank-response');
+      el.style.display='block';
+      el.innerHTML='Demo: encrypted data would be sent to your server for decryption';
+    });
+  }
+
+  // Animate ALL cipher values
+  var cipherEls=['bank-balance-1','bank-balance-2','bank-balance-3','bank-tx1','bank-tx2','bank-tx3','med-name','med-ssn','med-diag','med-rx','med-lab','phone-f1','phone-f2','phone-f3'];
+  var cipherLens=[6,5,7,9,6,10,7,6];
+  setInterval(function(){
+    for(var i=0;i<cipherEls.length;i++){
+      var el=document.getElementById(cipherEls[i]);
+      if(!el||el.dataset.revealed==='true')continue;
+      var chars=el.textContent.split('');
+      var idx=Math.floor(Math.random()*chars.length);
+      chars[idx]=rc();
+      el.textContent=chars.join('');
+    }
+  },120);
+
+  // BANKING: Reveal balances for 5 seconds
+  var balancesVisible = false;
+  var autoLockTimer = null;
+  var items = {
+    'bank-balance-1': '$24,891.53',
+    'bank-balance-2': '$142,500.00',
+    'bank-balance-3': '$89,234.77',
+    'bank-tx1': '-$67.99',
+    'bank-tx2': '+$8,500.00',
+    'bank-tx3': '-$15.99'
+  };
+  var originals = {
+    'bank-balance-1': 'ΣΩΔψξλ',
+    'bank-balance-2': '∫∑μπΩ∂',
+    'bank-balance-3': 'αβγδΨ∇≈',
+    'bank-tx1': '∂∇≈',
+    'bank-tx2': 'ΣΩΔψξ',
+    'bank-tx3': 'λμ'
+  };
+
+  function lockBalances() {
+    for(var id in originals){
+      var el=document.getElementById(id);
+      if(!el)continue;
+      el.textContent=originals[id];el.dataset.revealed='false';
+      el.style.color='#2f3192';el.style.textShadow='0 0 8px rgba(47,49,146,0.2)';
+    }
+    var btn=document.getElementById('lock-btn');
+    var txt=document.getElementById('lock-text');
+    btn.style.background='#ec1e24';
+    txt.textContent='Unlock Balances';
+    balancesVisible = false;
+    if(autoLockTimer){clearTimeout(autoLockTimer);autoLockTimer=null;}
+  }
+
+  function toggleBalances(){
+    if (!balancesVisible) {
+      // Unlock
+      for(var id in items){
+        var el=document.getElementById(id);
+        if(!el)continue;
+        el.textContent=items[id];el.dataset.revealed='true';
+        el.style.textShadow='none';
+        el.style.color=items[id].startsWith('-')?'#dc2626':'#16a34a';
+      }
+      var btn=document.getElementById('lock-btn');
+      var txt=document.getElementById('lock-text');
+      btn.style.background='#2f3192';
+      txt.textContent='Lock Balances';
+      balancesVisible = true;
+
+      // Auto-lock after 5 seconds
+      if(autoLockTimer) clearTimeout(autoLockTimer);
+      autoLockTimer = setTimeout(lockBalances, 5000);
+    } else {
+      // Manual lock
+      lockBalances();
+    }
+  }
+
+  // MEDICAL: Reveal records for 5 seconds
+  function revealMedical(){
+    var els={
+      'med-name':'John R. Harrison',
+      'med-ssn':'***-**-4921',
+      'med-diag':'Type 2 Diabetes Mellitus',
+      'med-rx':'Metformin 500mg 2x daily',
+      'med-lab':'HbA1c: 7.2% (high)'
+    };
+    for(var id in els){
+      var el=document.getElementById(id);
+      el.textContent=els[id];el.dataset.revealed='true';
+      el.style.textShadow='none';
+      if(id==='med-diag')el.style.color='#fbbf24';
+    }
+    setTimeout(function(){
+      var orig={'med-name':'ΣΩΔψξ∫∑μ','med-ssn':'∂∇≈λπφ','med-diag':'αβγδΨ∇≈≡∫μ','med-rx':'ξλΩΔψ∑π','med-lab':'μπφψΣΩ'};
+      for(var id in orig){
+        var el=document.getElementById(id);
+        el.textContent=orig[id];el.dataset.revealed='false';
+        el.style.textShadow='';
+        if(id==='med-diag'){el.style.color='#ef4444';el.style.textShadow='0 0 8px rgba(239,68,68,0.4)'}
+      }
+    },5000);
+  }
+</script>
+<script src="/landing/cookie-banner.js"></script>
+</body>
+</html>
