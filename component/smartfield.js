@@ -660,11 +660,12 @@
         self._isPeeking = true;
         peekBtn.classList.add('sf-peeking');
 
-        // Show real value
+        // Show real value — use high contrast color that works on any background
         self._input.value = self._s('realValue');
         self._input.style.letterSpacing = '2px';
-        self._input.style.color = '#e2e8f0';
-        self._input.style.textShadow = 'none';
+        self._input.style.color = '#111827';
+        self._input.style.textShadow = '0 0 0 #111827';
+        self._input.style.webkitTextFillColor = '#111827';
         clearInterval(self._anim);
         self._anim = null;
 
@@ -920,6 +921,7 @@
       this._input.style.letterSpacing = '4px';
       this._input.style.color = '';
       this._input.style.textShadow = '';
+      this._input.style.webkitTextFillColor = '';
       this._showCipher();
       if (this._s('cipherMap').length > 0) this._startAnim(100);
     }
