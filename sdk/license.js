@@ -129,6 +129,11 @@ function generateKey(options = {}) {
   const rawKey = generateRawKey(prefix);
   const hashed = hashKey(rawKey);
 
+  // paidUntil: null = free forever, date = subscription end
+  // gracePeriodDays: days after paidUntil before downgrade (default 7)
+  const paidUntil = options.paidUntil || null;
+  const gracePeriodDays = options.gracePeriodDays || 7;
+
   const record = {
     hash: hashed,
     plan: plan,
@@ -138,6 +143,8 @@ function generateKey(options = {}) {
     active: true,
     maxFields: plan === 'free' ? 3 : -1,
     badge: plan === 'free',
+    paidUntil: paidUntil,
+    gracePeriodDays: gracePeriodDays,
     createdAt: new Date().toISOString(),
     revokedAt: null
   };
@@ -232,7 +239,42 @@ function validateKey(params = {}) {
     }
   }
 
-  // Valid key
+  // Check payment status + grace period
+  if (record.paidUntil && record.plan !== 'free') {
+    const paidUntilDate = new Date(record.paidUntil);
+    const now = new Date();
+    const graceEnd = new Date(paidUntilDate.getTime() + record.gracePeriodDays * 24 * 60 * 60 * 1000);
+
+    if (now > graceEnd) {
+      // Grace period expired → downgrade to free
+      return _signResponse({
+        valid: true,
+        plan: 'free',
+        maxFields: 3,
+        badge: true,
+        domain: record.domain,
+        warning: 'subscription_expired',
+        expiredAt: record.paidUntil,
+        graceEndedAt: graceEnd.toISOString()
+      });
+    }
+
+    if (now > paidUntilDate) {
+      // In grace period → still works but warn
+      const daysLeft = Math.ceil((graceEnd - now) / (24 * 60 * 60 * 1000));
+      return _signResponse({
+        valid: true,
+        plan: record.plan,
+        maxFields: record.maxFields,
+        badge: record.badge,
+        domain: record.domain,
+        warning: 'grace_period',
+        graceDaysLeft: daysLeft
+      });
+    }
+  }
+
+  // Valid key, active subscription
   return _signResponse({
     valid: true,
     plan: record.plan,
@@ -276,6 +318,56 @@ function _checkRateLimit(ip) {
 
   _rateLimits[ip].count++;
   return _rateLimits[ip].count <= RATE_LIMIT_MAX;
+}
+
+// ========== SUBSCRIPTION MANAGEMENT ==========
+
+/**
+ * Extend a subscription. Called when customer pays.
+ *
+ * @param {string} rawKey - The API key
+ * @param {string} paidUntil - ISO date string (e.g. '2026-04-22T00:00:00Z')
+ * @returns {boolean} true if updated
+ */
+function extendSubscription(rawKey, paidUntil) {
+  if (!_initialized) throw new Error('[License] Not initialized.');
+  const hashed = hashKey(rawKey);
+  const record = _keys[hashed];
+  if (!record) return false;
+
+  record.paidUntil = paidUntil;
+  _saveKeys();
+  return true;
+}
+
+/**
+ * Get subscription status for a key.
+ *
+ * @param {string} rawKey
+ * @returns {Object} { plan, paidUntil, status, graceDaysLeft }
+ */
+function getSubscriptionStatus(rawKey) {
+  if (!_initialized) throw new Error('[License] Not initialized.');
+  const hashed = hashKey(rawKey);
+  const record = _keys[hashed];
+  if (!record) return null;
+
+  if (!record.paidUntil || record.plan === 'free') {
+    return { plan: record.plan, status: 'free', paidUntil: null };
+  }
+
+  const now = new Date();
+  const paidUntil = new Date(record.paidUntil);
+  const graceEnd = new Date(paidUntil.getTime() + record.gracePeriodDays * 24 * 60 * 60 * 1000);
+
+  if (now <= paidUntil) {
+    return { plan: record.plan, status: 'active', paidUntil: record.paidUntil };
+  } else if (now <= graceEnd) {
+    const daysLeft = Math.ceil((graceEnd - now) / (24 * 60 * 60 * 1000));
+    return { plan: record.plan, status: 'grace_period', paidUntil: record.paidUntil, graceDaysLeft: daysLeft };
+  } else {
+    return { plan: record.plan, status: 'expired', paidUntil: record.paidUntil, expiredDaysAgo: Math.floor((now - graceEnd) / (24 * 60 * 60 * 1000)) };
+  }
 }
 
 // ========== REVOCATION ==========
@@ -342,6 +434,8 @@ module.exports = {
   init,
   generateKey,
   validateKey,
+  extendSubscription,
+  getSubscriptionStatus,
   revokeKey,
   listKeys,
   getHmacVerifier,
