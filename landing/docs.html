@@ -98,6 +98,7 @@
   <a href="#architecture">Architecture</a>
   <a href="#mistakes">Common Mistakes</a>
   <a href="#attacks">Attack Resistance</a>
+  <a href="#compliance">Compliance</a>
 
   <h4>API Reference</h4>
   <a href="#api-ref">SDK Methods</a>
@@ -719,6 +720,154 @@ el.addEventListener('sf-threat', (e) =&gt; {
   console.log(e.detail.threats);    // what was detected
   console.log(e.detail.action);     // 'fake_data_sent'
 });</code></pre>
+
+<!-- COMPLIANCE -->
+<h2 id="compliance">Compliance</h2>
+<p>SmartField's encryption architecture can help satisfy specific requirements in PCI-DSS, HIPAA, GDPR, and SOX. Below is an honest breakdown: what SmartField covers, and what you still need to handle yourself.</p>
+
+<div class="warn"><strong>SmartField is not a compliance certification.</strong> Using SmartField does not make you PCI, HIPAA, GDPR, or SOX compliant on its own. Compliance requires organizational policies, server-side controls, access management, auditing, and more. SmartField addresses the <em>client-side data capture layer</em> — one piece of a larger compliance program.</div>
+
+<!-- PCI-DSS -->
+<h3>PCI-DSS</h3>
+<p>The Payment Card Industry Data Security Standard applies to any organization that stores, processes, or transmits cardholder data. SmartField directly addresses three requirements:</p>
+
+<table>
+  <tr><th>Requirement</th><th>What it says</th><th>How SmartField helps</th></tr>
+  <tr>
+    <td><strong>3.4</strong> — Render PAN unreadable anywhere it is stored</td>
+    <td>PAN must be protected using encryption, truncation, hashing, or tokenization</td>
+    <td>SmartField encrypts PAN at the moment of keystroke using AES-256-GCM. The value never exists as plaintext in the DOM, JavaScript memory, or network payload. With <code class="inline-code">sf-type="card"</code>, input is validated to 16 digits before encryption. The browser never holds the raw PAN in a readable form.</td>
+  </tr>
+  <tr>
+    <td><strong>4.1</strong> — Encrypt cardholder data in transit over open networks</td>
+    <td>Use strong cryptography when transmitting cardholder data</td>
+    <td>Data is encrypted client-side with AES-256-GCM before form submission. The AES key itself is wrapped with RSA-OAEP-2048. This means cardholder data is encrypted <em>before</em> it hits TLS — providing a second encryption layer. Even if TLS is compromised (MITM, misconfigured proxy), the payload remains encrypted.</td>
+  </tr>
+  <tr>
+    <td><strong>6.5</strong> — Address common coding vulnerabilities</td>
+    <td>Protect against XSS, injection, and other OWASP Top 10 issues in web applications</td>
+    <td>SmartField's closed Shadow DOM prevents XSS attacks from reading field values. Even if an attacker injects a script, <code class="inline-code">.value</code> returns an encrypted payload, <code class="inline-code">.shadowRoot</code> returns null, and no DOM traversal method exposes plaintext. Clipboard events (copy/paste/select) are blocked.</td>
+  </tr>
+</table>
+
+<p><strong>What you still need to do:</strong></p>
+<ul>
+  <li>Your server must decrypt and process card data in a PCI-compliant environment (SAQ A, SAQ A-EP, or SAQ D depending on your integration model)</li>
+  <li>Store decrypted PAN according to Requirement 3 — never log it, never write it to disk unencrypted</li>
+  <li>Implement access controls (Req 7, 8), network segmentation (Req 1), monitoring (Req 10, 11)</li>
+  <li>SmartField reduces your client-side attack surface but does not eliminate the need for a QSA assessment if you handle card data server-side</li>
+  <li>If you use SmartField to send encrypted card data to a PCI-compliant payment processor that handles decryption, you may qualify for SAQ A-EP (reduced scope)</li>
+</ul>
+
+<div class="success"><strong>Scope reduction:</strong> Because cardholder data is never exposed as plaintext in the browser, SmartField can help reduce the scope of your PCI-DSS assessment for the client-side environment. Your frontend code never touches raw PAN, which simplifies SAQ questionnaires.</div>
+
+<!-- HIPAA -->
+<h3>HIPAA</h3>
+<p>The Health Insurance Portability and Accountability Act requires protection of PHI (Protected Health Information) — names, dates, SSNs, medical record numbers, and any data that can identify a patient.</p>
+
+<table>
+  <tr><th>Safeguard</th><th>HIPAA requirement</th><th>How SmartField helps</th></tr>
+  <tr>
+    <td><strong>Technical Safeguard §164.312(a)(1)</strong> — Access Control</td>
+    <td>Implement technical policies to allow access only to authorized persons</td>
+    <td>PHI entered in SmartField is immediately encrypted. JavaScript on the page (including third-party scripts, analytics, and injected code) cannot read the plaintext. Only your server with the RSA private key can decrypt. This limits access to PHI at the point of capture.</td>
+  </tr>
+  <tr>
+    <td><strong>Technical Safeguard §164.312(e)(1)</strong> — Transmission Security</td>
+    <td>Protect PHI during electronic transmission</td>
+    <td>PHI is encrypted with AES-256-GCM + RSA-2048 before transmission. This operates independently of (and in addition to) TLS. PHI is encrypted in the browser and decrypted only on your server.</td>
+  </tr>
+  <tr>
+    <td><strong>Technical Safeguard §164.312(a)(2)(iv)</strong> — Encryption and Decryption</td>
+    <td>Encrypt ePHI as appropriate</td>
+    <td>SmartField encrypts all field data using NIST-recommended algorithms (AES-256-GCM, RSA-OAEP). Encryption happens automatically — developers cannot accidentally skip it.</td>
+  </tr>
+</table>
+
+<p><strong>What you still need to do:</strong></p>
+<ul>
+  <li>Sign a BAA (Business Associate Agreement) with any third party that handles PHI — SmartField never receives or stores PHI (encryption/decryption happens entirely on your infrastructure), so a BAA with SmartField is not required</li>
+  <li>Implement server-side access controls, audit logging, and breach notification procedures</li>
+  <li>Ensure your server environment meets HIPAA physical and administrative safeguards</li>
+  <li>Conduct a risk assessment covering your full stack, not just the client-side layer</li>
+  <li>Train staff on PHI handling procedures — SmartField protects data in the browser, not after decryption</li>
+</ul>
+
+<div class="warn"><strong>Important:</strong> SmartField never sees, stores, or transmits PHI. All encryption and decryption happens on your own infrastructure using keys generated on your server. This means SmartField itself is not a HIPAA Business Associate — but your server-side code that handles decrypted PHI must comply fully.</div>
+
+<!-- GDPR -->
+<h3>GDPR</h3>
+<p>The General Data Protection Regulation requires protection of personal data for EU residents. SmartField addresses several GDPR principles at the data capture layer.</p>
+
+<table>
+  <tr><th>Principle</th><th>GDPR article</th><th>How SmartField helps</th></tr>
+  <tr>
+    <td><strong>Data Minimization</strong></td>
+    <td>Article 5(1)(c)</td>
+    <td>SmartField's random field IDs (<code class="inline-code">sf_a7f3c2</code>) mean that even the encrypted payload does not reveal what type of data was collected. There are no field names like "email" or "password" in the submitted form data. Third-party scripts on the page cannot determine what data the form collects.</td>
+  </tr>
+  <tr>
+    <td><strong>Integrity &amp; Confidentiality</strong></td>
+    <td>Article 5(1)(f)</td>
+    <td>Personal data is encrypted at the earliest possible point — the moment of keystroke. AES-256-GCM provides both confidentiality (encryption) and integrity (authentication tag). Data cannot be tampered with or read between capture and server-side decryption.</td>
+  </tr>
+  <tr>
+    <td><strong>Data Protection by Design</strong></td>
+    <td>Article 25</td>
+    <td>SmartField enforces encryption by default. There is no "unencrypted mode." Developers cannot accidentally expose personal data because <code class="inline-code">.value</code> always returns the encrypted payload. This is protection by design, not by policy.</td>
+  </tr>
+  <tr>
+    <td><strong>Security of Processing</strong></td>
+    <td>Article 32</td>
+    <td>SmartField implements encryption, pseudonymization (random field IDs), and protection against unauthorized disclosure (closed Shadow DOM blocks third-party scripts). These are specific measures listed in Article 32(1)(a).</td>
+  </tr>
+</table>
+
+<p><strong>What you still need to do:</strong></p>
+<ul>
+  <li>Implement lawful basis for processing (consent, legitimate interest, etc.) — SmartField encrypts data, it does not manage consent</li>
+  <li>Provide data subject rights: access, rectification, erasure, portability — these require server-side implementation</li>
+  <li>Maintain a Record of Processing Activities (ROPA)</li>
+  <li>Appoint a DPO if required, conduct DPIAs for high-risk processing</li>
+  <li>Implement server-side data retention policies — SmartField protects data in transit, not at rest on your servers</li>
+  <li>Ensure any analytics or third-party scripts comply with GDPR independently</li>
+</ul>
+
+<div class="success"><strong>Third-party script protection:</strong> A major GDPR risk is third-party JavaScript (analytics, chat widgets, A/B testing tools) silently reading form data. SmartField eliminates this risk entirely — these scripts see only encrypted payloads and random field IDs.</div>
+
+<!-- SOX -->
+<h3>SOX (Sarbanes-Oxley)</h3>
+<p>SOX Section 404 requires internal controls over financial reporting. For web applications that handle financial data (accounting portals, expense systems, internal financial tools), SmartField provides controls at the input layer.</p>
+
+<table>
+  <tr><th>Control area</th><th>SOX requirement</th><th>How SmartField helps</th></tr>
+  <tr>
+    <td><strong>IT General Controls — Data Integrity</strong></td>
+    <td>Ensure accuracy and completeness of financial data</td>
+    <td>AES-256-GCM includes an authentication tag that detects any modification to the encrypted data. If a script or middlebox alters the payload in transit, decryption fails. This guarantees that financial data received by the server is exactly what the user entered.</td>
+  </tr>
+  <tr>
+    <td><strong>IT General Controls — Access to Data</strong></td>
+    <td>Restrict access to financial data to authorized personnel and systems</td>
+    <td>Financial figures entered in SmartField cannot be read by client-side JavaScript, browser extensions at the JS layer, or third-party scripts. Only your server with the private key can decrypt. This restricts access at the point of entry.</td>
+  </tr>
+  <tr>
+    <td><strong>IT General Controls — Change Management</strong></td>
+    <td>Ensure changes to applications do not compromise data integrity</td>
+    <td>SmartField's encryption is automatic and non-bypassable. A developer adding new frontend code cannot accidentally expose financial data — the architecture enforces protection regardless of application changes.</td>
+  </tr>
+</table>
+
+<p><strong>What you still need to do:</strong></p>
+<ul>
+  <li>Implement server-side access controls, segregation of duties, and audit trails for financial data</li>
+  <li>Maintain change management procedures for your full application stack</li>
+  <li>Conduct regular SOX audits covering both IT general controls and application controls</li>
+  <li>Ensure database-level encryption and access controls for stored financial data</li>
+  <li>SmartField protects data during entry and transit — your server-side controls must protect it after decryption</li>
+</ul>
+
+<div class="warn"><strong>SOX is about process, not just technology.</strong> SmartField provides a verifiable technical control at the input layer (encrypted capture, tamper detection, access restriction). But SOX compliance requires documented procedures, regular testing, and management sign-off across your entire financial reporting infrastructure.</div>
 
 <!-- LICENSE -->
 <h2 id="license">License Keys</h2>

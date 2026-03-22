@@ -375,23 +375,85 @@ Nota:         Se necesita token granular de npm con permisos read/write
 - [x] Security audit PASADO (Softwebo Security)
 - [x] License key system (data-key + validation + HMAC)
 - [x] Audit report corporativo (Softwebo Security)
-- [x] npm publish @smartfield-dev/server v2.6.0
+- [x] npm publish @smartfield-dev/server v2.7.1
 - [x] SRI (Subresource Integrity) — endpoint /api/sri
 - [x] HTTPS enforcement en key fetch (bug M2)
 - [x] Deploy a VPS (3wwprotocol.com temporal)
 - [x] SSL/HTTPS con Let's Encrypt
 - [x] Docker + nginx configurado
+- [x] React/Next.js wrapper (sdk/react.tsx) — bug B10 resuelto
+- [x] Public API: getRealValue(), hasValue(), clear()
+- [x] Security modes: max, peek, brief
+- [x] Primer cliente free: InPrices (inprices.com/login)
+- [x] Docs: compliance (PCI-DSS, HIPAA, GDPR, SOX)
+- [x] Docs: React wrapper, security modes, API reference, events
+- [x] 2FA configurado en npm
 
-### PENDIENTE
+### PENDIENTE — LANZAMIENTO
 - [ ] Comprar dominio smartfield.dev
-- [ ] VPS propio para SmartField
-- [ ] Dashboard (analytics) — feature grande, post-launch
+- [ ] VPS propio para SmartField (no compartido)
+- [ ] CDN: Cloudflare o unpkg (gratis, ya funciona con npm)
+- [ ] Hacker News launch post
+- [ ] Product Hunt launch
+- [ ] Reddit /r/webdev + /r/netsec posts
+- [ ] Dev.to artículo
+- [ ] Mobile testing completo
+
+### PENDIENTE — FEATURES
 - [ ] Stripe payment integration
 - [ ] Google OAuth (signup "Continue with Google")
-- [ ] SDKs: Python, PHP, Java, Go
+- [ ] Dashboard (analytics) — feature grande, post-launch
 - [ ] sf-type="message" (textarea encriptado)
-- [ ] Hacker News launch
-- [ ] Mobile testing
+- [ ] SDKs nativos: Python (pip), PHP (composer), Java (maven), Go (module)
+
+### PENDIENTE — CUANDO LLEGUE CLIENTE ENTERPRISE
+
+Estos items NO los necesitas ahora. Solo cuando un cliente enterprise diga "nos interesa".
+Cada item tiene un trigger: la señal de que ya es momento de hacerlo.
+
+**Infraestructura:**
+- [ ] VPS dedicado con SLA 99.9% (AWS/GCP) — Trigger: cliente pide uptime SLA
+- [ ] CDN enterprise (Cloudflare Pro $20/mes o AWS CloudFront) — Trigger: tráfico >100K req/día
+- [ ] Monitoring 24/7 (Better Stack, PagerDuty) — Trigger: cliente pide incident response SLA
+- [ ] Redundancia multi-región — Trigger: cliente pide disaster recovery plan
+
+**Seguridad formal:**
+- [ ] Pentest por firma reconocida (Cure53, NCC Group, Trail of Bits) — Trigger: cliente pide third-party audit. Costo: $15K-30K
+- [ ] SOC 2 Type II certificación — Trigger: cliente enterprise lo exige en procurement. Costo: $10K-50K con Vanta/Drata
+- [ ] ISO 27001 — Trigger: cliente europeo enterprise lo pide. Costo: $15K-40K
+- [ ] Bug bounty program (HackerOne/Bugcrowd) — Trigger: quieres seguridad continua. Costo: pagas por bug encontrado
+
+**Legal / Compliance:**
+- [ ] Términos de servicio enterprise (con SLA, indemnización, liability cap) — Trigger: legal del cliente lo pide
+- [ ] DPA (Data Processing Agreement) para GDPR — Trigger: cliente europeo lo pide
+- [ ] BAA (Business Associate Agreement) para HIPAA — Trigger: cliente healthcare lo pide. NOTA: SmartField nunca toca PHI, pero algunos clientes lo piden de todos modos
+- [ ] Seguro de cyber liability — Trigger: contrato enterprise >$50K/año. Costo: $1K-5K/año
+- [ ] Política de seguridad escrita (incident response, access control, etc.) — Trigger: SOC 2 o cliente lo pide
+
+**Documentación enterprise:**
+- [x] Compliance guides en docs (PCI-DSS, HIPAA, GDPR, SOX) — HECHO
+- [ ] Whitepaper técnico (PDF descargable) — Trigger: equipo de seguridad del cliente quiere evaluar
+- [ ] Architecture diagram formal — Trigger: review de seguridad del cliente
+- [ ] Penetration test report público (redacted) — Trigger: después del pentest formal
+
+**Ventas enterprise:**
+- [ ] Demo environment dedicado (no compartido con la landing) — Trigger: demo call con enterprise
+- [ ] Pricing enterprise custom (no publicar precio, "Contact Sales") — Trigger: primeras conversaciones enterprise
+- [ ] Contrato anual con descuento — Trigger: cliente quiere commitment
+- [ ] Soporte dedicado (Slack channel, email SLA <4h) — Trigger: cliente paga >$1K/mes
+
+**Costos estimados para estar "enterprise ready":**
+| Item | Costo | Cuándo |
+|------|-------|--------|
+| VPS dedicado | $50-200/mes | Con primeros 10 clientes pro |
+| Dominio smartfield.dev | $12/año | Ya |
+| CDN Cloudflare | $0-20/mes | Ya (gratis tier) |
+| Pentest formal | $15K-30K | Cuando revenue >$5K/mes |
+| SOC 2 | $10K-50K | Cuando enterprise lo pida |
+| Bug bounty | Variable | Cuando revenue >$3K/mes |
+| Seguro cyber | $1K-5K/año | Con primer contrato enterprise |
+| Total para empezar | ~$100/mes | Dominio + VPS + Cloudflare |
+| Total enterprise ready | ~$30K-80K one-time | Solo cuando haya revenue |
 
 ---
 
