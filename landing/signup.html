@@ -4,10 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Account — SmartField</title>
-  <script src="/component/smartfield.js"></script>
+  <script src="/component/smartfield.js" data-key="sf_test_765d7b744742dd8c0ebc6c8313d53e15"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,'Segoe UI',sans-serif;background:#ffffff;color:#111;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    body{font-family:-apple-system,'Segoe UI',sans-serif;background:#ffffff;color:#111;min-height:100vh;display:flex;flex-direction:column;padding:0}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);border-bottom:1px solid #eee}
+    .nav-logo{font-size:20px;font-weight:800;color:#111;letter-spacing:-0.5px}
+    .nav-logo-cipher{font-family:'Fira Code','Consolas',monospace;color:#22c55e;letter-spacing:2px}
+    .nav-links{display:flex;gap:32px;font-size:17px;font-weight:600}
+    .nav-links a{color:#666;transition:color 0.2s;text-decoration:none}
+    .nav-links a:hover{color:#111}
+    .nav-cta{padding:8px 20px;background:#111;color:#fff;font-weight:700;font-size:13px;border-radius:8px;transition:all 0.2s;text-decoration:none}
+    .nav-cta:hover{background:#333}
+    .main-content{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 20px 40px}
 
     .signup-page{width:100%;max-width:460px}
 
@@ -69,11 +78,23 @@
 </head>
 <body>
 
-<div class="signup-page">
-  <div class="logo">
-    <img src="/landing/img/iconLogo.png" alt="SmartField" width="32" height="32" style="border-radius:6px">
-    <span>SmartField</span>
+<!-- NAV -->
+<nav>
+  <a href="/landing/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <img src="/landing/img/iconLogo.png" alt="SmartField" width="28" height="28" style="border-radius:6px">
+    <span class="nav-logo">SmartField</span>
+  </a>
+  <div class="nav-links">
+    <a href="/landing/#demo">Live Demo</a>
+    <a href="/landing/usecases.html">Use Cases</a>
+    <a href="/landing/#pricing">Pricing</a>
+    <a href="/landing/docs.html">Docs</a>
   </div>
+  <a href="/landing/#demo" class="nav-cta">Try It Now</a>
+</nav>
+
+<div class="main-content">
+<div class="signup-page">
 
   <!-- FORM -->
   <div class="card" id="signup-card">
@@ -99,31 +120,36 @@
       </div>
     </div>
 
-    <form id="signup-form">
+    <form id="signup-form" onsubmit="return false">
       <div class="row">
         <div class="field">
           <label>First Name</label>
-          <input type="text" id="fname" placeholder="John" required>
+          <smart-field sf-security="brief" type="text" placeholder="John" encrypt-key="/api/public-key" style="--sf-bg:#fff;--sf-border-color:#e5e7eb;--sf-radius:10px;--sf-focus-color:#00B88A;--sf-focus-ring:rgba(0,184,138,0.12);--sf-placeholder-color:#bbb;--sf-cipher-color:#00B88A;--sf-cipher-glow:rgba(0,184,138,0.2)"></smart-field>
         </div>
         <div class="field">
           <label>Last Name</label>
-          <input type="text" id="lname" placeholder="Smith" required>
+          <smart-field sf-security="brief" type="text" placeholder="Smith" encrypt-key="/api/public-key" style="--sf-bg:#fff;--sf-border-color:#e5e7eb;--sf-radius:10px;--sf-focus-color:#00B88A;--sf-focus-ring:rgba(0,184,138,0.12);--sf-placeholder-color:#bbb;--sf-cipher-color:#00B88A;--sf-cipher-glow:rgba(0,184,138,0.2)"></smart-field>
         </div>
       </div>
 
       <div class="field">
         <label>Work Email</label>
-        <input type="email" id="email" placeholder="john@company.com" required>
+        <smart-field sf-security="brief" type="email" placeholder="john@company.com" encrypt-key="/api/public-key" style="--sf-bg:#fff;--sf-border-color:#e5e7eb;--sf-radius:10px;--sf-focus-color:#00B88A;--sf-focus-ring:rgba(0,184,138,0.12);--sf-placeholder-color:#bbb;--sf-cipher-color:#00B88A;--sf-cipher-glow:rgba(0,184,138,0.2)"></smart-field>
       </div>
 
       <div class="field">
         <label>Password</label>
-        <smart-field type="password" name="signup-pwd" placeholder="min. 8 characters" encrypt-key="/api/public-key"></smart-field>
+        <smart-field sf-security="peek" type="password" id="sf-pwd" placeholder="min. 8 characters" encrypt-key="/api/public-key" style="--sf-bg:#fff;--sf-border-color:#e5e7eb;--sf-radius:10px;--sf-focus-color:#00B88A;--sf-focus-ring:rgba(0,184,138,0.12);--sf-placeholder-color:#bbb;--sf-cipher-color:#00B88A;--sf-cipher-glow:rgba(0,184,138,0.2)"></smart-field>
+      </div>
+
+      <div class="field">
+        <label>Confirm Password <span id="pwd-match" style="font-size:10px;font-weight:700"></span></label>
+        <smart-field sf-security="peek" type="password" id="sf-pwd2" placeholder="repeat password" encrypt-key="/api/public-key" style="--sf-bg:#fff;--sf-border-color:#e5e7eb;--sf-radius:10px;--sf-focus-color:#00B88A;--sf-focus-ring:rgba(0,184,138,0.12);--sf-placeholder-color:#bbb;--sf-cipher-color:#00B88A;--sf-cipher-glow:rgba(0,184,138,0.2)"></smart-field>
       </div>
 
       <div class="field">
         <label>Company</label>
-        <input type="text" id="company" placeholder="Acme Inc.">
+        <smart-field sf-security="brief" type="text" placeholder="Acme Inc." encrypt-key="/api/public-key" style="--sf-bg:#fff;--sf-border-color:#e5e7eb;--sf-radius:10px;--sf-focus-color:#00B88A;--sf-focus-ring:rgba(0,184,138,0.12);--sf-placeholder-color:#bbb;--sf-cipher-color:#00B88A;--sf-cipher-glow:rgba(0,184,138,0.2)"></smart-field>
       </div>
 
       <div class="field">
@@ -142,7 +168,7 @@
         </select>
       </div>
 
-      <button type="button" class="btn btn-primary" onclick="submitSignup()">Create Account</button>
+      <smart-button label="Create Account" sf-domain="localhost" style="--sb-bg:#00B88A;--sb-min-width:100%;width:100%">Create Account</smart-button>
     </form>
 
     <div class="divider">or</div>
@@ -200,6 +226,49 @@
 
   <p class="login-link">Already have an account? <a href="#">Log in</a></p>
 </div>
+</div><!-- end main-content -->
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid #e5e7eb;padding:60px 20px 40px;max-width:1100px;margin:0 auto;width:100%">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <img src="/landing/img/iconLogo.png" alt="SmartField" width="28" height="28" style="border-radius:6px">
+        <span style="font-size:18px;font-weight:800;color:#111">SmartField</span>
+      </div>
+      <p style="font-size:12px;color:#666;line-height:1.6;max-width:280px">Every keystroke, encrypted. The secure input component for the modern web.</p>
+      <div style="display:flex;gap:12px;margin-top:16px">
+        <a href="https://github.com/smartfield-dev/smartfield" style="color:#999;text-decoration:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+        <a href="mailto:hello@smartfield.dev" style="color:#999;text-decoration:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px">Product</div>
+      <a href="/landing/#demo" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Live Demo</a>
+      <a href="/landing/usecases.html" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Use Cases</a>
+      <a href="/landing/#pricing" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Pricing</a>
+      <a href="/demo/hacker.html" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Hacker Challenge</a>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px">Company</div>
+      <a href="#" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">About</a>
+      <a href="mailto:hello@smartfield.dev" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Contact</a>
+      <a href="mailto:security@smartfield.dev" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Security</a>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px">Legal</div>
+      <a href="/landing/privacy.html" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Privacy Policy</a>
+      <a href="/landing/terms.html" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Terms of Service</a>
+      <a href="/landing/privacy.html#cookies" style="display:block;font-size:13px;color:#666;text-decoration:none;padding:4px 0">Cookie Policy</a>
+    </div>
+  </div>
+  <div style="border-top:1px solid #e5e7eb;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <span style="font-size:12px;color:#999">&copy; 2026 SmartField. All rights reserved.</span>
+    <div style="display:flex;gap:16px;font-size:11px;color:#999">
+      <span>AES-256-GCM</span><span>·</span><span>RSA-2048</span><span>·</span><span>Zero Data Architecture</span>
+    </div>
+  </div>
+</footer>
 
 <script>
 var selectedPlan = 'pro';
@@ -220,21 +289,50 @@ function selectPlan(el, plan) {
   selectedPlan = plan;
 }
 
-function submitSignup() {
-  var fname = document.getElementById('fname').value;
-  var email = document.getElementById('email').value;
-
-  if (!fname || !email) {
-    alert('Please fill in your name and email.');
+// Password match validation
+var pwd1 = '', pwd2 = '';
+document.getElementById('sf-pwd').addEventListener('sf-input', function() {
+  pwd1 = this._s('realValue');
+  checkMatch();
+});
+document.getElementById('sf-pwd2').addEventListener('sf-input', function() {
+  pwd2 = this._s('realValue');
+  checkMatch();
+});
+function checkMatch() {
+  var el = document.getElementById('pwd-match');
+  var sf2 = document.getElementById('sf-pwd2');
+  if (pwd2.length === 0) {
+    el.textContent = '';
+    sf2.style.setProperty('--sf-border-color', '#e5e7eb');
     return;
   }
+  if (pwd1 === pwd2) {
+    el.textContent = '✓ match';
+    el.style.color = '#22c55e';
+    sf2.style.setProperty('--sf-border-color', '#22c55e');
+  } else {
+    el.textContent = '✗ no match';
+    el.style.color = '#ef4444';
+    sf2.style.setProperty('--sf-border-color', '#ef4444');
+  }
+}
 
+// Handle smart-button submit
+document.addEventListener('sf-submit', function(e) {
+  if (pwd1.length < 8) {
+    alert('Password must be at least 8 characters.');
+    return;
+  }
+  if (pwd1 !== pwd2) {
+    alert('Passwords do not match.');
+    return;
+  }
   var plans = { free: 'Starter (Free)', pro: 'Pro ($19/mo)', enterprise: 'Enterprise (Custom)' };
-
   document.getElementById('signup-card').style.display = 'none';
   document.getElementById('success-card').style.display = 'block';
   document.getElementById('plan-msg').textContent = 'Plan: ' + plans[selectedPlan];
-}
+});
 </script>
 <script src="/landing/cookie-banner.js"></script>
 </body>
