@@ -171,6 +171,7 @@
       .case{padding:16px}
       .faq-q{font-size:14px}
       .faq-a{font-size:13px}
+      #ai-test div[style*="repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important}
       #devtools > div > div[style*="grid-template-columns:1fr 1fr"],
       #smart-submit > div > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
       #devtools > div > div[style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr !important}
@@ -716,6 +717,84 @@
 
   <div style="text-align:center;margin-top:32px;font-size:13px;color:#475569">
     One line of CSS. Your brand, your colors. SmartField disappears into your design.
+  </div>
+</section>
+
+<!-- TESTED AGAINST AI -->
+<section id="ai-test" style="padding:80px 40px">
+  <h2 class="section-title">We Asked 4 AIs to Hack SmartField</h2>
+  <p class="section-sub">We gave GPT, Claude, Gemini, and Grok full access to our live page. None could read a single character.</p>
+
+  <!-- AI Cards -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1000px;margin:0 auto 48px">
+
+    <!-- GPT -->
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:24px;text-align:center">
+      <img src="/landing/img/ai_gpt.png" alt="GPT" width="48" height="48" style="border-radius:12px;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:4px">GPT-4o</div>
+      <div style="font-size:11px;color:#dc2626;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Failed to read data</div>
+      <div style="font-size:12px;color:#666;line-height:1.5;font-style:italic">"No afirmo haber extraído el plaintext. No afirmo haber visto el Shadow DOM interno."</div>
+    </div>
+
+    <!-- Claude -->
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:24px;text-align:center">
+      <img src="/landing/img/ai_claude.png" alt="Claude" width="48" height="48" style="border-radius:12px;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:4px">Claude</div>
+      <div style="font-size:11px;color:#dc2626;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Failed to read data</div>
+      <div style="font-size:12px;color:#666;line-height:1.5;font-style:italic">"The component does exactly what it promises. The input never exists in the DOM."</div>
+    </div>
+
+    <!-- Gemini -->
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:24px;text-align:center">
+      <img src="/landing/img/ai_gemini.png" alt="Gemini" width="48" height="48" style="border-radius:12px;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:4px">Gemini</div>
+      <div style="font-size:11px;color:#dc2626;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Failed to read data</div>
+      <div style="font-size:12px;color:#666;line-height:1.5;font-style:italic">"SmartField acts as a cryptographic-level black box, blocking all possible ways to extract data."</div>
+    </div>
+
+    <!-- Grok -->
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:24px;text-align:center">
+      <img src="/landing/img/ai_grok.png" alt="Grok" width="48" height="48" style="border-radius:12px;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:4px">Grok</div>
+      <div style="font-size:11px;color:#dc2626;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Failed to read data</div>
+      <div style="font-size:12px;color:#666;line-height:1.5;font-style:italic">"Any AI that says they can read the content is lying or hallucinating. The component wins."</div>
+    </div>
+  </div>
+
+  <!-- Results Table -->
+  <div style="max-width:900px;margin:0 auto">
+    <h3 style="font-size:18px;font-weight:700;text-align:center;margin-bottom:20px;color:#111">What Each AI Could See</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead>
+        <tr style="background:#0B1120;color:#e2e8f0">
+          <th style="padding:12px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Attack Vector</th>
+          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_gpt.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> GPT</th>
+          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_claude.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> Claude</th>
+          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_gemini.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> Gemini</th>
+          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_grok.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> Grok</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f0f0f0"><td style="padding:12px 16px;font-weight:600">Read field values</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td></tr>
+        <tr style="border-bottom:1px solid #f0f0f0;background:#f8fafc"><td style="padding:12px 16px;font-weight:600">Identify field type</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td></tr>
+        <tr style="border-bottom:1px solid #f0f0f0"><td style="padding:12px 16px;font-weight:600">Read placeholders</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td></tr>
+        <tr style="border-bottom:1px solid #f0f0f0;background:#f8fafc"><td style="padding:12px 16px;font-weight:600">Access Shadow DOM</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Blocked</td></tr>
+        <tr><td style="padding:12px 16px;font-weight:600">Extract useful data</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Nothing</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Nothing</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Nothing</td><td style="padding:12px;text-align:center;color:#dc2626;font-weight:700">Nothing</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bottom quote -->
+  <div style="max-width:700px;margin:40px auto 0;text-align:center">
+    <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:24px">
+      <p style="font-size:16px;color:#111;line-height:1.7;font-weight:600">
+        4 of the most advanced AIs in the world tried to read SmartField data.<br>
+        <span style="color:#22c55e">All 4 failed. Zero data extracted.</span>
+      </p>
+      <p style="font-size:13px;color:#666;margin-top:8px">
+        If GPT-4, Claude, Gemini, and Grok can't read it — neither can Hotjar, screen recorders, or XSS attacks.
+      </p>
+    </div>
   </div>
 </section>
 
