@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Income Data Input for Real Estate: Tracker Protection | SmartField</title>
+<meta name="description" content="Encrypt income data data in real estate forms. SmartField provides tracker protection with AES-256-GCM + RSA-2048 encryption at the keystroke level.">
+<link rel="canonical" href="https://3wwprotocol.com/landing/real-estate/income-tracker-capture.html">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:#fff;color:#111;line-height:1.7}
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+h1{font-size:36px;font-weight:800;color:#0B1120;margin-bottom:12px;line-height:1.2}
+h2{font-size:24px;font-weight:700;color:#0B1120;margin-top:40px;margin-bottom:12px}
+h3{font-size:18px;font-weight:700;color:#0B1120;margin-top:24px;margin-bottom:8px}
+p{font-size:17px;color:#444;margin-bottom:16px;line-height:1.7}
+ul{padding-left:20px;margin-bottom:16px}
+li{font-size:16px;color:#444;margin-bottom:8px;line-height:1.6}
+a{color:#00B88A;text-decoration:none;font-weight:600}
+a:hover{text-decoration:underline}
+.badge{display:inline-block;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;margin-bottom:16px}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.code-block{background:#0B1120;color:#e2e8f0;border-radius:10px;padding:20px;margin:12px 0 20px;overflow-x:auto;font-size:14px;line-height:1.6;font-family:'Fira Code',monospace}
+.code-inline{background:#f0f0f0;color:#0B1120;padding:2px 6px;border-radius:4px;font-size:13px;font-family:'Fira Code',monospace}
+.card{background:#f8fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:16px}
+.cta{display:inline-block;padding:14px 32px;background:#00B88A;color:#fff;font-size:16px;font-weight:700;border-radius:10px;margin-top:24px;transition:opacity .2s}
+.cta:hover{opacity:.85;text-decoration:none}
+.faq-item{border-bottom:1px solid #e5e7eb;padding:16px 0;cursor:pointer}
+.faq-q{font-size:17px;font-weight:600;color:#0B1120;display:flex;justify-content:space-between;align-items:center}
+.faq-a{display:none;font-size:16px;color:#555;margin-top:10px;line-height:1.7}
+.faq-item.open .faq-a{display:block}
+.breadcrumb{font-size:14px;color:#888;margin-bottom:24px}
+.breadcrumb a{color:#00B88A;font-weight:500}
+nav{position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 20px;z-index:100;display:flex;justify-content:space-between;align-items:center}
+nav a.logo{font-size:18px;font-weight:800;color:#0B1120;text-decoration:none}
+nav a.logo span{color:#00B88A}
+nav .nav-cta{padding:8px 20px;background:#0B1120;color:#fff;font-size:13px;font-weight:700;border-radius:8px;text-decoration:none}
+.spacer{height:70px}
+footer{border-top:1px solid #e5e7eb;padding:40px 20px;text-align:center;font-size:14px;color:#888;margin-top:60px}
+.related{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.related a{display:block;padding:16px;background:#f8fafb;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-weight:600;color:#0B1120;text-decoration:none;transition:border-color .2s}
+.related a:hover{border-color:#00B88A}
+@media(max-width:768px){.related{grid-template-columns:1fr}h1{font-size:28px}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does SmartField protect income data in real estate?","acceptedAnswer":{"@type":"Answer","text":"SmartField encrypts income data at the keystroke level using AES-256-GCM. The data never exists as plaintext in the browser DOM. Tracker Protection is achieved through 13 independent security layers including closed Shadow DOM and WeakMap isolation."}},{"@type":"Question","name":"Can tracker capture attacks steal income data?","acceptedAnswer":{"@type":"Answer","text":"Not with SmartField. The .value property returns encrypted payloads only. The real income data is stored in a WeakMap inside a closed Shadow DOM, invisible to any JavaScript including tracker capture attacks."}},{"@type":"Question","name":"How do I implement this?","acceptedAnswer":{"@type":"Answer","text":"Replace your standard input with smart-field. 2 lines of HTML. Install the server SDK (Node.js, Python, Java, Go, PHP, or Ruby) to decrypt on your backend."}}]}</script>
+</head>
+<body>
+<nav>
+  <a href="/landing/" class="logo">Smart<span>Field</span></a>
+  <a href="/landing/#demo" class="nav-cta">Try Demo</a>
+</nav>
+<div class="spacer"></div>
+<div class="container">
+<div class="breadcrumb"><a href="/landing/">Home</a> / <a href="/landing/use-cases/">Use Cases</a> / <a href="/landing/use-cases/real-estate-secure-login-fields.html">Real Estate</a> / Income Data</div>
+<span class="badge badge-green">Real Estate</span>
+<h1>Protect Income Data Fields in Real Estate from Tracker</h1>
+<p style="font-size:19px;color:#333">In real estate, income data is one of the most targeted data types. Standard HTML inputs expose it to tracker capture attacks. SmartField encrypts it at the keystroke level.</p>
+
+<h2>The Risk</h2>
+<div class="card">
+<p>Income Data entered in a standard form is immediately accessible:</p>
+<div class="code-block">// Tracker attack:
+document.querySelector('input').value
+// "Income Data data here"  &larr; stolen</div>
+</div>
+
+<h2>The Fix</h2>
+<div class="code-block">&lt;smart-field type="password" encrypt-key="/api/sf-key"
+  placeholder="income data"&gt;&lt;/smart-field&gt;</div>
+<p>Now the same attack returns AES-256-GCM encrypted data. The income data never exists as plaintext in the browser.</p>
+
+<h2>What the Attacker Gets</h2>
+<div class="card" style="border-left:3px solid #00B88A">
+<div class="code-block">document.querySelector('smart-field').value
+// "eyJ2IjoxLCJpdiI6IkNxT3..."  &larr; 600+ chars of encrypted gibberish</div>
+<p>Useless without your server's RSA-2048 private key.</p>
+</div>
+
+<h2>Compliance</h2>
+<p>SmartField uses NIST-approved algorithms: AES-256-GCM (SP 800-38D) and RSA-2048 (SP 800-56B). Compatible with PCI-DSS, HIPAA, GDPR, SOX, and FISMA requirements.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-list">
+  <div class="faq-item">
+    <div class="faq-q">How does SmartField protect income data in real estate?<span>+</span></div>
+    <div class="faq-a">SmartField encrypts income data at the keystroke level using AES-256-GCM. The data never exists as plaintext in the browser DOM. Tracker Protection is achieved through 13 independent security layers including closed Shadow DOM and WeakMap isolation.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Can tracker capture attacks steal income data?<span>+</span></div>
+    <div class="faq-a">Not with SmartField. The .value property returns encrypted payloads only. The real income data is stored in a WeakMap inside a closed Shadow DOM, invisible to any JavaScript including tracker capture attacks.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">How do I implement this?<span>+</span></div>
+    <div class="faq-a">Replace your standard input with smart-field. 2 lines of HTML. Install the server SDK (Node.js, Python, Java, Go, PHP, or Ruby) to decrypt on your backend.</div>
+  </div>
+</div>
+
+<h2>Related</h2>
+<div class="related">
+  <a href="/landing/use-cases/real-estate-secure-login-fields.html">Real Estate Use Case</a>
+  <a href="/landing/threats/anti-bot-form-fields.html">Tracker Protection</a>
+  <a href="/landing/data-types/secure-password-input.html">Income Data Data Type</a>
+</div>
+
+<div style="text-align:center;margin-top:40px">
+  <a href="/landing/#demo" class="cta">Try Live Demo</a>
+</div>
+</div>
+<footer>
+  <p>SmartField. Every Keystroke, Encrypted. <a href="/landing/">Home</a> &middot; <a href="/landing/docs.html">Docs</a></p>
+</footer>
+<script>document.querySelectorAll('.faq-item').forEach(i=>i.addEventListener('click',()=>i.classList.toggle('open')))</script>
+</body>
+</html>
