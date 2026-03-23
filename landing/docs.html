@@ -97,6 +97,7 @@
   <h4>Security</h4>
   <a href="#architecture">Architecture</a>
   <a href="#mistakes">Common Mistakes</a>
+  <a href="#troubleshooting">Troubleshooting</a>
   <a href="#attacks">Attack Resistance</a>
   <a href="#compliance">Compliance</a>
 
@@ -637,6 +638,119 @@ User types → AES key generated (random, per encryption)
 18. JSON.stringify         → sensitive data in WeakMap (invisible)
 19. Property enumeration   → no plaintext properties
 20. Accessibility APIs     → no data in ARIA</code></pre>
+
+<!-- TROUBLESHOOTING BY STACK -->
+<h2 id="troubleshooting">Troubleshooting by Stack</h2>
+<p>SmartField has been tested end-to-end with <strong>Node.js, Python, Java, Go, PHP, and Ruby</strong>. All SDKs decrypt correctly. Below are real issues we encountered during integration testing and how to fix them.</p>
+
+<h3>All Stacks — Field Limit (Free Plan)</h3>
+<div class="error">
+  <strong>Symptom:</strong> SmartField fields appear disabled or unresponsive after the 3rd field on the page.
+</div>
+<p>The free plan allows <strong>3 SmartFields per page</strong>. Fields beyond the limit are automatically blocked. Fix:</p>
+<ul>
+  <li>Reduce to 3 SmartFields per page, OR</li>
+  <li>Add your license key: <code class="inline-code">&lt;script src="smartfield.js" data-key="sf_live_xxx"&gt;&lt;/script&gt;</code></li>
+</ul>
+
+<h3>All Stacks — Peek Mode Text Invisible on Dark Backgrounds</h3>
+<div class="error">
+  <strong>Symptom:</strong> When holding the shield icon in peek mode, the revealed text is invisible (black text on dark background).
+</div>
+<p>SmartField auto-detects background brightness and adjusts the peek text color. If auto-detection fails (e.g., transparent backgrounds), set the color explicitly:</p>
+<pre><code>smart-field {
+  --sf-peek-color: #ffffff;  /* white text for dark backgrounds */
+}</code></pre>
+
+<h3>All Stacks — Wrong Attribute Name</h3>
+<div class="error">
+  <strong>Symptom:</strong> Security modes don't work. Field behaves like <code class="inline-code">max</code> mode regardless of setting.
+</div>
+<p>The correct attribute is <code class="inline-code">sf-security</code>, not <code class="inline-code">security</code>:</p>
+<pre><code>&lt;!-- ❌ Wrong --&gt;
+&lt;smart-field security="peek" ...&gt;
+
+&lt;!-- ✅ Correct --&gt;
+&lt;smart-field sf-security="peek" ...&gt;</code></pre>
+
+<h3>PHP — JSON Response Contaminated with Print Output</h3>
+<div class="error">
+  <strong>Symptom:</strong> Browser shows <code class="inline-code">Unexpected token 'S'</code> or similar JSON parse error. The PHP server returns text before the JSON payload.
+</div>
+<p>Any <code class="inline-code">echo</code>, <code class="inline-code">print</code>, or <code class="inline-code">var_dump</code> before your JSON response will break the output. This includes initialization messages from the SmartField SDK.</p>
+<pre><code>// ❌ This breaks JSON responses — output goes to browser
+echo "[SmartField] Keys loaded";
+
+// ✅ Use error_log instead — output goes to server logs only
+error_log("[SmartField] Keys loaded");</code></pre>
+<div class="warn">
+  <strong>Tip:</strong> In PHP's built-in server (<code class="inline-code">php -S</code>), anything printed outside a response handler also contaminates the output. Always use <code class="inline-code">error_log()</code> for debug messages.
+</div>
+
+<h3>Ruby (WEBrick) — CORS Preflight Fails</h3>
+<div class="error">
+  <strong>Symptom:</strong> <code class="inline-code">Failed to fetch</code> error when SmartField tries to get the public key or submit data cross-origin. Works with <code class="inline-code">curl</code> but fails in the browser.
+</div>
+<p>WEBrick intercepts <code class="inline-code">OPTIONS</code> requests before they reach your route handler, so CORS headers are never sent. Use <code class="inline-code">RequestCallback</code> to inject CORS headers globally:</p>
+<pre><code>server = WEBrick::HTTPServer.new(
+  Port: 9999,
+  RequestCallback: proc { |req, res|
+    res['Access-Control-Allow-Origin'] = '*'
+    res['Access-Control-Allow-Headers'] = 'Content-Type'
+    res['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+  }
+)</code></pre>
+<div class="warn">
+  <strong>Note:</strong> This applies to WEBrick specifically. If you use <strong>Sinatra</strong> or <strong>Rails</strong>, use the <code class="inline-code">rack-cors</code> gem instead, which handles preflight correctly.
+</div>
+
+<h3>Java (HttpServer) — Cross-Origin Blocked by Browser</h3>
+<div class="error">
+  <strong>Symptom:</strong> <code class="inline-code">Failed to fetch</code> when SmartField component is served from a different origin than the Java server. CORS headers are present but browser still blocks.
+</div>
+<p>Some browsers enforce stricter CORS rules for certain header combinations. The simplest fix is to proxy requests through your frontend server so everything is same-origin:</p>
+<pre><code>// Express proxy example (frontend server)
+app.all('/proxy/java/:path', (req, res) => {
+  const http = require('http');
+  const options = {
+    hostname: 'localhost', port: 6666,
+    path: '/' + req.params.path,
+    method: req.method,
+    headers: { 'Content-Type': 'application/json' }
+  };
+  const proxy = http.request(options, (proxyRes) => {
+    let data = '';
+    proxyRes.on('data', c => data += c);
+    proxyRes.on('end', () => res.type('json').send(data));
+  });
+  if (req.body) proxy.write(JSON.stringify(req.body));
+  proxy.end();
+});
+
+// SmartField uses the proxy URL
+&lt;smart-field encrypt-key="/proxy/java/sf-key"&gt;</code></pre>
+<div class="warn">
+  <strong>Alternative:</strong> In production, serve your frontend and Java API from the same domain (reverse proxy via nginx/Apache), which eliminates CORS entirely.
+</div>
+
+<h3>Go, Python, Node.js — No Issues</h3>
+<div class="success">
+  These stacks worked correctly out of the box with standard CORS headers. No special configuration needed beyond the basic setup documented above.
+</div>
+
+<h3>General — CORS Checklist</h3>
+<p>If you're getting <code class="inline-code">Failed to fetch</code> errors, verify your server returns these headers on <strong>both</strong> <code class="inline-code">OPTIONS</code> and regular responses:</p>
+<pre><code>Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Content-Type
+Access-Control-Allow-Methods: GET, POST, OPTIONS</code></pre>
+<p>Test with curl to confirm:</p>
+<pre><code># Test preflight
+curl -X OPTIONS http://localhost:PORT/sf-key \
+  -H "Origin: http://localhost:3000" \
+  -H "Access-Control-Request-Method: GET" \
+  -H "Access-Control-Request-Headers: Content-Type" -D -
+
+# You should see all 3 Access-Control headers in the response</code></pre>
 
 <!-- WHAT WE PROTECT / DON'T PROTECT -->
 <h2 id="attacks">What SmartField Protects — And What It Doesn't</h2>

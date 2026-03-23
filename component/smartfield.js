@@ -660,12 +660,31 @@
         self._isPeeking = true;
         peekBtn.classList.add('sf-peeking');
 
-        // Show real value — use high contrast color that works on any background
+        // Show real value — use --sf-peek-color, or auto-detect contrast
+        var peekColor = getComputedStyle(self).getPropertyValue('--sf-peek-color').trim();
+        if (!peekColor) {
+          // Check the actual computed background of the input inside Shadow DOM
+          var inputBg = getComputedStyle(self._input).backgroundColor;
+          var isDark = true; // default assume dark
+          if (inputBg) {
+            var m = inputBg.match(/[\d.]+/g);
+            if (m && m.length >= 3) {
+              var lum = parseFloat(m[0])*0.299 + parseFloat(m[1])*0.587 + parseFloat(m[2])*0.114;
+              // If alpha is near 0, background is transparent — check parent
+              var alpha = m.length >= 4 ? parseFloat(m[3]) : 1;
+              if (alpha > 0.5) {
+                isDark = lum < 128;
+              }
+              // else stays true (transparent on dark page = dark)
+            }
+          }
+          peekColor = isDark ? '#ffffff' : '#111827';
+        }
         self._input.value = self._s('realValue');
         self._input.style.letterSpacing = '2px';
-        self._input.style.color = '#111827';
-        self._input.style.textShadow = '0 0 0 #111827';
-        self._input.style.webkitTextFillColor = '#111827';
+        self._input.style.color = peekColor;
+        self._input.style.textShadow = '0 0 0 ' + peekColor;
+        self._input.style.webkitTextFillColor = peekColor;
         clearInterval(self._anim);
         self._anim = null;
 

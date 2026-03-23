@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartField — Every Keystroke, Encrypted</title>
-  <script src="/component/smartfield.js" data-key="sf_test_6b2b0293c953a55c7c4ad732f1f566fc"></script>
+  <script src="/component/smartfield.js" data-key="sf_test_dc19e07987a45a0ca2472153e5f827d6"></script>
   <script src="/landing/cookie-banner.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -340,6 +340,45 @@
       <img src="/landing/img/live_screenshot.png" alt="SmartField vs Normal Input — Live security audit showing encrypted vs plaintext values in browser console" style="width:100%;max-width:800px;display:block">
     </div>
     <p style="font-size:12px;color:#999;margin-top:12px">Live audit from browser DevTools — <a href="/demo/audit.html" style="color:#00B88A;text-decoration:none;font-weight:600">run it yourself →</a></p>
+  </div>
+
+  <!-- MULTI-STACK VERIFIED -->
+  <div style="margin-top:64px;text-align:center">
+    <h3 style="font-size:22px;font-weight:800;color:#0B1120;margin-bottom:8px">Tested & Verified — 6 Server Languages</h3>
+    <p style="font-size:15px;color:#666;max-width:640px;margin:0 auto 32px">Same component, same encryption. Each server generates its own RSA-2048 keys and decrypts with its native crypto library. We tested every one.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:720px;margin:0 auto">
+      <div style="background:linear-gradient(135deg,#1a3a2a,#0d2818);border-radius:14px;padding:20px;text-align:left">
+        <div style="font-size:10px;font-weight:700;color:#68d39180;margin-bottom:8px">PORT 3333</div>
+        <div style="font-size:17px;font-weight:700;color:#68d391;margin-bottom:4px">Node.js</div>
+        <div style="font-size:12px;color:#68d39199;line-height:1.4">Express · Zero dependencies · Original SDK</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a2a3a,#0d1828);border-radius:14px;padding:20px;text-align:left">
+        <div style="font-size:10px;font-weight:700;color:#63b3ed80;margin-bottom:8px">PORT 5555</div>
+        <div style="font-size:17px;font-weight:700;color:#63b3ed;margin-bottom:4px">Python</div>
+        <div style="font-size:12px;color:#63b3ed99;line-height:1.4">Flask · cryptography lib · RSA + AES-GCM</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#3a1a1a,#280d0d);border-radius:14px;padding:20px;text-align:left">
+        <div style="font-size:10px;font-weight:700;color:#fc818180;margin-bottom:8px">PORT 6666</div>
+        <div style="font-size:17px;font-weight:700;color:#fc8181;margin-bottom:4px">Java</div>
+        <div style="font-size:12px;color:#fc818199;line-height:1.4">HttpServer · javax.crypto · RSA-OAEP + GCM</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a3a3a,#0d2828);border-radius:14px;padding:20px;text-align:left">
+        <div style="font-size:10px;font-weight:700;color:#4fd1c580;margin-bottom:8px">PORT 7777</div>
+        <div style="font-size:17px;font-weight:700;color:#4fd1c5;margin-bottom:4px">Go</div>
+        <div style="font-size:12px;color:#4fd1c599;line-height:1.4">net/http · Standard crypto · Zero dependencies</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#2a1a3a,#1a0d28);border-radius:14px;padding:20px;text-align:left">
+        <div style="font-size:10px;font-weight:700;color:#b794f480;margin-bottom:8px">PORT 8888</div>
+        <div style="font-size:17px;font-weight:700;color:#b794f4;margin-bottom:4px">PHP</div>
+        <div style="font-size:12px;color:#b794f499;line-height:1.4">Built-in server · openssl · RSA + AES-GCM</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#3a1a2a,#280d1a);border-radius:14px;padding:20px;text-align:left">
+        <div style="font-size:10px;font-weight:700;color:#f687b380;margin-bottom:8px">PORT 9999</div>
+        <div style="font-size:17px;font-weight:700;color:#f687b3;margin-bottom:4px">Ruby</div>
+        <div style="font-size:12px;color:#f687b399;line-height:1.4">WEBrick · OpenSSL · RSA-OAEP + AES-GCM</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:16px">Each server generates its own RSA-2048 keys. The component encrypts with AES-256-GCM. Only that server can decrypt.</p>
   </div>
 </section>
 
@@ -782,7 +821,7 @@
     <h3 style="font-size:18px;font-weight:700;text-align:center;margin-bottom:20px;color:#111">What Each AI Could See</h3>
     <table style="width:100%;border-collapse:collapse;font-size:13px">
       <thead>
-        <tr style="background:#0B1120;color:#e2e8f0">
+        <tr style="background:#00B88A;color:#fff">
           <th style="padding:12px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Attack Vector</th>
           <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_gpt.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> GPT</th>
           <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_claude.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> Claude</th>
@@ -871,6 +910,64 @@
     Every browser returned <strong style="color:#111">encrypted payloads only</strong>. shadowRoot = null. .value = cipher.
     If it works on <strong style="color:#111">Tor</strong> — the most restrictive browser in the world — it works everywhere.
   </p>
+
+  <!-- WHO SEES WHAT -->
+  <div style="margin-top:48px;max-width:580px;margin-left:auto;margin-right:auto;background:#f8fafb;border:1px solid #e5e7eb;border-radius:16px;padding:32px 36px;font-family:'Fira Code','Consolas',monospace">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:15px;font-weight:800;color:#0B1120;letter-spacing:0.5px">Who sees what?</div>
+      <div style="font-size:12px;color:#888;margin-top:4px">User types: <span style="color:#00B88A;font-weight:700">MyPassword123</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;background:rgba(0,184,138,0.06);border:1px solid rgba(0,184,138,0.15);border-radius:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00B88A" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+        <div style="flex:1">
+          <div style="font-size:10px;color:#00B88A;font-weight:700;letter-spacing:1px">THE USER</div>
+          <div style="font-size:13px;color:#065f46;margin-top:2px">types "MyPassword123"</div>
+        </div>
+        <div style="font-size:10px;color:#00B88A;font-weight:700;background:rgba(0,184,138,0.1);padding:3px 8px;border-radius:4px">KNOWS</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <div style="flex:1">
+          <div style="font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:1px">THE SCREEN</div>
+          <div style="font-size:13px;color:#64748b;margin-top:2px">ΣΩΔψξλμπφψ§∞</div>
+        </div>
+        <div style="font-size:10px;color:#d97706;font-weight:700;background:#fef3c7;padding:3px 8px;border-radius:4px">CIPHER</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="15" r="0.5" fill="#ef4444"/></svg>
+        <div style="flex:1">
+          <div style="font-size:10px;color:#ef4444;font-weight:700;letter-spacing:1px">ATTACKER (JS)</div>
+          <div style="font-size:13px;color:#991b1b;margin-top:2px">eyJ2IjoxLCJpdiI6IkNxT3...</div>
+        </div>
+        <div style="font-size:10px;color:#dc2626;font-weight:700;background:#fee2e2;padding:3px 8px;border-radius:4px">ENCRYPTED</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;background:rgba(0,184,138,0.06);border:1px solid rgba(0,184,138,0.15);border-radius:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00B88A" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <div style="flex:1">
+          <div style="font-size:10px;color:#00B88A;font-weight:700;letter-spacing:1px">YOUR SERVER</div>
+          <div style="font-size:13px;color:#065f46;margin-top:2px">MyPassword123 <span style="color:#00B88A;font-weight:700">✓</span></div>
+        </div>
+        <div style="font-size:10px;color:#00B88A;font-weight:700;background:rgba(0,184,138,0.1);padding:3px 8px;border-radius:4px">DECRYPTED</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div style="flex:1">
+          <div style="font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:1px">HOTJAR / TRACKER</div>
+          <div style="font-size:13px;color:#64748b;margin-top:2px">ΣΩΔψξλμπφψ§∞</div>
+        </div>
+        <div style="font-size:10px;color:#d97706;font-weight:700;background:#fef3c7;padding:3px 8px;border-radius:4px">USELESS</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <div style="flex:1">
+          <div style="font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:1px">SCREENSHOT</div>
+          <div style="font-size:13px;color:#64748b;margin-top:2px">ΣΩΔψξλμπφψ§∞</div>
+        </div>
+        <div style="font-size:10px;color:#d97706;font-weight:700;background:#fef3c7;padding:3px 8px;border-radius:4px">SCRAMBLED</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- SMART SUBMIT — ANTI-PHISHING -->
@@ -882,10 +979,10 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px;position:relative">
 
       <!-- LEGITIMATE -->
-      <div style="background:#fff;border:2px solid #22c55e;border-radius:16px;padding:28px">
-        <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(34,197,94,0.1);color:#166534;margin-bottom:12px">LEGITIMATE SITE</div>
+      <div style="background:#fff;border:2px solid #00B88A;border-radius:16px;padding:28px">
+        <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(0,184,138,0.1);color:#065f46;margin-bottom:12px">LEGITIMATE SITE</div>
         <h3 style="font-size:18px;margin-bottom:4px">Real Bank Login</h3>
-        <div style="font-family:'Fira Code',monospace;font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(34,197,94,0.08);color:#166534;display:inline-block;margin-bottom:20px">https://banco.com/login</div>
+        <div style="font-family:'Fira Code',monospace;font-size:12px;padding:4px 10px;border-radius:6px;background:rgba(0,184,138,0.08);color:#065f46;display:inline-block;margin-bottom:20px">https://banco.com/login</div>
 
         <form id="ss-form-real" onsubmit="return ssHandleReal(event)">
           <div style="margin-bottom:12px">
@@ -900,12 +997,12 @@
             <div style="font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Card Number</div>
             <smart-field sf-type="card" sf-security="brief" sf-domain="localhost" placeholder="card number" encrypt-key="/api/public-key"></smart-field>
           </div>
-          <button type="submit" style="width:100%;padding:12px;background:#22c55e;color:#000;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Submit (Legitimate)</button>
+          <button type="submit" style="width:100%;padding:12px;background:#00B88A;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Submit (Legitimate)</button>
         </form>
 
-        <div id="ss-result-real" style="display:none;margin-top:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px">
-          <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#166534;margin-bottom:8px">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div id="ss-result-real" style="display:none;margin-top:16px;background:rgba(0,184,138,0.06);border:1px solid rgba(0,184,138,0.2);border-radius:10px;padding:16px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#065f46;margin-bottom:8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00B88A" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             Server received REAL data
           </div>
           <div id="ss-result-real-data" style="font-family:'Fira Code',monospace;font-size:11px;color:#166534;line-height:1.6"></div>
