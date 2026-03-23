@@ -359,10 +359,15 @@ SmartField is open source. PRs welcome.
 
 ```bash
 git clone https://github.com/smartfield-dev/smartfield.git
-cd smartfield/api
+cd smartfield
+
+# The component is in component/smartfield.js
+# Server SDKs are in sdk/ (Node.js, Python, Java, Go, PHP, Ruby)
+
+# To test with Node.js:
+cd sdk
 npm install
-node server-sdk.js
-# Open http://localhost:3333/demo
+node -e "const sf = require('.'); sf.init().then(() => console.log('Keys generated:', sf.status()))"
 ```
 
 ---
