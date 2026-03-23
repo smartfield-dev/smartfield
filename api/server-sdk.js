@@ -20,6 +20,8 @@ app.use('/component', express.static(path.join(__dirname, '..', 'component')));
 app.use('/landing', express.static(path.join(__dirname, '..', 'landing')));
 app.use('/usecases', express.static(path.join(__dirname, '..', 'landing')));
 app.use('/demo', express.static(path.join(__dirname, '..', 'demo')));
+app.get('/sitemap.xml', (req, res) => res.sendFile(path.join(__dirname, '..', 'sitemap.xml')));
+app.get('/robots.txt', (req, res) => { res.type('text/plain'); res.send('User-agent: *\nAllow: /\nSitemap: https://3wwprotocol.com/sitemap.xml'); });
 
 // ========== LICENSE VALIDATION ==========
 
