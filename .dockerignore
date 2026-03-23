@@ -1,9 +1,0 @@
-node_modules
-.smartfield
-.licenses
-.git
-*.log
-INTERNAL-MAP.md
-SECURITY-AUDIT-REPORT.html
-SECURITY-AUDIT.md
-ARCHITECTURE.md
