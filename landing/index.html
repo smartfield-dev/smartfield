@@ -209,64 +209,8 @@
 <nav>
   <div style="display:flex;align-items:center;gap:10px">
     <img src="/landing/img/iconLogo.png" alt="SmartField" width="28" height="28" style="border-radius:6px">
-    <span class="nav-logo"><span class="nav-logo-text" id="nav-logo-text">SmartField</span></span>
+    <span class="nav-logo"><span style="color:#0B1120">Smart</span><span style="color:#00B88A">Field</span></span>
   </div>
-  <script>
-  (function(){
-    var CHARS='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
-    var NAME='SmartField';
-    var el=document.getElementById('nav-logo-text');
-    var phase=0; // 0=cipher, 1=decoding, 2=showing name, 3=encoding
-    var pos=0;
-    var display=[];
-    // Start with cipher
-    for(var i=0;i<NAME.length;i++) display.push(CHARS[Math.floor(Math.random()*CHARS.length)]);
-    el.innerHTML='<span class="nav-logo-cipher">'+display.join('')+'</span>';
-
-    setInterval(function(){
-      if(phase===0){
-        // Mutate cipher chars
-        var idx=Math.floor(Math.random()*display.length);
-        display[idx]=CHARS[Math.floor(Math.random()*CHARS.length)];
-        el.innerHTML='<span class="nav-logo-cipher">'+display.join('')+'</span>';
-        pos++;
-        if(pos>30){phase=1;pos=0;} // After ~30 ticks, start decoding
-      } else if(phase===1){
-        // Reveal one char at a time left to right
-        if(pos<NAME.length){
-          display[pos]=NAME[pos];
-          var html='';
-          for(var i=0;i<display.length;i++){
-            if(i<=pos) html+=display[i];
-            else html+='<span class="nav-logo-cipher">'+display[i]+'</span>';
-          }
-          el.innerHTML=html;
-          pos++;
-        } else {
-          phase=2;pos=0;
-        }
-      } else if(phase===2){
-        // Show full name for a while
-        pos++;
-        if(pos>40){phase=3;pos=0;} // After ~40 ticks, start encoding back
-      } else if(phase===3){
-        // Encode back to cipher left to right
-        if(pos<NAME.length){
-          display[pos]=CHARS[Math.floor(Math.random()*CHARS.length)];
-          var html='';
-          for(var i=0;i<display.length;i++){
-            if(i>=pos) html+='<span class="nav-logo-cipher">'+display[i]+'</span>';
-            else html+='<span class="nav-logo-cipher">'+display[i]+'</span>';
-          }
-          el.innerHTML=html;
-          pos++;
-        } else {
-          phase=0;pos=0;
-        }
-      }
-    },100);
-  })();
-  </script>
   <div class="nav-links">
     <a href="#demo">Live Demo</a>
     <a href="/landing/usecases.html">Use Cases</a>
@@ -1247,6 +1191,51 @@
       <a href="mailto:sales@smartfield.dev" class="price-btn price-btn-white" style="text-align:center;text-decoration:none;display:block">Contact Sales</a>
     </div>
   </div>
+</section>
+
+<!-- ENTERPRISE SELF-HOSTED -->
+<section style="text-align:center">
+  <h2 class="section-title">Enterprise: Your Infrastructure. Zero Dependency on Us.</h2>
+  <p class="section-sub" style="max-width:650px">If our server goes down, your bank keeps running. Self-hosted means SmartField lives on YOUR servers, YOUR network, YOUR rules.</p>
+
+  <div style="max-width:800px;margin:32px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:24px;text-align:left">
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:28px">
+      <div style="font-size:20px;font-weight:800;color:#dc2626;margin-bottom:12px">Without Self-Hosted</div>
+      <div style="font-size:16px;color:#991b1b;line-height:1.7">
+        Your SmartField depends on our API.<br>
+        Our server goes down = your fields stop encrypting.<br>
+        Your bank's login page breaks at 2am.<br>
+        10 million users can't log in.<br>
+        <strong>That's unacceptable.</strong>
+      </div>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:28px">
+      <div style="font-size:20px;font-weight:800;color:#065f46;margin-bottom:12px">With Self-Hosted</div>
+      <div style="font-size:16px;color:#065f46;line-height:1.7">
+        SmartField runs on YOUR servers.<br>
+        YOUR RSA keys. YOUR infrastructure.<br>
+        Our server goes down = nothing happens to you.<br>
+        We get hacked = nothing happens to you.<br>
+        <strong>We disappear = you still work.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:600px;margin:32px auto 0;background:#0B1120;border-radius:16px;padding:28px;text-align:left">
+    <div style="font-size:14px;color:#00B88A;font-weight:700;margin-bottom:12px;letter-spacing:1px">WHAT SELF-HOSTED INCLUDES</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:15px;color:#e2e8f0">
+      <div>&#10003; Component JS on your CDN</div>
+      <div>&#10003; Server SDK on your servers</div>
+      <div>&#10003; RSA keys generated locally</div>
+      <div>&#10003; Zero calls to our API</div>
+      <div>&#10003; Your CSP, your firewall</div>
+      <div>&#10003; Full source code access</div>
+      <div>&#10003; Custom key rotation policy</div>
+      <div>&#10003; Air-gapped deployment option</div>
+    </div>
+  </div>
+
+  <p style="margin-top:24px;font-size:17px;color:#666;max-width:600px;margin-left:auto;margin-right:auto">Banks, hospitals, and governments need zero external dependencies. Enterprise self-hosted gives them exactly that.</p>
 </section>
 
 <!-- 2FA vs SMARTFIELD -->

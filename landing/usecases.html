@@ -127,7 +127,7 @@
 <nav>
   <a href="/landing" style="display:flex;align-items:center;gap:10px;text-decoration:none">
     <img src="/landing/img/iconLogo.png" alt="SmartField" width="28" height="28" style="border-radius:6px">
-    <span class="nav-logo">SmartField</span>
+    <span class="nav-logo"><span style="color:#0B1120">Smart</span><span style="color:#00B88A">Field</span></span>
   </a>
   <div class="nav-links">
     <a href="#banking">Banking</a>
@@ -144,7 +144,7 @@
 </nav>
 
 <div class="hero">
-  <h1 id="hero-title" style="font-family:'Fira Code',monospace;letter-spacing:2px"></h1>
+  <h1 id="hero-title" style="font-family:-apple-system,'Segoe UI',sans-serif;letter-spacing:-2px"><span style="color:#0B1120">Smart</span><span style="color:#00B88A">Field</span> in Action</h1>
   <p>Real-world simulations. Every field encrypted. Every industry protected.</p>
 </div>
 
@@ -670,40 +670,7 @@
   function rc(){return CHARS[Math.floor(Math.random()*CHARS.length)]}
   function scramble(id,len){var el=document.getElementById(id);if(!el)return;var s='';for(var i=0;i<len;i++)s+=rc();el.textContent=s}
 
-  // Hero decrypt animation
-  (function() {
-    var CH='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
-    var target='SmartField in Action';
-    var el=document.getElementById('hero-title');
-    var cur=[],rev=[];
-    for(var i=0;i<target.length;i++){
-      if(target[i]===' '){cur.push(' ');rev.push(true);}
-      else{cur.push(CH[Math.floor(Math.random()*CH.length)]);rev.push(false);}
-    }
-    function render(){
-      var h='';
-      for(var i=0;i<cur.length;i++){
-        if(rev[i]){
-          var isSF=i>=0&&i<=9;
-          if(isSF)h+='<span style="background:linear-gradient(135deg,#00B88A,#00D4A8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+cur[i]+'</span>';
-          else h+='<span style="font-family:-apple-system,sans-serif;letter-spacing:-2px">'+cur[i]+'</span>';
-        }else{
-          h+='<span style="color:#00B88A;text-shadow:0 0 8px rgba(0,184,138,0.4)">'+cur[i]+'</span>';
-        }
-      }
-      el.innerHTML=h;
-    }
-    var si=setInterval(function(){for(var i=0;i<cur.length;i++){if(!rev[i])cur[i]=CH[Math.floor(Math.random()*CH.length)];}render();},60);
-    setTimeout(function(){
-      var ri=0;
-      var riv=setInterval(function(){
-        while(ri<target.length&&rev[ri])ri++;
-        if(ri>=target.length){clearInterval(riv);clearInterval(si);el.style.fontFamily="-apple-system,'Segoe UI',sans-serif";el.style.letterSpacing="-2px";el.innerHTML='<span style="background:linear-gradient(135deg,#00B88A,#00D4A8);-webkit-background-clip:text;-webkit-text-fill-color:transparent">SmartField</span> in Action';return;}
-        cur[ri]=target[ri];rev[ri]=true;ri++;render();
-      },50);
-    },1200);
-    render();
-  })();
+  // Hero title (static, no animation)
 
   // Section title decrypt animations
   function animateTitle(elId, text, color1, color2, delay) {
