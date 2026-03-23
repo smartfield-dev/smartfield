@@ -157,6 +157,9 @@
     footer{text-align:center;padding:32px 20px;color:#1e293b;font-size:12px;border-top:1px solid #0f172a}
 
     @media(max-width:768px){
+      html,body{overflow-x:hidden;max-width:100vw}
+      *{max-width:100vw}
+      section{overflow:hidden;padding-left:16px !important;padding-right:16px !important}
       .hero h1{font-size:32px;letter-spacing:-1px}
       .hero{padding:100px 16px 40px}
       .demo-grid,.cases-grid,.steps,.pricing-grid{grid-template-columns:1fr}
@@ -170,6 +173,8 @@
       .sr{display:none !important}
       .demo-desktop{display:none !important}
       .demo-mobile-msg{display:block !important}
+      .brand-section{display:none !important}
+      .compare-section{display:none !important}
       section{padding:40px 16px}
       .section-title{font-size:24px}
       .comparison{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:12px}
@@ -511,7 +516,7 @@
 </section>
 
 <!-- COMPARISON -->
-<section id="compare">
+<section id="compare" class="compare-section">
   <h2 class="section-title">SmartField vs Everything Else</h2>
   <p class="section-sub">There's nothing like it.</p>
   <table class="comparison">
@@ -780,7 +785,7 @@
 </section>
 
 <!-- YOUR BRAND -->
-<section id="brand">
+<section id="brand" class="brand-section">
   <h2 class="section-title">Your Brand, Your Colors</h2>
   <p class="section-sub">SmartField adapts to any design system. Just CSS variables.</p>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1100px;margin:0 auto;-webkit-user-select:none;user-select:none">
