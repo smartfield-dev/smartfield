@@ -1,15 +1,37 @@
 /**
- * @smartfield/server — License Management
+ * ============================================================================
+ * SmartField License System — v2.7.0
+ * ============================================================================
+ *
+ * Copyright (c) 2026 SmartField — MIT License
+ * Website:  https://smartfield.dev
+ * Docs:     https://smartfield.dev/docs
+ * Support:  support@smartfield.dev
  *
  * Handles API key generation, validation, revocation, and HMAC signing.
- * Keys are stored HASHED (SHA-256) — never in plaintext.
+ * Keys are stored HASHED (SHA-256). Never in plaintext. Never transmitted.
  *
- * Security layers:
- *   1. Key hashing (SHA-256) — DB compromise doesn't leak keys
- *   2. HMAC-signed responses — client can verify authenticity
- *   3. Origin header validation — key tied to domain
- *   4. Rate limiting — prevents brute force / enumeration
- *   5. Graceful fallback — API down = free plan, not broken site
+ * API:
+ *   license.init(options)                — Initialize license storage
+ *   license.generateKey({domain, plan})  — Create sf_live_ or sf_test_ key
+ *   license.validateKey({key, domain})   — Validate key + domain + HMAC sign
+ *   license.revokeKey(key)               — Deactivate a key
+ *   license.listKeys()                   — List all keys (hashed, not plaintext)
+ *
+ * Security:
+ *   1. Key hashing (SHA-256)       — DB compromise doesn't leak keys
+ *   2. HMAC-signed responses       — Client can verify authenticity
+ *   3. Origin header validation    — Key tied to domain
+ *   4. Rate limiting (60 req/min)  — Prevents brute force / enumeration
+ *   5. Graceful fallback           — API down = free plan, not broken site
+ *   6. Grace period (7 days)       — Expired subscription keeps working
+ *
+ * Key formats:
+ *   sf_live_ + 32 hex chars = production (domain-locked)
+ *   sf_test_ + 32 hex chars = development (any domain)
+ *
+ * Storage: .licenses/keys.json (auto-created, add to .gitignore)
+ * ============================================================================
  */
 
 'use strict';

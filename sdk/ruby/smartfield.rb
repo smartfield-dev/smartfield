@@ -1,22 +1,25 @@
-# SmartField Server SDK for Ruby
+# ============================================================================
+# SmartField Server SDK for Ruby — v2.7.0
+# ============================================================================
 #
-# Usage:
-#   require 'smartfield'
+# Copyright (c) 2026 SmartField — MIT License
+# Website:  https://smartfield.dev
+# Docs:     https://smartfield.dev/docs
+# Support:  support@smartfield.dev
+#
+# Decrypts data encrypted by the <smart-field> browser component.
+# Uses Ruby OpenSSL library (RSA-OAEP + AES-256-GCM). Zero external dependencies.
+# Keys are generated and stored locally. SmartField never sees your data.
+#
+# API:
 #   sf = SmartField.new
-#   sf.init
+#   sf.init                      — Generate or load RSA-2048 keys
+#   sf.get_public_key            — Return public key as JWK hash
+#   sf.decrypt(payload)          — Decrypt a single encrypted value
+#   sf.decrypt_fields(hash)      — Decrypt all encrypted fields
 #
-#   # Rails controller
-#   class AuthController < ApplicationController
-#     def public_key
-#       render json: sf.get_public_key
-#     end
-#
-#     def login
-#       email = sf.decrypt(params[:email])
-#       password = sf.decrypt(params[:password])
-#     end
-#   end
-
+# Encryption: AES-256-GCM (NIST SP 800-38D) + RSA-OAEP-2048 (NIST SP 800-56B)
+# ============================================================================
 require 'openssl'
 require 'json'
 require 'base64'

@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * SmartField React Wrapper — v2.7.0
+ * ============================================================================
+ *
+ * Copyright (c) 2026 SmartField — MIT License
+ * Website:  https://smartfield.dev
+ * Docs:     https://smartfield.dev/docs
+ * Support:  support@smartfield.dev
+ *
+ * React/Next.js component wrapper for <smart-field>.
+ * Handles React re-renders, Strict Mode double-mount, and value persistence.
+ *
+ * Usage:
+ *   import { SmartField, getSmartFieldValue } from './react';
+ *   <SmartField type="password" encryptKey="/api/sf-key" sfSecurity="peek" />
+ *   const value = getSmartFieldValue(id);
+ *
+ * Props: type, placeholder, encryptKey, sfSecurity, sfStealth, sfType, sfDomain
+ * Functions: getSmartFieldValue, getSmartFieldEncrypted, smartFieldHasValue, clearSmartField
+ * ============================================================================
+ */
+
 "use client";
 
 import { useRef, useEffect, memo } from "react";

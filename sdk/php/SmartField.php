@@ -1,21 +1,28 @@
 <?php
 /**
- * SmartField Server SDK for PHP
+ * ============================================================================
+ * SmartField Server SDK for PHP — v2.7.0
+ * ============================================================================
  *
- * Usage:
- *   require_once 'SmartField.php';
- *   $sf = new SmartField();
- *   $sf->init();
+ * Copyright (c) 2026 SmartField — MIT License
+ * Website:  https://smartfield.dev
+ * Docs:     https://smartfield.dev/docs
+ * Support:  support@smartfield.dev
  *
- *   // Laravel route
- *   Route::get('/sf-key', fn() => response()->json($sf->getPublicKey()));
- *   Route::post('/login', function(Request $r) use ($sf) {
- *       $email = $sf->decrypt($r->input('email'));
- *       $password = $sf->decrypt($r->input('password'));
- *   });
+ * Decrypts data encrypted by the <smart-field> browser component.
+ * Uses PHP openssl extension (RSA-OAEP + AES-256-GCM). Zero external dependencies.
+ * Keys are generated and stored locally. SmartField never sees your data.
+ *
+ * API:
+ *   $sf->init()                — Generate or load RSA-2048 keys
+ *   $sf->getPublicKey()        — Return public key as associative array (JWK)
+ *   $sf->decrypt($payload)     — Decrypt a single encrypted value
+ *   $sf->decryptFields($data)  — Decrypt all encrypted fields
+ *
+ * Encryption: AES-256-GCM (NIST SP 800-38D) + RSA-OAEP-2048 (NIST SP 800-56B)
+ * ============================================================================
  */
 
-class SmartField {
     private $privateKey = null;
     private $publicKey = null;
     private $publicKeyJwk = null;

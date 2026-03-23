@@ -1,26 +1,68 @@
 /**
- * @smartfield/server v0.1.0
+ * ============================================================================
+ * SmartField Server SDK for Node.js — v2.7.0
+ * ============================================================================
  *
- * Server-side SDK for SmartField.
- * Generates encryption keys and decrypts data from <smart-field> components.
+ * Copyright (c) 2026 SmartField
+ * Licensed under the MIT License (https://opensource.org/licenses/MIT)
  *
- * Keys are generated and stored LOCALLY on YOUR server.
+ * Website:  https://smartfield.dev
+ * Docs:     https://smartfield.dev/docs
+ * GitHub:   https://github.com/smartfield-dev/smartfield
+ * npm:      https://www.npmjs.com/package/@smartfield-dev/server
+ * Support:  support@smartfield.dev
+ *
+ * ============================================================================
+ * WHAT THIS DOES
+ * ============================================================================
+ *
+ * Decrypts data encrypted by the <smart-field> browser component.
+ * Generates and manages RSA-2048 key pairs locally on YOUR server.
  * SmartField (the company) NEVER sees your keys or your users' data.
  *
- * Usage:
- *   const sf = require('@smartfield/server');
+ * ============================================================================
+ * QUICK START
+ * ============================================================================
  *
- *   // First time: generate keys
- *   await sf.init();
+ *   const sf = require('@smartfield-dev/server');
+ *
+ *   await sf.init();                    // Generate RSA keys (stored in .smartfield/)
  *
  *   // Serve public key to frontend
- *   app.get('/api/sf-key', (req, res) => res.json(sf.getPublicKey()));
+ *   app.get('/sf-key', (req, res) => res.json(sf.getPublicKey()));
  *
- *   // Decrypt form data
- *   app.post('/api/login', async (req, res) => {
+ *   // Decrypt encrypted form data
+ *   app.post('/login', async (req, res) => {
  *     const email = await sf.decrypt(req.body.email);
  *     const password = await sf.decrypt(req.body.password);
  *   });
+ *
+ *   // Or use Express middleware (auto-serves key + auto-decrypts)
+ *   app.use(sf.middleware());
+ *
+ * ============================================================================
+ * API REFERENCE
+ * ============================================================================
+ *
+ *   sf.init(options)          — Generate or load RSA-2048 keys
+ *   sf.getPublicKey()         — Return public key as JWK (serve to frontend)
+ *   sf.decrypt(payload)       — Decrypt a single encrypted value
+ *   sf.decryptFields(object)  — Decrypt all encrypted fields in an object
+ *   sf.middleware(options)     — Express middleware (auto key endpoint + decrypt)
+ *   sf.rotateKeys()           — Rotate RSA keys (archive old for decryption)
+ *   sf.autoRotate(options)    — Automatic key rotation on interval
+ *   sf.status()               — Return SDK status (keys, version, rotation)
+ *
+ * ============================================================================
+ * ENCRYPTION STANDARDS
+ * ============================================================================
+ *
+ *   Data encryption:   AES-256-GCM    (NIST SP 800-38D)
+ *   Key exchange:      RSA-OAEP-2048  (NIST SP 800-56B)
+ *   Key storage:       .smartfield/   (auto-added to .gitignore, chmod 0600)
+ *   Payload format:    Base64(JSON{ v: 1, iv, key, data })
+ *
+ * ============================================================================
  */
 
 'use strict';

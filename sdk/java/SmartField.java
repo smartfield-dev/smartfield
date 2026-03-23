@@ -1,3 +1,26 @@
+/**
+ * ============================================================================
+ * SmartField Server SDK for Java — v2.7.0
+ * ============================================================================
+ *
+ * Copyright (c) 2026 SmartField — MIT License
+ * Website:  https://smartfield.dev
+ * Docs:     https://smartfield.dev/docs
+ * Support:  support@smartfield.dev
+ *
+ * Decrypts data encrypted by the <smart-field> browser component.
+ * Uses javax.crypto (RSA-OAEP + AES-256-GCM). Zero external dependencies.
+ * Keys are generated and stored locally. SmartField never sees your data.
+ *
+ * API:
+ *   sf.init()                  — Generate or load RSA-2048 keys
+ *   sf.getPublicKey()          — Return public key as JWK JSONObject
+ *   sf.decrypt(payload)        — Decrypt a single encrypted value
+ *   sf.decryptFields(map)      — Decrypt all encrypted fields
+ *
+ * Encryption: AES-256-GCM (NIST SP 800-38D) + RSA-OAEP-2048 (NIST SP 800-56B)
+ * ============================================================================
+ */
 package dev.smartfield;
 
 import javax.crypto.Cipher;

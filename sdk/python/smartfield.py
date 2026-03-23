@@ -1,8 +1,19 @@
 """
-SmartField Server SDK for Python
-Decrypts encrypted data from <smart-field> components.
+============================================================================
+SmartField Server SDK for Python — v2.7.0
+============================================================================
 
-Usage:
+Copyright (c) 2026 SmartField — MIT License
+Website:  https://smartfield.dev
+Docs:     https://smartfield.dev/docs
+Support:  support@smartfield.dev
+
+Decrypts data encrypted by the <smart-field> browser component.
+Keys are generated and stored locally. SmartField never sees your data.
+
+Quick start:
+    pip install cryptography
+
     from smartfield import SmartField
     sf = SmartField()
     sf.init()
@@ -15,6 +26,15 @@ Usage:
     def login():
         email = sf.decrypt(request.json['email'])
         password = sf.decrypt(request.json['password'])
+
+API:
+    sf.init(keys_dir)        — Generate or load RSA-2048 keys
+    sf.get_public_key()      — Return public key as JWK dict
+    sf.decrypt(payload)      — Decrypt a single encrypted value
+    sf.decrypt_fields(dict)  — Decrypt all encrypted fields
+
+Encryption: AES-256-GCM (NIST SP 800-38D) + RSA-OAEP-2048 (NIST SP 800-56B)
+============================================================================
 """
 
 import json
