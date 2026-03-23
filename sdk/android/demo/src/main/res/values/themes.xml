@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SmartFieldDemo" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#00B88A</item>
+        <item name="colorPrimaryVariant">#009B74</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:statusBarColor">#0B1120</item>
+        <item name="android:navigationBarColor">#0B1120</item>
+    </style>
+</resources>

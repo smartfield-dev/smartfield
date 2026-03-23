@@ -202,7 +202,11 @@
         keys: null,
         cipherMap: [],
         shadow: __shadow,
-        fieldId: 'sf_' + crypto.getRandomValues(new Uint8Array(8)).reduce((s,b) => s + b.toString(16).padStart(2,'0'), '')
+        fieldId: 'sf_' + crypto.getRandomValues(new Uint8Array(8)).reduce((s,b) => s + b.toString(16).padStart(2,'0'), ''),
+        securityMode: 'max',
+        isPeeking: false,
+        peekTimeout: null,
+        briefRevealed: new Set()
       });
 
       // TRAP: _shadow returns a fake decoy Shadow DOM
@@ -223,10 +227,7 @@
 
       this._anim = null;
       this._disabled = false; // License limit reached
-      this._securityMode = 'max'; // max | peek | brief
-      this._isPeeking = false;
-      this._peekTimeout = null;
-      this._briefRevealed = new Set(); // indices currently showing real chars
+      // Security-sensitive state stored in WeakMap (invisible to getOwnPropertyNames)
 
       // Protect .value from Object.defineProperty attacks
       var me = this;
@@ -550,7 +551,7 @@
         self._validateField();
 
         // Display based on security mode
-        if (self._securityMode === 'brief' && e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+        if (self._s('securityMode') === 'brief' && e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
           // Brief mode: show new char for 1 second
           self._briefReveal(self._s('cipherMap').length - 1);
         } else {
@@ -597,7 +598,7 @@
         }
 
         self._validateField();
-        if (self._securityMode === 'brief' && e.inputType === 'insertText') {
+        if (self._s('securityMode') === 'brief' && e.inputType === 'insertText') {
           self._briefReveal(self._s('cipherMap').length - 1);
         } else {
           self._showCipher();
@@ -637,7 +638,7 @@
       input.addEventListener('blur', function() {
         self._startAnim(400);
         // Force hide on blur for all modes
-        if (self._isPeeking) self._peekEnd();
+        if (self._s('isPeeking')) self._peekEnd();
         // Stealth: restore cipher placeholder
         if (self._stealthMode && self._s('realValue').length === 0) {
           clearTimeout(self._stealthPlaceholderTimer);
@@ -655,9 +656,9 @@
 
       var peekStart = function(e) {
         e.preventDefault();
-        if (self._securityMode !== 'peek') return;
+        if (self._s('securityMode') !== 'peek') return;
         if (self._s('realValue').length === 0) return;
-        self._isPeeking = true;
+        self._s('isPeeking', true);
         peekBtn.classList.add('sf-peeking');
 
         // Show real value — use --sf-peek-color, or auto-detect contrast
@@ -697,9 +698,9 @@
         });
 
         // Auto-hide after 5 seconds
-        self._peekTimeout = setTimeout(function() {
+        self._s('peekTimeout', setTimeout(function() {
           self._peekEnd();
-        }, 5000);
+        }, 5000));
       };
 
       var peekEnd = function(e) {
@@ -766,7 +767,7 @@
         // Read security mode: max (default), peek, brief
         var secMode = self.getAttribute('sf-security') || 'max';
         if (secMode === 'peek' || secMode === 'brief' || secMode === 'max') {
-          self._securityMode = secMode;
+          self._s('securityMode', secMode);
         }
 
         // Read placeholder + stealth (re-read here because constructor may miss attributes)
@@ -923,10 +924,10 @@
     }
 
     _peekEnd() {
-      if (!this._isPeeking) return;
-      this._isPeeking = false;
-      clearTimeout(this._peekTimeout);
-      this._peekTimeout = null;
+      if (!this._s('isPeeking')) return;
+      this._s('isPeeking', false);
+      clearTimeout(this._s('peekTimeout'));
+      this._s('peekTimeout', null);
 
       var peekBtn = this._s('shadow').getElementById('sf-peek');
       var peekBar = this._s('shadow').getElementById('sf-peek-bar');
@@ -946,16 +947,16 @@
     }
 
     _showCipher() {
-      if (this._isPeeking) return; // Don't override during peek
+      if (this._s('isPeeking')) return; // Don't override during peek
       this._updating = true;
 
-      if (this._securityMode === 'brief' && this._briefRevealed.size > 0) {
+      if (this._s('securityMode') === 'brief' && this._s('briefRevealed').size > 0) {
         // Brief mode: show real chars for revealed indices, cipher for the rest
         var realVal = this._s('realValue');
         var cMap = this._s('cipherMap');
         var display = [];
         for (var i = 0; i < cMap.length; i++) {
-          display.push(this._briefRevealed.has(i) ? realVal[i] : cMap[i]);
+          display.push(this._s('briefRevealed').has(i) ? realVal[i] : cMap[i]);
         }
         this._input.value = display.join('');
       } else {
@@ -967,16 +968,16 @@
 
     // Brief mode: show the real char at position for 1 second, then cipher
     _briefReveal(index) {
-      if (this._securityMode !== 'brief') return;
+      if (this._s('securityMode') !== 'brief') return;
       var self = this;
 
       // Mark this index as revealed
-      this._briefRevealed.add(index);
+      this._s('briefRevealed').add(index);
       this._showCipher();
 
       // After 1 second, hide it
       setTimeout(function() {
-        self._briefRevealed.delete(index);
+        self._s('briefRevealed').delete(index);
         self._showCipher();
       }, 1000);
     }
@@ -988,7 +989,7 @@
         if (self._s('cipherMap').length === 0) return;
         var idx = Math.floor(Math.random() * self._s('cipherMap').length);
         // In brief mode, don't mutate chars that are currently revealed
-        if (self._securityMode === 'brief' && self._briefRevealed.has(idx)) return;
+        if (self._s('securityMode') === 'brief' && self._s('briefRevealed').has(idx)) return;
         self._s('cipherMap')[idx] = randChar();
         self._showCipher();
       }, speed || 150);
@@ -1302,13 +1303,45 @@
     disconnectedCallback() {
       clearInterval(this._anim);
       this._anim = null;
-      clearTimeout(this._peekTimeout);
-      this._briefRevealed.clear();
+      clearTimeout(this._s('peekTimeout'));
+      this._s('briefRevealed').clear();
       if (!this._disabled) License.unregisterField();
     }
   }
 
-  customElements.define('smart-field', SmartField);
+  // Mobile detection — fallback to standard input on mobile devices
+  var _isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || ('ontouchstart' in window && window.innerWidth < 1024);
+
+  if (_isMobile) {
+    // On mobile: render a standard input (no encryption, no cipher)
+    customElements.define('smart-field', class extends HTMLElement {
+      constructor() {
+        super();
+        this._value = '';
+      }
+      connectedCallback() {
+        var type = this.getAttribute('type') || 'text';
+        var placeholder = this.getAttribute('placeholder') || '';
+        var input = document.createElement('input');
+        input.type = type === 'password' ? 'password' : 'text';
+        input.placeholder = placeholder;
+        input.autocomplete = 'off';
+        input.style.cssText = 'width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;background:#fff;color:#111;outline:none;box-sizing:border-box;';
+        var self = this;
+        input.addEventListener('input', function() { self._value = input.value; });
+        this.appendChild(input);
+        this._input = input;
+      }
+      get value() { return this._value; }
+      set value(v) {}
+      get name() { return this.getAttribute('name') || this.getAttribute('id') || ''; }
+      get type() { return 'text'; }
+      get hasValue() { return this._value.length > 0; }
+      clear() { if (this._input) { this._input.value = ''; this._value = ''; } }
+    });
+  } else {
+    customElements.define('smart-field', SmartField);
+  }
 
   // ========== SMART BUTTON COMPONENT ==========
 

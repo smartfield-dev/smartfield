@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentation — SmartField</title>
+  <title>Documentation. SmartField</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:-apple-system,'Segoe UI',sans-serif;background:#fff;color:#111;line-height:1.7}
@@ -115,7 +115,7 @@
 <p>Every keystroke, encrypted. Invisible to JavaScript, trackers, and hackers.</p>
 
 <!-- QUICK START -->
-<h2 id="quickstart">Quick Start — 2 Minutes</h2>
+<h2 id="quickstart">Quick Start. 2 Minutes</h2>
 
 <h3>Step 1: Add the script</h3>
 <pre><code>&lt;script src="https://3wwprotocol.com/component/smartfield.js"&gt;&lt;/script&gt;</code></pre>
@@ -132,7 +132,7 @@
   sf-stealth
   placeholder="..."
 &gt;&lt;/smart-field&gt;</code></pre>
-<p style="font-size:13px;color:#666;margin-top:8px"><strong>encrypt-key</strong> is required — it tells SmartField where to fetch your server's public key. Use a relative URL (e.g. <code class="inline-code">/sf-key</code>).</p>
+<p style="font-size:13px;color:#666;margin-top:8px"><strong>encrypt-key</strong> is required. it tells SmartField where to fetch your server's public key. Use a relative URL (e.g. <code class="inline-code">/sf-key</code>).</p>
 
 <h3>Step 3: Decrypt on your server</h3>
 <pre><code>// Node.js
@@ -142,7 +142,7 @@ await sf.init();
 // Serve public key (SmartField fetches this automatically)
 app.get('/sf-key', (req, res) =&gt; res.json(sf.getPublicKey()));
 
-// Decrypt — fields arrive with random IDs, not "password"
+// Decrypt. fields arrive with random IDs, not "password"
 app.post('/login', async (req, res) =&gt; {
   const data = await sf.decryptFields(req.body);
   // data = { sf_a7f3c2: "user@email.com", sf_b9e1d4: "mypassword" }
@@ -154,7 +154,7 @@ app.post('/login', async (req, res) =&gt; {
 <div class="success">That's it. Your form is now encrypted end-to-end. Every keystroke is protected with AES-256-GCM + RSA-2048.</div>
 
 <!-- COMMON MISTAKES -->
-<h2 id="mistakes">Common Mistakes — Don't Do This</h2>
+<h2 id="mistakes">Common Mistakes. Don't Do This</h2>
 
 <div class="error"><strong>MISTAKE #1: Using descriptive field names</strong><br><br>
 <code class="inline-code">&lt;smart-field name="password"&gt;</code> ← WRONG<br>
@@ -211,7 +211,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-// Initialize — generates keys on YOUR server
+// Initialize. generates keys on YOUR server
 await sf.init();
 
 // Serve public key to frontend
@@ -586,7 +586,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 &lt;!-- Free text: no restrictions --&gt;
 &lt;smart-field&gt;&lt;/smart-field&gt;</code></pre>
 
-<div class="warn"><strong>Important:</strong> sf-type only controls INPUT VALIDATION (what characters are accepted). It does NOT expose the field type to JavaScript. An attacker cannot read sf-type from the DOM — it's consumed during initialization and not stored as a readable attribute.</div>
+<div class="warn"><strong>Important:</strong> sf-type only controls INPUT VALIDATION (what characters are accepted). It does NOT expose the field type to JavaScript. An attacker cannot read sf-type from the DOM. it's consumed during initialization and not stored as a readable attribute.</div>
 
 <!-- STYLING -->
 <h2 id="styling">Custom Styling</h2>
@@ -643,7 +643,7 @@ User types → AES key generated (random, per encryption)
 <h2 id="troubleshooting">Troubleshooting by Stack</h2>
 <p>SmartField has been tested end-to-end with <strong>Node.js, Python, Java, Go, PHP, and Ruby</strong>. All SDKs decrypt correctly. Below are real issues we encountered during integration testing and how to fix them.</p>
 
-<h3>All Stacks — Field Limit (Free Plan)</h3>
+<h3>All Stacks. Field Limit (Free Plan)</h3>
 <div class="error">
   <strong>Symptom:</strong> SmartField fields appear disabled or unresponsive after the 3rd field on the page.
 </div>
@@ -653,7 +653,7 @@ User types → AES key generated (random, per encryption)
   <li>Add your license key: <code class="inline-code">&lt;script src="smartfield.js" data-key="sf_live_xxx"&gt;&lt;/script&gt;</code></li>
 </ul>
 
-<h3>All Stacks — Peek Mode Text Invisible on Dark Backgrounds</h3>
+<h3>All Stacks. Peek Mode Text Invisible on Dark Backgrounds</h3>
 <div class="error">
   <strong>Symptom:</strong> When holding the shield icon in peek mode, the revealed text is invisible (black text on dark background).
 </div>
@@ -662,7 +662,7 @@ User types → AES key generated (random, per encryption)
   --sf-peek-color: #ffffff;  /* white text for dark backgrounds */
 }</code></pre>
 
-<h3>All Stacks — Wrong Attribute Name</h3>
+<h3>All Stacks. Wrong Attribute Name</h3>
 <div class="error">
   <strong>Symptom:</strong> Security modes don't work. Field behaves like <code class="inline-code">max</code> mode regardless of setting.
 </div>
@@ -673,21 +673,21 @@ User types → AES key generated (random, per encryption)
 &lt;!-- ✅ Correct --&gt;
 &lt;smart-field sf-security="peek" ...&gt;</code></pre>
 
-<h3>PHP — JSON Response Contaminated with Print Output</h3>
+<h3>PHP. JSON Response Contaminated with Print Output</h3>
 <div class="error">
   <strong>Symptom:</strong> Browser shows <code class="inline-code">Unexpected token 'S'</code> or similar JSON parse error. The PHP server returns text before the JSON payload.
 </div>
 <p>Any <code class="inline-code">echo</code>, <code class="inline-code">print</code>, or <code class="inline-code">var_dump</code> before your JSON response will break the output. This includes initialization messages from the SmartField SDK.</p>
-<pre><code>// ❌ This breaks JSON responses — output goes to browser
+<pre><code>// ❌ This breaks JSON responses. output goes to browser
 echo "[SmartField] Keys loaded";
 
-// ✅ Use error_log instead — output goes to server logs only
+// ✅ Use error_log instead. output goes to server logs only
 error_log("[SmartField] Keys loaded");</code></pre>
 <div class="warn">
   <strong>Tip:</strong> In PHP's built-in server (<code class="inline-code">php -S</code>), anything printed outside a response handler also contaminates the output. Always use <code class="inline-code">error_log()</code> for debug messages.
 </div>
 
-<h3>Ruby (WEBrick) — CORS Preflight Fails</h3>
+<h3>Ruby (WEBrick). CORS Preflight Fails</h3>
 <div class="error">
   <strong>Symptom:</strong> <code class="inline-code">Failed to fetch</code> error when SmartField tries to get the public key or submit data cross-origin. Works with <code class="inline-code">curl</code> but fails in the browser.
 </div>
@@ -704,7 +704,7 @@ error_log("[SmartField] Keys loaded");</code></pre>
   <strong>Note:</strong> This applies to WEBrick specifically. If you use <strong>Sinatra</strong> or <strong>Rails</strong>, use the <code class="inline-code">rack-cors</code> gem instead, which handles preflight correctly.
 </div>
 
-<h3>Java (HttpServer) — Cross-Origin Blocked by Browser</h3>
+<h3>Java (HttpServer). Cross-Origin Blocked by Browser</h3>
 <div class="error">
   <strong>Symptom:</strong> <code class="inline-code">Failed to fetch</code> when SmartField component is served from a different origin than the Java server. CORS headers are present but browser still blocks.
 </div>
@@ -733,12 +733,23 @@ app.all('/proxy/java/:path', (req, res) => {
   <strong>Alternative:</strong> In production, serve your frontend and Java API from the same domain (reverse proxy via nginx/Apache), which eliminates CORS entirely.
 </div>
 
-<h3>Go, Python, Node.js — No Issues</h3>
+<h3>Go, Python, Node.js. No Issues</h3>
 <div class="success">
   These stacks worked correctly out of the box with standard CORS headers. No special configuration needed beyond the basic setup documented above.
 </div>
 
-<h3>General — CORS Checklist</h3>
+<h3>Mobile Devices. Standard Input Mode</h3>
+<div class="success">
+  <strong>Not a bug.</strong> On mobile devices, SmartField intentionally renders as a standard HTML input without encryption.
+</div>
+<p>Mobile browsers do not support browser extensions, which eliminates the primary attack vector SmartField protects against:</p>
+<ul>
+  <li><strong>Desktop</strong>: extensions, Hotjar, FullStory, injected scripts, XSS can all read <code class="inline-code">&lt;input&gt;</code> values. SmartField encrypts them.</li>
+  <li><strong>Mobile</strong>: no extensions, apps are sandboxed by the OS, third-party scripts have limited access. A standard input is already more secure than on desktop.</li>
+</ul>
+<p>SmartField detects mobile devices automatically. No configuration needed. The <code class="inline-code">&lt;smart-field&gt;</code> tag still works. it just renders as a normal input on mobile and an encrypted field on desktop.</p>
+
+<h3>General. CORS Checklist</h3>
 <p>If you're getting <code class="inline-code">Failed to fetch</code> errors, verify your server returns these headers on <strong>both</strong> <code class="inline-code">OPTIONS</code> and regular responses:</p>
 <pre><code>Access-Control-Allow-Origin: *
 Access-Control-Allow-Headers: Content-Type
@@ -753,7 +764,7 @@ curl -X OPTIONS http://localhost:PORT/sf-key \
 # You should see all 3 Access-Control headers in the response</code></pre>
 
 <!-- WHAT WE PROTECT / DON'T PROTECT -->
-<h2 id="attacks">What SmartField Protects — And What It Doesn't</h2>
+<h2 id="attacks">What SmartField Protects. And What It Doesn't</h2>
 <p>We believe in transparency. No security product is 100%. Here's exactly what SmartField covers and what it doesn't.</p>
 
 <h3>SmartField PROTECTS against:</h3>
@@ -777,14 +788,14 @@ curl -X OPTIONS http://localhost:PORT/sf-key \
   <tr><td>Malicious browser extensions</td><td>Extensions with elevated permissions operate below the JavaScript layer. SmartField cannot block them. This is a browser-level limitation, not a SmartField limitation.</td></tr>
   <tr><td>OS-level keyloggers</td><td>A keylogger installed on the operating system captures keystrokes before they reach the browser. No web technology can prevent this.</td></tr>
   <tr><td>Physical access to the machine</td><td>Someone with physical access can install keyloggers, use hardware devices, or read the screen directly. This requires endpoint security, not web security.</td></tr>
-  <tr><td>Browser zero-day exploits</td><td>A vulnerability in Chrome/Firefox itself could bypass Shadow DOM. If this happens, the entire browser is compromised — not just SmartField.</td></tr>
+  <tr><td>Browser zero-day exploits</td><td>A vulnerability in Chrome/Firefox itself could bypass Shadow DOM. If this happens, the entire browser is compromised. not just SmartField.</td></tr>
   <tr><td>RAM dump with root access</td><td>With root/admin access to the machine, an attacker could read browser process memory. This requires full system compromise.</td></tr>
 </table>
 
-<div class="warn"><strong>Our position:</strong> SmartField protects the browser layer — the space between the keyboard and the server. This is the layer that no one else protects. We are transparent about what falls outside our scope because we believe honesty builds more trust than false promises.</div>
+<div class="warn"><strong>Our position:</strong> SmartField protects the browser layer. the space between the keyboard and the server. This is the layer that no one else protects. We are transparent about what falls outside our scope because we believe honesty builds more trust than false promises.</div>
 
 <!-- API REFERENCE -->
-<h2 id="api-ref">API Reference — SDK Methods</h2>
+<h2 id="api-ref">API Reference. SDK Methods</h2>
 
 <h3>Server SDK (Node.js)</h3>
 <pre><code>const sf = require('@smartfield-dev/server');
@@ -797,7 +808,7 @@ sf.middleware()                    // Express middleware (auto key + decrypt)
 await sf.rotateKeys()              // Rotate RSA keys (archives old ones)
 sf.status()                        // Returns SDK state info</code></pre>
 
-<h3>Client-side (Browser) — v2.7+</h3>
+<h3>Client-side (Browser). v2.7+</h3>
 <pre><code>const el = document.getElementById('sf-email');
 
 el.value                // Returns ENCRYPTED payload (for server decryption)
@@ -840,7 +851,7 @@ el.addEventListener('sf-threat', (e) =&gt; {
 <h2 id="compliance">Compliance</h2>
 <p>SmartField's encryption architecture can help satisfy specific requirements in PCI-DSS, HIPAA, GDPR, and SOX. Below is an honest breakdown: what SmartField covers, and what you still need to handle yourself.</p>
 
-<div class="warn"><strong>SmartField is not a compliance certification.</strong> Using SmartField does not make you PCI, HIPAA, GDPR, or SOX compliant on its own. Compliance requires organizational policies, server-side controls, access management, auditing, and more. SmartField addresses the <em>client-side data capture layer</em> — one piece of a larger compliance program.</div>
+<div class="warn"><strong>SmartField is not a compliance certification.</strong> Using SmartField does not make you PCI, HIPAA, GDPR, or SOX compliant on its own. Compliance requires organizational policies, server-side controls, access management, auditing, and more. SmartField addresses the <em>client-side data capture layer</em>. one piece of a larger compliance program.</div>
 
 <!-- PCI-DSS -->
 <h3>PCI-DSS</h3>
@@ -849,17 +860,17 @@ el.addEventListener('sf-threat', (e) =&gt; {
 <table>
   <tr><th>Requirement</th><th>What it says</th><th>How SmartField helps</th></tr>
   <tr>
-    <td><strong>3.4</strong> — Render PAN unreadable anywhere it is stored</td>
+    <td><strong>3.4</strong>. Render PAN unreadable anywhere it is stored</td>
     <td>PAN must be protected using encryption, truncation, hashing, or tokenization</td>
     <td>SmartField encrypts PAN at the moment of keystroke using AES-256-GCM. The value never exists as plaintext in the DOM, JavaScript memory, or network payload. With <code class="inline-code">sf-type="card"</code>, input is validated to 16 digits before encryption. The browser never holds the raw PAN in a readable form.</td>
   </tr>
   <tr>
-    <td><strong>4.1</strong> — Encrypt cardholder data in transit over open networks</td>
+    <td><strong>4.1</strong>. Encrypt cardholder data in transit over open networks</td>
     <td>Use strong cryptography when transmitting cardholder data</td>
-    <td>Data is encrypted client-side with AES-256-GCM before form submission. The AES key itself is wrapped with RSA-OAEP-2048. This means cardholder data is encrypted <em>before</em> it hits TLS — providing a second encryption layer. Even if TLS is compromised (MITM, misconfigured proxy), the payload remains encrypted.</td>
+    <td>Data is encrypted client-side with AES-256-GCM before form submission. The AES key itself is wrapped with RSA-OAEP-2048. This means cardholder data is encrypted <em>before</em> it hits TLS. providing a second encryption layer. Even if TLS is compromised (MITM, misconfigured proxy), the payload remains encrypted.</td>
   </tr>
   <tr>
-    <td><strong>6.5</strong> — Address common coding vulnerabilities</td>
+    <td><strong>6.5</strong>. Address common coding vulnerabilities</td>
     <td>Protect against XSS, injection, and other OWASP Top 10 issues in web applications</td>
     <td>SmartField's closed Shadow DOM prevents XSS attacks from reading field values. Even if an attacker injects a script, <code class="inline-code">.value</code> returns an encrypted payload, <code class="inline-code">.shadowRoot</code> returns null, and no DOM traversal method exposes plaintext. Clipboard events (copy/paste/select) are blocked.</td>
   </tr>
@@ -868,7 +879,7 @@ el.addEventListener('sf-threat', (e) =&gt; {
 <p><strong>What you still need to do:</strong></p>
 <ul>
   <li>Your server must decrypt and process card data in a PCI-compliant environment (SAQ A, SAQ A-EP, or SAQ D depending on your integration model)</li>
-  <li>Store decrypted PAN according to Requirement 3 — never log it, never write it to disk unencrypted</li>
+  <li>Store decrypted PAN according to Requirement 3. never log it, never write it to disk unencrypted</li>
   <li>Implement access controls (Req 7, 8), network segmentation (Req 1), monitoring (Req 10, 11)</li>
   <li>SmartField reduces your client-side attack surface but does not eliminate the need for a QSA assessment if you handle card data server-side</li>
   <li>If you use SmartField to send encrypted card data to a PCI-compliant payment processor that handles decryption, you may qualify for SAQ A-EP (reduced scope)</li>
@@ -878,37 +889,37 @@ el.addEventListener('sf-threat', (e) =&gt; {
 
 <!-- HIPAA -->
 <h3>HIPAA</h3>
-<p>The Health Insurance Portability and Accountability Act requires protection of PHI (Protected Health Information) — names, dates, SSNs, medical record numbers, and any data that can identify a patient.</p>
+<p>The Health Insurance Portability and Accountability Act requires protection of PHI (Protected Health Information). names, dates, SSNs, medical record numbers, and any data that can identify a patient.</p>
 
 <table>
   <tr><th>Safeguard</th><th>HIPAA requirement</th><th>How SmartField helps</th></tr>
   <tr>
-    <td><strong>Technical Safeguard §164.312(a)(1)</strong> — Access Control</td>
+    <td><strong>Technical Safeguard §164.312(a)(1)</strong>. Access Control</td>
     <td>Implement technical policies to allow access only to authorized persons</td>
     <td>PHI entered in SmartField is immediately encrypted. JavaScript on the page (including third-party scripts, analytics, and injected code) cannot read the plaintext. Only your server with the RSA private key can decrypt. This limits access to PHI at the point of capture.</td>
   </tr>
   <tr>
-    <td><strong>Technical Safeguard §164.312(e)(1)</strong> — Transmission Security</td>
+    <td><strong>Technical Safeguard §164.312(e)(1)</strong>. Transmission Security</td>
     <td>Protect PHI during electronic transmission</td>
     <td>PHI is encrypted with AES-256-GCM + RSA-2048 before transmission. This operates independently of (and in addition to) TLS. PHI is encrypted in the browser and decrypted only on your server.</td>
   </tr>
   <tr>
-    <td><strong>Technical Safeguard §164.312(a)(2)(iv)</strong> — Encryption and Decryption</td>
+    <td><strong>Technical Safeguard §164.312(a)(2)(iv)</strong>. Encryption and Decryption</td>
     <td>Encrypt ePHI as appropriate</td>
-    <td>SmartField encrypts all field data using NIST-recommended algorithms (AES-256-GCM, RSA-OAEP). Encryption happens automatically — developers cannot accidentally skip it.</td>
+    <td>SmartField encrypts all field data using NIST-recommended algorithms (AES-256-GCM, RSA-OAEP). Encryption happens automatically. developers cannot accidentally skip it.</td>
   </tr>
 </table>
 
 <p><strong>What you still need to do:</strong></p>
 <ul>
-  <li>Sign a BAA (Business Associate Agreement) with any third party that handles PHI — SmartField never receives or stores PHI (encryption/decryption happens entirely on your infrastructure), so a BAA with SmartField is not required</li>
+  <li>Sign a BAA (Business Associate Agreement) with any third party that handles PHI. SmartField never receives or stores PHI (encryption/decryption happens entirely on your infrastructure), so a BAA with SmartField is not required</li>
   <li>Implement server-side access controls, audit logging, and breach notification procedures</li>
   <li>Ensure your server environment meets HIPAA physical and administrative safeguards</li>
   <li>Conduct a risk assessment covering your full stack, not just the client-side layer</li>
-  <li>Train staff on PHI handling procedures — SmartField protects data in the browser, not after decryption</li>
+  <li>Train staff on PHI handling procedures. SmartField protects data in the browser, not after decryption</li>
 </ul>
 
-<div class="warn"><strong>Important:</strong> SmartField never sees, stores, or transmits PHI. All encryption and decryption happens on your own infrastructure using keys generated on your server. This means SmartField itself is not a HIPAA Business Associate — but your server-side code that handles decrypted PHI must comply fully.</div>
+<div class="warn"><strong>Important:</strong> SmartField never sees, stores, or transmits PHI. All encryption and decryption happens on your own infrastructure using keys generated on your server. This means SmartField itself is not a HIPAA Business Associate. but your server-side code that handles decrypted PHI must comply fully.</div>
 
 <!-- GDPR -->
 <h3>GDPR</h3>
@@ -924,7 +935,7 @@ el.addEventListener('sf-threat', (e) =&gt; {
   <tr>
     <td><strong>Integrity &amp; Confidentiality</strong></td>
     <td>Article 5(1)(f)</td>
-    <td>Personal data is encrypted at the earliest possible point — the moment of keystroke. AES-256-GCM provides both confidentiality (encryption) and integrity (authentication tag). Data cannot be tampered with or read between capture and server-side decryption.</td>
+    <td>Personal data is encrypted at the earliest possible point. the moment of keystroke. AES-256-GCM provides both confidentiality (encryption) and integrity (authentication tag). Data cannot be tampered with or read between capture and server-side decryption.</td>
   </tr>
   <tr>
     <td><strong>Data Protection by Design</strong></td>
@@ -940,15 +951,15 @@ el.addEventListener('sf-threat', (e) =&gt; {
 
 <p><strong>What you still need to do:</strong></p>
 <ul>
-  <li>Implement lawful basis for processing (consent, legitimate interest, etc.) — SmartField encrypts data, it does not manage consent</li>
-  <li>Provide data subject rights: access, rectification, erasure, portability — these require server-side implementation</li>
+  <li>Implement lawful basis for processing (consent, legitimate interest, etc.). SmartField encrypts data, it does not manage consent</li>
+  <li>Provide data subject rights: access, rectification, erasure, portability. these require server-side implementation</li>
   <li>Maintain a Record of Processing Activities (ROPA)</li>
   <li>Appoint a DPO if required, conduct DPIAs for high-risk processing</li>
-  <li>Implement server-side data retention policies — SmartField protects data in transit, not at rest on your servers</li>
+  <li>Implement server-side data retention policies. SmartField protects data in transit, not at rest on your servers</li>
   <li>Ensure any analytics or third-party scripts comply with GDPR independently</li>
 </ul>
 
-<div class="success"><strong>Third-party script protection:</strong> A major GDPR risk is third-party JavaScript (analytics, chat widgets, A/B testing tools) silently reading form data. SmartField eliminates this risk entirely — these scripts see only encrypted payloads and random field IDs.</div>
+<div class="success"><strong>Third-party script protection:</strong> A major GDPR risk is third-party JavaScript (analytics, chat widgets, A/B testing tools) silently reading form data. SmartField eliminates this risk entirely. these scripts see only encrypted payloads and random field IDs.</div>
 
 <!-- SOX -->
 <h3>SOX (Sarbanes-Oxley)</h3>
@@ -957,19 +968,19 @@ el.addEventListener('sf-threat', (e) =&gt; {
 <table>
   <tr><th>Control area</th><th>SOX requirement</th><th>How SmartField helps</th></tr>
   <tr>
-    <td><strong>IT General Controls — Data Integrity</strong></td>
+    <td><strong>IT General Controls. Data Integrity</strong></td>
     <td>Ensure accuracy and completeness of financial data</td>
     <td>AES-256-GCM includes an authentication tag that detects any modification to the encrypted data. If a script or middlebox alters the payload in transit, decryption fails. This guarantees that financial data received by the server is exactly what the user entered.</td>
   </tr>
   <tr>
-    <td><strong>IT General Controls — Access to Data</strong></td>
+    <td><strong>IT General Controls. Access to Data</strong></td>
     <td>Restrict access to financial data to authorized personnel and systems</td>
     <td>Financial figures entered in SmartField cannot be read by client-side JavaScript, browser extensions at the JS layer, or third-party scripts. Only your server with the private key can decrypt. This restricts access at the point of entry.</td>
   </tr>
   <tr>
-    <td><strong>IT General Controls — Change Management</strong></td>
+    <td><strong>IT General Controls. Change Management</strong></td>
     <td>Ensure changes to applications do not compromise data integrity</td>
-    <td>SmartField's encryption is automatic and non-bypassable. A developer adding new frontend code cannot accidentally expose financial data — the architecture enforces protection regardless of application changes.</td>
+    <td>SmartField's encryption is automatic and non-bypassable. A developer adding new frontend code cannot accidentally expose financial data. the architecture enforces protection regardless of application changes.</td>
   </tr>
 </table>
 
@@ -979,7 +990,7 @@ el.addEventListener('sf-threat', (e) =&gt; {
   <li>Maintain change management procedures for your full application stack</li>
   <li>Conduct regular SOX audits covering both IT general controls and application controls</li>
   <li>Ensure database-level encryption and access controls for stored financial data</li>
-  <li>SmartField protects data during entry and transit — your server-side controls must protect it after decryption</li>
+  <li>SmartField protects data during entry and transit. your server-side controls must protect it after decryption</li>
 </ul>
 
 <div class="warn"><strong>SOX is about process, not just technology.</strong> SmartField provides a verifiable technical control at the input layer (encrypted capture, tamper detection, access restriction). But SOX compliance requires documented procedures, regular testing, and management sign-off across your entire financial reporting infrastructure.</div>
@@ -1004,13 +1015,13 @@ el.addEventListener('sf-threat', (e) =&gt; {
 <p><strong>This is intentional, not a bug.</strong></p>
 <p>Browser autofill is a security risk. When Chrome, Firefox, or Safari autofill your login form, the password is stored in the browser and inserted as plaintext into the DOM. This means:</p>
 <ul>
-  <li><strong>Anyone with access to your computer</strong> can open Chrome and the autofill gives them your password — no authentication required</li>
+  <li><strong>Anyone with access to your computer</strong> can open Chrome and the autofill gives them your password. no authentication required</li>
   <li><strong>Any JavaScript on the page</strong> can read the autofilled value instantly</li>
   <li><strong>Trackers and extensions</strong> can capture autofilled data before you even click "Log In"</li>
   <li><strong>Shared/public computers</strong> may have previous users' credentials stored</li>
 </ul>
 <p>SmartField blocks autofill by design: the input lives inside a closed Shadow DOM with <code class="inline-code">autocomplete="off"</code>, password manager ignore flags, and <code class="inline-code">type="text"</code> (not "password"). The browser cannot detect, fill, or save the field.</p>
-<div class="success"><strong>The trade-off:</strong> Users type their password manually every time. Use <code class="inline-code">sf-security="peek"</code> so they can hold the eye icon to verify what they typed — this replaces the convenience of autofill with a secure alternative.</div>
+<div class="success"><strong>The trade-off:</strong> Users type their password manually every time. Use <code class="inline-code">sf-security="peek"</code> so they can hold the eye icon to verify what they typed. this replaces the convenience of autofill with a secure alternative.</div>
 
 <h3>Can I use SmartField alongside normal inputs?</h3>
 <p>Yes. You don't have to encrypt every field. Use SmartField for sensitive fields (passwords, card numbers, SSN) and normal <code class="inline-code">&lt;input&gt;</code> for non-sensitive fields (username, search, preferences). SmartField will even warn you if it detects unprotected <code class="inline-code">&lt;input type="password"&gt;</code> fields on the same page.</p>
@@ -1019,14 +1030,14 @@ el.addEventListener('sf-threat', (e) =&gt; {
 <p>Yes. SmartField supports both physical keyboards (<code class="inline-code">keydown</code>) and virtual keyboards (<code class="inline-code">beforeinput</code>) on iOS and Android. The cipher animation, peek mode, and encryption all work on mobile browsers.</p>
 
 <h3>What happens if the SmartField server goes down?</h3>
-<p>If you're using the free plan (no <code class="inline-code">data-key</code>), SmartField works 100% offline — it generates encryption keys locally in the browser. No server call needed.</p>
+<p>If you're using the free plan (no <code class="inline-code">data-key</code>), SmartField works 100% offline. it generates encryption keys locally in the browser. No server call needed.</p>
 <p>If you're using a paid plan, SmartField caches the license in <code class="inline-code">sessionStorage</code> for 24 hours. If the license server is unreachable, it falls back gracefully to the free plan (3 fields, badge shown). Your forms never break.</p>
 
 <h3>Can attackers decrypt the data if they steal my public key?</h3>
-<p>No. The public key is <strong>public by design</strong> — it's served to every browser that loads your page. It can only <strong>encrypt</strong>, never decrypt. Only your server's private key (stored in <code class="inline-code">.smartfield/</code>) can decrypt. This is standard RSA asymmetric cryptography.</p>
+<p>No. The public key is <strong>public by design</strong>. it's served to every browser that loads your page. It can only <strong>encrypt</strong>, never decrypt. Only your server's private key (stored in <code class="inline-code">.smartfield/</code>) can decrypt. This is standard RSA asymmetric cryptography.</p>
 
 <h3>Why do field names show as random IDs (sf_a7f3c2)?</h3>
-<p>To prevent attackers from identifying which field contains the password. If the field name was "password", an attacker could target that specific field. Random IDs make all SmartField fields look identical — an attacker cannot distinguish the email from the password from the SSN.</p>
+<p>To prevent attackers from identifying which field contains the password. If the field name was "password", an attacker could target that specific field. Random IDs make all SmartField fields look identical. an attacker cannot distinguish the email from the password from the SSN.</p>
 
 <h3>Does SmartField slow down my page?</h3>
 <p>The SmartField script is ~15KB. Encryption uses the browser's native Web Crypto API (hardware-accelerated on most devices). Each keystroke encryption takes &lt;1ms. There is no noticeable performance impact.</p>

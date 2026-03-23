@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartField — Real World Use Cases</title>
+  <title>SmartField. Real World Use Cases</title>
   <script src="/component/smartfield.js" data-key="sf_test_dc19e07987a45a0ca2472153e5f827d6"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -113,7 +113,8 @@
 
     footer{text-align:center;padding:40px 20px;color:#1e293b;font-size:12px}
 
-    @media(max-width:768px){.usecase-inner{grid-template-columns:1fr}.reverse .usecase-inner{direction:ltr}}
+    @media(max-width:768px){.usecase-inner{grid-template-columns:1fr}.reverse .usecase-inner{direction:ltr}.nav-back{display:none}}
+    .mobile-section{display:none !important}
   </style>
 </head>
 <body>
@@ -149,7 +150,7 @@
   <p style="color:#2f3192;font-size:14px;margin-top:8px;font-weight:600">SmartField encrypts balances on screen. Even screenshots capture only ΣΩΔψ.</p>
 </div>
 
-<!-- ========== 1. BANKING — REAL LOGIN ========== -->
+<!-- ========== 1. BANKING. REAL LOGIN ========== -->
 <div id="banking" style="background:#f0f1f8;padding:60px 0">
   <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
 
@@ -159,10 +160,10 @@
         <img src="/landing/img/ima_bank.png" alt="National Trust Bank" style="height:80px;margin-bottom:16px;border-radius:6px">
       </div>
       <h2 style="font-size:32px;font-weight:800;color:#2f3192;margin-bottom:10px">Your balance, invisible.</h2>
-      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Account balances, transactions, portfolio value — all encrypted on screen. Click "Unlock" to reveal for 5 seconds. Auto-locks. Screen recorders see only cipher characters.</p>
+      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Account balances, transactions, portfolio value. all encrypted on screen. Click "Unlock" to reveal for 5 seconds. Auto-locks. Screen recorders see only cipher characters.</p>
       <ul style="list-style:none;font-size:16px;color:#444">
         <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> AES-256 encryption per keystroke</li>
-        <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> Shadow DOM closed — JavaScript blocked</li>
+        <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> Shadow DOM closed. JavaScript blocked</li>
         <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> Screen recorders see only ΣΩΔψ</li>
         <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> Bots & AI can't fill this form</li>
         <li style="padding:6px 0;display:flex;gap:8px;align-items:center"><span style="color:#2f3192;font-weight:700">✓</span> No copy, paste, or select</li>
@@ -232,7 +233,7 @@
   <p style="color:#23073e;font-size:14px;margin-top:8px;font-weight:600">SmartField encrypts card, CVV, and expiry at the keystroke level.</p>
 </div>
 
-<!-- ========== 2. PAYMENTS — REAL CHECKOUT ========== -->
+<!-- ========== 2. PAYMENTS. REAL CHECKOUT ========== -->
 <div id="payments" style="background:#f0f4ff;padding:60px 0">
   <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
     <!-- Checkout card -->
@@ -257,9 +258,9 @@
     </div>
     <!-- Info -->
     <div>
-      <img src="/landing/img/ima_cre.png" alt="Payments" height="80" style="margin-bottom:16px;border-radius:6px">
+      <img src="/landing/img/ima_onl.png" alt="Payments" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#1e293b;margin-bottom:10px">Payments & Checkout</h2>
-      <p style="font-size:17px;color:#64748b;line-height:1.7;margin-bottom:20px">Card numbers, CVV, billing — encrypted before they touch the DOM. No Stripe iframe needed. PCI-DSS compliance built into every keystroke.</p>
+      <p style="font-size:17px;color:#64748b;line-height:1.7;margin-bottom:20px">Card numbers, CVV, billing. encrypted before they touch the DOM. No Stripe iframe needed. PCI-DSS compliance built into every keystroke.</p>
       <ul style="list-style:none;font-size:16px;color:#475569">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#4f46e5;font-weight:700">✓</span> Card number never exists in plaintext</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#4f46e5;font-weight:700">✓</span> CVV invisible to any JavaScript</li>
@@ -277,13 +278,13 @@
   <p style="color:#57b1e1;font-size:14px;margin-top:8px;font-weight:600">SmartField makes patient data invisible to every tracker on the page.</p>
 </div>
 
-<!-- ========== 3. HEALTHCARE — PATIENT PORTAL ========== -->
+<!-- ========== 3. HEALTHCARE. PATIENT PORTAL ========== -->
 <div id="healthcare" style="background:#f0fdfa;padding:60px 0">
   <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
     <div>
       <img src="/landing/img/ima_heal.png" alt="Healthcare" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#134e4a;margin-bottom:10px">Medical Records</h2>
-      <p style="font-size:17px;color:#374151;line-height:1.7;margin-bottom:20px">Diagnoses, prescriptions, lab results — the CEO's cancer diagnosis invisible to Hotjar. HIPAA compliance by default.</p>
+      <p style="font-size:17px;color:#374151;line-height:1.7;margin-bottom:20px">Diagnoses, prescriptions, lab results. the CEO's cancer diagnosis invisible to Hotjar. HIPAA compliance by default.</p>
       <ul style="list-style:none;font-size:16px;color:#475569">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#0d9488;font-weight:700">✓</span> Patient data encrypted on screen</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#0d9488;font-weight:700">✓</span> Hotjar/FullStory see only cipher</li>
@@ -338,7 +339,7 @@
   <p style="color:#1e40af;font-size:14px;margin-top:8px;font-weight:600">SmartField ensures SSN and tax data never exist in the DOM.</p>
 </div>
 
-<!-- ========== 4. GOVERNMENT — TAX PORTAL ========== -->
+<!-- ========== 4. GOVERNMENT. TAX PORTAL ========== -->
 <div id="government" style="background:#f8fafc;padding:60px 0">
   <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
     <div style="background:#ffffff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #e2e8f0;max-width:420px;-webkit-user-select:none;user-select:none">
@@ -355,7 +356,7 @@
     <div>
       <img src="/landing/img/ima_gove.png" alt="Government" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#1e293b;margin-bottom:10px">Tax & Government</h2>
-      <p style="font-size:17px;color:#64748b;line-height:1.7;margin-bottom:20px">Social security numbers, tax IDs, income, bank accounts — the most sensitive government data, encrypted at input level.</p>
+      <p style="font-size:17px;color:#64748b;line-height:1.7;margin-bottom:20px">Social security numbers, tax IDs, income, bank accounts. the most sensitive government data, encrypted at input level.</p>
       <ul style="list-style:none;font-size:16px;color:#475569">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> SSN encrypted per keystroke</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> Income invisible to third-party scripts</li>
@@ -373,16 +374,16 @@
   <p style="color:#a855f7;font-size:14px;margin-top:8px;font-weight:600">SmartField makes seed phrases invisible to every script and extension.</p>
 </div>
 
-<!-- ========== 5. CRYPTO — DEX SWAP ========== -->
+<!-- ========== 5. CRYPTO. DEX SWAP ========== -->
 <div id="crypto" style="background:#f5f0ff;padding:60px 0">
   <div style="max-width:1000px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
     <div>
       <img src="/landing/img/ima_crip.png" alt="Crypto" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#3b0764;margin-bottom:10px">Crypto & Web3</h2>
-      <p style="font-size:14px;color:#666;line-height:1.7;margin-bottom:20px">Seed phrases, private key imports, wallet recovery — the most sensitive data in crypto, invisible to extensions and XSS.</p>
+      <p style="font-size:14px;color:#666;line-height:1.7;margin-bottom:20px">Seed phrases, private key imports, wallet recovery. the most sensitive data in crypto, invisible to extensions and XSS.</p>
       <ul style="list-style:none;font-size:16px;color:#475569">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Seed phrase invisible to extensions</li>
-        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Zero clipboard access — no paste attacks</li>
+        <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Zero clipboard access. no paste attacks</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> XSS gets encrypted garbage</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Wallet import fully protected</li>
       </ul>
@@ -412,7 +413,7 @@
     <div>
       <img src="/landing/img/ima_hr.png" alt="HR" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#1e40af;margin-bottom:10px">HR & Payroll</h2>
-      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Social security numbers, salaries, bank accounts, tax forms — HR handles the most sensitive data in any company. Every field is a liability.</p>
+      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Social security numbers, salaries, bank accounts, tax forms. HR handles the most sensitive data in any company. Every field is a liability.</p>
       <ul style="list-style:none;font-size:16px;color:#444">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> SSN encrypted at keystroke level</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#1e40af;font-weight:700">✓</span> Salary data invisible to browser</li>
@@ -465,7 +466,7 @@
     <div>
       <img src="/landing/img/ima_insurance.png" alt="Insurance" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#b45309;margin-bottom:10px">Insurance & Claims</h2>
-      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Policy numbers, medical conditions, claim amounts, beneficiary data — every field in an insurance form is sensitive and regulated.</p>
+      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Policy numbers, medical conditions, claim amounts, beneficiary data. every field in an insurance form is sensitive and regulated.</p>
       <ul style="list-style:none;font-size:16px;color:#444">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#b45309;font-weight:700">✓</span> Claims data encrypted per keystroke</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#b45309;font-weight:700">✓</span> Medical history invisible to trackers</li>
@@ -487,7 +488,7 @@
     <div>
       <img src="/landing/img/img_rea.png" alt="Real Estate" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#059669;margin-bottom:10px">Real Estate & Mortgage</h2>
-      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Mortgage pre-approvals, rental applications, property closings — every form asks for income, employer, SSN, and bank details.</p>
+      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Mortgage pre-approvals, rental applications, property closings. every form asks for income, employer, SSN, and bank details.</p>
       <ul style="list-style:none;font-size:16px;color:#444">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#059669;font-weight:700">✓</span> Buyer financial data encrypted</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#059669;font-weight:700">✓</span> Income & employment protected</li>
@@ -516,7 +517,7 @@
 <!-- ========== 9. IMMIGRATION ========== -->
 <div style="text-align:center;padding:80px 20px;background:#ffffff">
   <h2 id="anim-immigration" style="font-size:56px;font-weight:800;color:#7c3aed;font-family:'Fira Code',monospace;letter-spacing:4px"></h2>
-  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Visa applications, passport data, travel history — <strong style="color:#7c3aed">the most personal data a government can collect, on a web form.</strong></p>
+  <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Visa applications, passport data, travel history. <strong style="color:#7c3aed">the most personal data a government can collect, on a web form.</strong></p>
 </div>
 
 <div id="immigration" style="background:#f5f3ff;padding:60px 0">
@@ -540,7 +541,7 @@
     <div>
       <img src="/landing/img/img_pass.png" alt="Immigration" height="80" style="margin-bottom:16px;border-radius:6px">
       <h2 style="font-size:32px;font-weight:800;color:#7c3aed;margin-bottom:10px">Immigration & Visas</h2>
-      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Passport numbers, nationality, travel history, biometric data — immigration portals handle the most sensitive personal data on the internet.</p>
+      <p style="font-size:17px;color:#555;line-height:1.7;margin-bottom:20px">Passport numbers, nationality, travel history, biometric data. immigration portals handle the most sensitive personal data on the internet.</p>
       <ul style="list-style:none;font-size:16px;color:#444">
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Passport data encrypted in browser</li>
         <li style="padding:6px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700">✓</span> Travel history invisible to trackers</li>
@@ -551,8 +552,8 @@
   </div>
 </div>
 
-<!-- MOBILE SECTION -->
-<div style="background:#ffffff;padding:80px 20px;text-align:center">
+<!-- MOBILE SECTION (hidden on mobile) -->
+<div class="mobile-section" id="mobile-section" style="background:#ffffff;padding:80px 20px;text-align:center">
   <h2 style="font-size:36px;font-weight:800;color:#0B1120;margin-bottom:8px">Works on Mobile Too</h2>
   <p style="color:#555;font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6">Your customers pay from their phone. They check balances on the bus. They log in from coffee shops. <strong style="color:#0B1120">Their data is exposed on every public WiFi, every screen recorder, every shoulder surfer.</strong></p>
   <p style="color:#00B88A;font-size:16px;margin-top:8px;font-weight:600;margin-bottom:40px">SmartField encrypts on mobile exactly like desktop. No app. No SDK. Just HTML.</p>

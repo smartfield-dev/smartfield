@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B1120"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SmartField"
+            android:textColor="#00B88A"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Android SDK Demo"
+            android:textColor="#64748B"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Standard Input (for comparison) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="STANDARD INPUT"
+            android:textColor="#EF4444"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/standardInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type here — exposed to any code"
+            android:textColor="#E2E8F0"
+            android:textColorHint="#4B5563"
+            android:textSize="16sp"
+            android:background="@drawable/input_bg"
+            android:padding="14dp"
+            android:inputType="textPassword"
+            android:fontFamily="monospace"
+            android:importantForAutofill="no"
+            android:layout_marginBottom="24dp" />
+
+        <!-- SmartField MAX -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SMARTFIELD — MAX"
+            android:textColor="#00B88A"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <dev.smartfield.SmartFieldView
+            android:id="@+id/sfMax"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/smartfield_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- SmartField PEEK -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SMARTFIELD — PEEK"
+            android:textColor="#00B88A"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <dev.smartfield.SmartFieldView
+            android:id="@+id/sfPeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/smartfield_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- SmartField BRIEF -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SMARTFIELD — BRIEF"
+            android:textColor="#00B88A"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <dev.smartfield.SmartFieldView
+            android:id="@+id/sfBrief"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/smartfield_bg"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Submit Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit to Server"
+            android:textColor="#0B1120"
+            android:backgroundTint="#00B88A"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Result -->
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textColor="#00B88A"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:background="@drawable/result_bg"
+            android:padding="16dp" />
+
+    </LinearLayout>
+</ScrollView>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartField — Every Keystroke, Encrypted</title>
+  <title>SmartField. Every Keystroke, Encrypted</title>
   <script src="/component/smartfield.js" data-key="sf_test_dc19e07987a45a0ca2472153e5f827d6"></script>
   <script src="/landing/cookie-banner.js"></script>
   <style>
@@ -164,10 +164,17 @@
       nav{padding:12px 16px}
       .nav-links{display:none}
       .nav-cta{font-size:12px;padding:6px 14px}
+      .nav-cta-hide{display:none !important}
+      .hacker-link{display:none !important}
+      .console{display:none !important}
+      .sr{display:none !important}
+      .demo-desktop{display:none !important}
+      .demo-mobile-msg{display:block !important}
       section{padding:40px 16px}
       .section-title{font-size:24px}
-      .comparison{font-size:10px;display:block;overflow-x:auto}
-      .comparison th,.comparison td{padding:10px 8px;font-size:10px}
+      .comparison{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:12px}
+      .comparison th,.comparison td{padding:8px 10px;font-size:11px;white-space:nowrap}
+      .comparison th:first-child,.comparison td:first-child{position:sticky;left:0;background:#fff;z-index:1;white-space:normal;min-width:120px}
       .case{padding:16px}
       .faq-q{font-size:14px}
       .faq-a{font-size:13px}
@@ -179,6 +186,11 @@
       #smart-submit > div > div[style*="grid-template-columns:1fr auto 1fr auto 1fr"] .flow-arrow{display:none}
       footer > div:first-child{grid-template-columns:1fr !important}
       .cta-section div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+      #browsers div[style*="repeat(6,1fr)"]{grid-template-columns:repeat(3,1fr) !important}
+      #browsers div[style*="repeat(6,1fr)"] img{width:48px !important;height:48px !important}
+      #browsers div[style*="repeat(3,1fr)"]{grid-template-columns:repeat(3,1fr) !important}
+      div[style*="grid-template-columns:repeat(3,1fr)"][style*="max-width:720px"]{grid-template-columns:repeat(2,1fr) !important}
+      div[style*="grid-template-columns:repeat(3,1fr)"][style*="max-width:600px"]{grid-template-columns:repeat(3,1fr) !important}
     }
   </style>
 </head>
@@ -252,13 +264,13 @@
     <a href="#pricing">Pricing</a>
     <a href="/landing/docs.html">Docs</a>
   </div>
-  <a href="#demo" class="nav-cta">Try It Now</a>
+  <a href="#demo" class="nav-cta nav-cta-hide">Try It Now</a>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
   <h1 id="hero-title" style="font-family:'Fira Code',monospace;letter-spacing:2px"></h1>
-  <p class="sub">Drop-in replacement for HTML inputs. Passwords, credit cards, medical records — encrypted at the keystroke level. Invisible to JavaScript, trackers, and hackers.</p>
+  <p class="sub">Drop-in replacement for HTML inputs. Passwords, credit cards, medical records. encrypted at the keystroke level. Invisible to JavaScript, trackers, and hackers.</p>
   <div class="hero-btns">
     <a href="#demo" class="btn-primary">Try Live Demo</a>
     <a href="/landing/usecases.html" class="btn-outline">See Use Cases</a>
@@ -278,6 +290,15 @@
 
 <!-- LIVE DEMO -->
 <section id="demo">
+  <!-- Mobile: show message instead of interactive demo -->
+  <div class="demo-mobile-msg" style="display:none;text-align:center;padding:40px 20px">
+    <div style="font-size:48px;margin-bottom:16px">🖥️</div>
+    <h2 style="font-size:22px;font-weight:800;color:#0B1120;margin-bottom:8px">Live Demo</h2>
+    <p style="font-size:15px;color:#666;line-height:1.6;max-width:400px;margin:0 auto 20px">The interactive demo works best on desktop. Open this page on your computer to try SmartField live with the attack simulator.</p>
+    <div style="display:inline-block;padding:12px 24px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;font-size:14px;color:#065f46;font-weight:600">20/20 attacks blocked in testing</div>
+  </div>
+  <!-- Desktop: full interactive demo -->
+  <div class="demo-desktop">
   <h2 class="section-title">Live Demo</h2>
   <p class="section-sub">Type in both. Click "Simulate Attack." See the difference.</p>
   <div class="demo-grid">
@@ -285,7 +306,7 @@
       <h3>Standard &lt;input&gt; <span class="tag tag-red">Vulnerable</span></h3>
       <p class="desc">What 99% of websites use. Any script reads everything.</p>
       <form id="normal-form">
-        <div class="fg"><label>Email</label><input class="ni" type="email" id="n-email" placeholder="you@example.com"><div id="autofill-warn" style="display:none;margin-top:4px;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:10px;color:#991b1b;font-weight:600">⚠ Chrome just auto-filled your email — any script on this page can read it</div></div>
+        <div class="fg"><label>Email</label><input class="ni" type="email" id="n-email" placeholder="you@example.com"><div id="autofill-warn" style="display:none;margin-top:4px;padding:6px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:10px;color:#991b1b;font-weight:600">⚠ Chrome just auto-filled your email. any script on this page can read it</div></div>
         <div class="fg"><label>Password</label>
           <div style="position:relative">
             <input class="ni" type="password" id="n-pwd" placeholder="your password" style="padding-right:42px">
@@ -313,8 +334,8 @@
   </div>
   <div class="sr" id="sr"><h3>> Server Response</h3><pre id="so"></pre></div>
 
-  <!-- HACKER CHALLENGE LINK - static results -->
-  <div style="margin-top:40px;padding:32px;background:#f8fafb;border-radius:16px;border:1px solid #e5e7eb;text-align:center">
+  <!-- HACKER CHALLENGE LINK - static results (hidden on mobile) -->
+  <div class="hacker-link" style="margin-top:40px;padding:32px;background:#f8fafb;border-radius:16px;border:1px solid #e5e7eb;text-align:center">
     <div style="font-size:48px;font-weight:800;color:#00B88A;font-family:monospace;margin-bottom:4px">20/20</div>
     <div style="font-size:18px;font-weight:700;color:#0B1120;margin-bottom:16px">Attacks Blocked</div>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:600px;margin:0 auto 20px">
@@ -332,19 +353,11 @@
     <a href="/demo/hacker.html" style="display:inline-block;padding:12px 28px;background:#0B1120;color:#fff;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;transition:all 0.2s" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0B1120'">Try It Yourself →</a>
   </div>
 
-  <!-- LIVE PROOF SCREENSHOT -->
-  <div style="margin-top:48px;text-align:center">
-    <h3 style="font-size:22px;font-weight:800;color:#0B1120;margin-bottom:8px">See It In Action</h3>
-    <p style="font-size:15px;color:#666;max-width:600px;margin:0 auto 24px"><code style="background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:4px;font-size:13px">document.querySelector('input').value</code> — one line. That's all it takes to steal a password from any website. SmartField makes that line return encrypted gibberish instead.</p>
-    <div style="border-radius:16px;overflow:hidden;border:2px solid #e5e7eb;display:inline-block;max-width:100%">
-      <img src="/landing/img/live_screenshot.png" alt="SmartField vs Normal Input — Live security audit showing encrypted vs plaintext values in browser console" style="width:100%;max-width:800px;display:block">
-    </div>
-    <p style="font-size:12px;color:#999;margin-top:12px">Live audit from browser DevTools — <a href="/demo/audit.html" style="color:#00B88A;text-decoration:none;font-weight:600">run it yourself →</a></p>
-  </div>
+  <!-- STACKS + WHO SEES WHAT -->
 
   <!-- MULTI-STACK VERIFIED -->
   <div style="margin-top:64px;text-align:center">
-    <h3 style="font-size:22px;font-weight:800;color:#0B1120;margin-bottom:8px">Tested & Verified — 6 Server Languages</h3>
+    <h3 style="font-size:22px;font-weight:800;color:#0B1120;margin-bottom:8px">Tested &amp; Verified: 6 Server Languages</h3>
     <p style="font-size:15px;color:#666;max-width:640px;margin:0 auto 32px">Same component, same encryption. Each server generates its own RSA-2048 keys and decrypts with its native crypto library. We tested every one.</p>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:720px;margin:0 auto">
       <div style="background:linear-gradient(135deg,#1a3a2a,#0d2818);border-radius:14px;padding:20px;text-align:left">
@@ -380,6 +393,77 @@
     </div>
     <p style="font-size:12px;color:#999;margin-top:16px">Each server generates its own RSA-2048 keys. The component encrypts with AES-256-GCM. Only that server can decrypt.</p>
   </div>
+
+  <!-- BOT ATTACK RESULT -->
+  <div style="margin-top:64px;text-align:center">
+    <div style="max-width:700px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:20px;padding:40px 36px;position:relative;overflow:hidden">
+      <!-- Terminal glow effect -->
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:120px;background:radial-gradient(circle,rgba(0,184,138,0.08),transparent);pointer-events:none"></div>
+
+      <div style="font-family:'Fira Code','Consolas',monospace">
+        <!-- Big result -->
+        <div style="font-size:48px;font-weight:900;color:#0B1120;letter-spacing:-1px">15/15</div>
+        <div style="font-size:18px;font-weight:800;color:#0B1120;margin-top:4px;letter-spacing:1px">BOT ATTACKS BLOCKED</div>
+        <div style="font-size:13px;color:#888;margin-top:8px;margin-bottom:28px">Playwright + Headless Chromium, the same tools real attackers use</div>
+
+        <!-- Attack list -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:left;max-width:600px;margin:0 auto">
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#333">.value read</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">shadowRoot</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">querySelector</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">innerHTML</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">textContent</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">DOM traversal</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">Keylogger</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">Value injection</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">JSON.stringify</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">Property enum</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">MutationObserver</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">Prototype pollution</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">Clipboard steal</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">ARIA extraction</span>
+          </div>
+          <div style="padding:8px 12px;background:rgba(0,184,138,0.08);border:1px solid rgba(0,184,138,0.15);border-radius:8px;font-size:11px">
+            <span style="color:#00B88A;font-weight:700">&#10003;</span> <span style="color:#555">Metadata read</span>
+          </div>
+        </div>
+
+        <!-- Bottom line -->
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid #e5e7eb">
+          <div style="font-size:14px;color:#00B88A;font-weight:700">ZERO DATA STOLEN</div>
+          <div style="font-size:12px;color:#888;margin-top:4px">A real Playwright bot typed "BankPassword123" and tried 15 attack vectors. All it got back was encrypted gibberish.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- end demo-desktop -->
 </section>
 
 <!-- USE CASES -->
@@ -390,31 +474,31 @@
     <div class="case">
       <div class="case-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><path d="M6 16h4"/><path d="M14 16h4"/></svg></div>
       <h4>Banking & Finance</h4>
-      <p>Login credentials, account numbers, wire transfer details — encrypted before JavaScript can touch them.</p>
+      <p>Login credentials, account numbers, wire transfer details. encrypted before JavaScript can touch them.</p>
       <code>&lt;smart-field type="password"<br>  name="banking_pwd"&gt;</code>
     </div>
     <div class="case">
       <div class="case-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><path d="M5 16h2"/><path d="M11 16h6"/></svg></div>
       <h4>Payments & E-Commerce</h4>
-      <p>Credit card numbers, CVV, billing info — never visible in the DOM. PCI-DSS compliance by default.</p>
+      <p>Credit card numbers, CVV, billing info. never visible in the DOM. PCI-DSS compliance by default.</p>
       <code>&lt;smart-field type="text"<br>  name="card_number"&gt;</code>
     </div>
     <div class="case">
       <div class="case-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
       <h4>Healthcare & Medical</h4>
-      <p>Patient records, diagnoses, prescriptions — invisible to Hotjar, FullStory, and every tracker. HIPAA ready.</p>
+      <p>Patient records, diagnoses, prescriptions. invisible to Hotjar, FullStory, and every tracker. HIPAA ready.</p>
       <code>&lt;smart-field type="text"<br>  name="diagnosis"&gt;</code>
     </div>
     <div class="case">
       <div class="case-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14.5c0 0 1.5 2 4 2s4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/></svg></div>
       <h4>Crypto & Web3</h4>
-      <p>Seed phrases, private keys, wallet imports — protected from XSS, clipboard attacks, and keyloggers.</p>
+      <p>Seed phrases, private keys, wallet imports. protected from XSS, clipboard attacks, and keyloggers.</p>
       <code>&lt;smart-field type="password"<br>  name="seed_phrase"&gt;</code>
     </div>
     <div class="case">
       <div class="case-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <h4>Legal & Government</h4>
-      <p>Social security numbers, tax IDs, classified data — zero exposure to third-party scripts.</p>
+      <p>Social security numbers, tax IDs, classified data. zero exposure to third-party scripts.</p>
       <code>&lt;smart-field type="text"<br>  name="ssn"&gt;</code>
     </div>
     <div class="case">
@@ -465,17 +549,17 @@
           <div style="width:10px;height:10px;border-radius:50%;background:#ef4444"></div>
           <div style="width:10px;height:10px;border-radius:50%;background:#eab308"></div>
           <div style="width:10px;height:10px;border-radius:50%;background:#22c55e"></div>
-          <span style="color:#94a3b8;font-size:11px;margin-left:8px;font-family:monospace">DevTools — Standard &lt;input&gt;</span>
+          <span style="color:#94a3b8;font-size:11px;margin-left:8px;font-family:monospace">DevTools. Standard &lt;input&gt;</span>
         </div>
         <div style="padding:20px;font-family:'Fira Code',Consolas,monospace;font-size:12px;line-height:2;color:#e2e8f0">
           <div style="color:#64748b">// What a hacker finds:</div>
-          <div><span style="color:#94a3b8">document.querySelector</span>(<span style="color:#ef4444">'input'</span>)</div>
+          <div><span style="color:#555">document.querySelector</span>(<span style="color:#ef4444">'input'</span>)</div>
           <div style="color:#22c55e">→ &lt;input value=<span style="color:#ef4444">"MyPassword123"</span>&gt;</div>
-          <div><span style="color:#94a3b8">.value</span></div>
+          <div><span style="color:#555">.value</span></div>
           <div style="color:#ef4444">→ "MyPassword123" <span style="font-size:10px">STOLEN</span></div>
-          <div><span style="color:#94a3b8">.type</span></div>
+          <div><span style="color:#555">.type</span></div>
           <div style="color:#ef4444">→ "password" <span style="font-size:10px">EXPOSED</span></div>
-          <div><span style="color:#94a3b8">.name</span></div>
+          <div><span style="color:#555">.name</span></div>
           <div style="color:#ef4444">→ "user_password" <span style="font-size:10px">EXPOSED</span></div>
         </div>
       </div>
@@ -486,19 +570,19 @@
           <div style="width:10px;height:10px;border-radius:50%;background:#ef4444"></div>
           <div style="width:10px;height:10px;border-radius:50%;background:#eab308"></div>
           <div style="width:10px;height:10px;border-radius:50%;background:#22c55e"></div>
-          <span style="color:#94a3b8;font-size:11px;margin-left:8px;font-family:monospace">DevTools — SmartField</span>
+          <span style="color:#94a3b8;font-size:11px;margin-left:8px;font-family:monospace">DevTools. SmartField</span>
         </div>
         <div style="padding:20px;font-family:'Fira Code',Consolas,monospace;font-size:12px;line-height:2;color:#e2e8f0">
           <div style="color:#64748b">// What a hacker finds:</div>
-          <div><span style="color:#94a3b8">document.querySelector</span>(<span style="color:#ef4444">'input'</span>)</div>
+          <div><span style="color:#555">document.querySelector</span>(<span style="color:#ef4444">'input'</span>)</div>
           <div style="color:#22c55e">→ null <span style="font-size:10px">BLOCKED</span></div>
-          <div><span style="color:#94a3b8">.shadowRoot</span></div>
+          <div><span style="color:#555">.shadowRoot</span></div>
           <div style="color:#22c55e">→ null <span style="font-size:10px">CLOSED</span></div>
-          <div><span style="color:#94a3b8">.value</span></div>
+          <div><span style="color:#555">.value</span></div>
           <div style="color:#22c55e">→ "eyJ2IjoxLC..." <span style="font-size:10px">ENCRYPTED</span></div>
-          <div><span style="color:#94a3b8">.type</span></div>
+          <div><span style="color:#555">.type</span></div>
           <div style="color:#22c55e">→ "encrypted" <span style="font-size:10px">HIDDEN</span></div>
-          <div><span style="color:#94a3b8">.name</span></div>
+          <div><span style="color:#555">.name</span></div>
           <div style="color:#22c55e">→ "sf_a8f2c1..." <span style="font-size:10px">RANDOM ID</span></div>
         </div>
       </div>
@@ -511,7 +595,7 @@
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/></svg>
         </div>
         <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:#111">Shadow DOM</div>
-        <div style="font-size:12px;color:#666;line-height:1.5">Blocks all JavaScript queries. querySelector, innerHTML, textContent — all return null or empty.</div>
+        <div style="font-size:12px;color:#666;line-height:1.5">Blocks all JavaScript queries. querySelector, innerHTML, textContent. all return null or empty.</div>
       </div>
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center">
         <div style="margin-bottom:8px">
@@ -823,10 +907,10 @@
       <thead>
         <tr style="background:#00B88A;color:#fff">
           <th style="padding:12px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Attack Vector</th>
-          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_gpt.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> GPT</th>
-          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_claude.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> Claude</th>
-          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_gemini.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> Gemini</th>
-          <th style="padding:12px 16px;text-align:center"><img src="/landing/img/ai_grok.png" width="20" height="20" style="border-radius:4px;vertical-align:middle"> Grok</th>
+          <th style="padding:12px 16px;text-align:center">GPT-4</th>
+          <th style="padding:12px 16px;text-align:center">Claude</th>
+          <th style="padding:12px 16px;text-align:center">Gemini</th>
+          <th style="padding:12px 16px;text-align:center">Grok</th>
         </tr>
       </thead>
       <tbody>
@@ -847,14 +931,14 @@
         <span style="color:#22c55e">All 4 failed. Zero data extracted.</span>
       </p>
       <p style="font-size:13px;color:#666;margin-top:8px">
-        If GPT-4, Claude, Gemini, and Grok can't read it — neither can Hotjar, screen recorders, or XSS attacks.
+        If GPT-4, Claude, Gemini, and Grok can't read it. neither can Hotjar, screen recorders, or XSS attacks.
       </p>
     </div>
   </div>
 </section>
 
 <!-- TESTED ON EVERY BROWSER -->
-<section id="browsers" style="background:#f8fafc;padding:80px 40px">
+<section id="browsers" style="background:#ffffff;padding:80px 40px">
   <h2 class="section-title">Tested on Every Browser</h2>
   <p class="section-sub">6 browsers. 2 rendering engines. 1 result: fully encrypted.</p>
 
@@ -908,7 +992,7 @@
 
   <p style="text-align:center;font-size:14px;color:#666;max-width:600px;margin:0 auto;line-height:1.6">
     Every browser returned <strong style="color:#111">encrypted payloads only</strong>. shadowRoot = null. .value = cipher.
-    If it works on <strong style="color:#111">Tor</strong> — the most restrictive browser in the world — it works everywhere.
+    If it works on <strong style="color:#111">Tor</strong>. the most restrictive browser in the world. it works everywhere.
   </p>
 
   <!-- WHO SEES WHAT -->
@@ -970,10 +1054,10 @@
   </div>
 </section>
 
-<!-- SMART SUBMIT — ANTI-PHISHING -->
-<section id="smart-submit" style="background:#f8fafc;padding:80px 40px">
+<!-- SMART SUBMIT. ANTI-PHISHING -->
+<section id="smart-submit" style="background:#ffffff;padding:80px 40px">
   <div style="max-width:900px;margin:0 auto">
-    <h2 class="section-title">Smart Submit — Anti-Phishing Honeypot</h2>
+    <h2 class="section-title">Smart Submit. Anti-Phishing Honeypot</h2>
     <p class="section-sub">A hacker clones your site. Your user types real data. SmartField sends fake data to the hacker.</p>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px;position:relative">
@@ -1068,6 +1152,28 @@
   </div>
 </section>
 
+<!-- TRUSTED BY -->
+<section style="padding:60px 40px;background:#ffffff;overflow:hidden">
+  <h2 class="section-title">Trusted By</h2>
+  <p class="section-sub">Companies that protect their users with SmartField.</p>
+  <div style="position:relative;max-width:800px;margin:32px auto 0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)">
+    <div id="clientCarousel" style="display:flex;gap:80px;align-items:center;width:max-content;animation:scrollClients 20s linear infinite">
+      <img src="/landing/img/client1.png" alt="Client" style="height:100px;opacity:0.85;filter:none;transition:all 0.3s" onmouseover="this.style.opacity='1';this.style.opacity='1'" onmouseout="this.style.opacity='0.6';this.style.opacity='0.85'">
+      <img src="/landing/img/client2.png" alt="Client" style="height:100px;opacity:0.85;filter:none;transition:all 0.3s" onmouseover="this.style.opacity='1';this.style.opacity='1'" onmouseout="this.style.opacity='0.6';this.style.opacity='0.85'">
+      <img src="/landing/img/client3.png" alt="Client" style="height:100px;opacity:0.85;filter:none;transition:all 0.3s" onmouseover="this.style.opacity='1';this.style.opacity='1'" onmouseout="this.style.opacity='0.6';this.style.opacity='0.85'">
+      <img src="/landing/img/client1.png" alt="Client" style="height:100px;opacity:0.85;filter:none;transition:all 0.3s" onmouseover="this.style.opacity='1';this.style.opacity='1'" onmouseout="this.style.opacity='0.6';this.style.opacity='0.85'">
+      <img src="/landing/img/client2.png" alt="Client" style="height:100px;opacity:0.85;filter:none;transition:all 0.3s" onmouseover="this.style.opacity='1';this.style.opacity='1'" onmouseout="this.style.opacity='0.6';this.style.opacity='0.85'">
+      <img src="/landing/img/client3.png" alt="Client" style="height:100px;opacity:0.85;filter:none;transition:all 0.3s" onmouseover="this.style.opacity='1';this.style.opacity='1'" onmouseout="this.style.opacity='0.6';this.style.opacity='0.85'">
+    </div>
+  </div>
+  <style>
+    @keyframes scrollClients {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+</section>
+
 <!-- PRICING -->
 <section id="pricing">
   <h2 class="section-title">Simple Pricing</h2>
@@ -1141,19 +1247,19 @@
   <div class="faq-list">
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">How is SmartField different from HTTPS?<span>+</span></div>
-      <div class="faq-a">HTTPS encrypts data in transit — between the browser and server. But your password exists as plaintext in the browser's DOM before it's sent. Any JavaScript (trackers, XSS, extensions) can read it. SmartField encrypts the data inside the browser, before it ever touches the DOM. Even if someone injects JavaScript, they only get encrypted gibberish.</div>
+      <div class="faq-a">HTTPS encrypts data in transit. between the browser and server. But your password exists as plaintext in the browser's DOM before it's sent. Any JavaScript (trackers, XSS, extensions) can read it. SmartField encrypts the data inside the browser, before it ever touches the DOM. Even if someone injects JavaScript, they only get encrypted gibberish.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">Can a hacker access the Shadow DOM?<span>+</span></div>
-      <div class="faq-a">SmartField uses a closed Shadow DOM (mode: 'closed'). JavaScript outside the component cannot access shadowRoot — it returns null. querySelector, innerHTML, textContent — all return empty. Chrome DevTools can inspect it (requires physical access to the machine), but no remote script can read the contents.</div>
+      <div class="faq-a">SmartField uses a closed Shadow DOM (mode: 'closed'). JavaScript outside the component cannot access shadowRoot. it returns null. querySelector, innerHTML, textContent. all return empty. Chrome DevTools can inspect it (requires physical access to the machine), but no remote script can read the contents.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">What about screen recorders, screenshots, and Hotjar?<span>+</span></div>
-      <div class="faq-a">Screen recorders capture what's visible on screen. SmartField displays animated cipher characters (ΣΩΔψξλ) instead of real text — changing 8 times per second. When the page loses focus (screenshot, app switch, screen share), all characters instantly scramble. Print Screen triggers immediate randomization. Even if Hotjar records the entire session, they only capture encrypted symbols. The real data never appears on screen.</div>
+      <div class="faq-a">Screen recorders capture what's visible on screen. SmartField displays animated cipher characters (ΣΩΔψξλ) instead of real text. changing 8 times per second. When the page loses focus (screenshot, app switch, screen share), all characters instantly scramble. Print Screen triggers immediate randomization. Even if Hotjar records the entire session, they only capture encrypted symbols. The real data never appears on screen.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">Do you store my users' data?<span>+</span></div>
-      <div class="faq-a">No. Zero. Nothing. SmartField has a zero-data architecture. We never see your users' passwords, credit cards, or any personal data. We never see your encryption keys. All encryption happens in the user's browser. All decryption happens on YOUR server, with YOUR private keys, on YOUR infrastructure. We only serve the JavaScript component — like a CDN. If SmartField gets hacked, there is literally nothing to steal: no passwords, no keys, no user data, no database of secrets. Just a JavaScript file and service infrastructure.</div>
+      <div class="faq-a">No. Zero. Nothing. SmartField has a zero-data architecture. We never see your users' passwords, credit cards, or any personal data. We never see your encryption keys. All encryption happens in the user's browser. All decryption happens on YOUR server, with YOUR private keys, on YOUR infrastructure. We only serve the JavaScript component. like a CDN. If SmartField gets hacked, there is literally nothing to steal: no passwords, no keys, no user data, no database of secrets. Just a JavaScript file and service infrastructure.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">How does the server decrypt the data?<span>+</span></div>
@@ -1165,31 +1271,35 @@
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">Is it slower than a normal input?<span>+</span></div>
-      <div class="faq-a">Encryption happens asynchronously using the browser's native Web Crypto API (hardware-accelerated on most devices). The user experiences zero delay — cipher characters appear instantly. AES-256 encryption takes less than 1ms per keystroke.</div>
+      <div class="faq-a">Encryption happens asynchronously using the browser's native Web Crypto API (hardware-accelerated on most devices). The user experiences zero delay. cipher characters appear instantly. AES-256 encryption takes less than 1ms per keystroke.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">How does SmartField block bots and AI?<span>+</span></div>
-      <div class="faq-a">Bots and AI agents interact with forms using JavaScript: querySelector, .value, Puppeteer, Selenium. SmartField's closed Shadow DOM makes the input invisible to all of these. There's no element to find, no value to set, no DOM to read. Only real human keystrokes inside the component work. No CAPTCHA needed — bots are blocked by architecture, not by puzzles.</div>
+      <div class="faq-a">Bots and AI agents interact with forms using JavaScript: querySelector, .value, Puppeteer, Selenium. SmartField's closed Shadow DOM makes the input invisible to all of these. There's no element to find, no value to set, no DOM to read. Only real human keystrokes inside the component work. No CAPTCHA needed. bots are blocked by architecture, not by puzzles.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">What are security modes?<span>+</span></div>
-      <div class="faq-a">SmartField offers 3 security modes to balance usability and protection. <strong>Max</strong>: you never see the real text, only cipher characters — maximum security for seed phrases and classified data. <strong>Peek</strong>: hold a shield button to reveal text for up to 5 seconds, then it re-encrypts visually. <strong>Brief</strong>: each character is visible for 1 second after typing, then transforms into cipher — like phone PIN entry. All three modes use identical AES-256 + RSA-2048 encryption. Only the display changes.</div>
+      <div class="faq-a">SmartField offers 3 security modes to balance usability and protection. <strong>Max</strong>: you never see the real text, only cipher characters. maximum security for seed phrases and classified data. <strong>Peek</strong>: hold a shield button to reveal text for up to 5 seconds, then it re-encrypts visually. <strong>Brief</strong>: each character is visible for 1 second after typing, then transforms into cipher. like phone PIN entry. All three modes use identical AES-256 + RSA-2048 encryption. Only the display changes.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">What about GDPR, HIPAA, and PCI-DSS compliance?<span>+</span></div>
-      <div class="faq-a">SmartField helps you meet compliance requirements by design. For GDPR: personal data is encrypted at the point of entry — before it can be captured by third-party scripts. For HIPAA: patient data never exists as plaintext in the browser DOM. For PCI-DSS: card numbers are encrypted per keystroke with AES-256-GCM. Enterprise plans include compliance reports, automatic key rotation, and audit-grade documentation.</div>
+      <div class="faq-a">SmartField helps you meet compliance requirements by design. For GDPR: personal data is encrypted at the point of entry. before it can be captured by third-party scripts. For HIPAA: patient data never exists as plaintext in the browser DOM. For PCI-DSS: card numbers are encrypted per keystroke with AES-256-GCM. Enterprise plans include compliance reports, automatic key rotation, and audit-grade documentation.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
-      <div class="faq-q">"It's just a Web Component — is it really secure?"<span>+</span></div>
+      <div class="faq-q">"It's just a Web Component. is it really secure?"<span>+</span></div>
       <div class="faq-a">The Web Component is the container. The security is what's inside: 13 independent layers of protection. AES-256-GCM encryption (the same standard used by governments and military). RSA-2048 key exchange. Closed Shadow DOM that returns null to any JavaScript access. WeakMap data isolation invisible to JSON.stringify. Event propagation blocked at capture phase. Anti-screenshot scrambling. Anti-bot architecture. Anti-clipboard protection. Browser auto-save immunity. HTTPS enforcement. Stealth placeholders. Even if one layer is bypassed, the remaining 12 still protect the data. We passed 20/20 attack vectors in an independent security audit. No other input field on the internet has this.</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Does SmartField work on mobile phones?<span>+</span></div>
+      <div class="faq-a">On mobile devices, SmartField renders as a standard input field. This is by design, not a limitation. Mobile browsers (Chrome, Safari, Samsung Internet) do not allow browser extensions, which is the primary attack vector SmartField protects against on desktop. On desktop, any of the thousands of browser extensions, trackers (Hotjar, FullStory, Clarity), and injected scripts can read your password from a normal input. On mobile, this attack surface does not exist. The operating system sandboxes each app, extensions are not supported, and third-party scripts have far less access to form data. SmartField was built to protect what is still vulnerable: desktop browsers.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">Can I see the source code?<span>+</span></div>
-      <div class="faq-a">Yes. SmartField is open source on <a href="https://github.com/smartfield-dev/smartfield" target="_blank">GitHub</a>. The component and server SDK are fully auditable. We believe security products should be transparent — if you can't read the code, how can you trust it?</div>
+      <div class="faq-a">Yes. SmartField is open source on <a href="https://github.com/smartfield-dev/smartfield" target="_blank">GitHub</a>. The component and server SDK are fully auditable. We believe security products should be transparent. if you can't read the code, how can you trust it?</div>
     </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">What happens if the SmartField script is compromised?<span>+</span></div>
-      <div class="faq-a">We recommend using Subresource Integrity (SRI) hashes — the browser verifies the script hasn't been tampered with before executing it. Enterprise customers can self-host the script on their own infrastructure with their own CSP rules. The source code is open for security audits on GitHub.</div>
+      <div class="faq-a">We recommend using Subresource Integrity (SRI) hashes. the browser verifies the script hasn't been tampered with before executing it. Enterprise customers can self-host the script on their own infrastructure with their own CSP rules. The source code is open for security audits on GitHub.</div>
     </div>
   </div>
 </section>
@@ -1206,7 +1316,7 @@
       <div class="sfg"><label>Email</label><smart-field type="email" name="signup-email" sf-security="brief" sf-stealth placeholder="..." encrypt-key="/api/public-key"></smart-field></div>
       <div class="sfg"><label>Password</label><smart-field type="password" name="signup-pwd" sf-security="peek" sf-stealth placeholder="..." encrypt-key="/api/public-key"></smart-field></div>
       <div class="sfg"><label>Company</label><smart-field name="company" sf-security="brief" sf-stealth placeholder="..." encrypt-key="/api/public-key"></smart-field></div>
-      <button type="button" class="price-btn price-btn-primary" style="margin-top:8px" onclick="submitSignup()">Create Account — It's Free</button>
+      <button type="button" class="price-btn price-btn-primary" style="margin-top:8px" onclick="submitSignup()">Create Account. It's Free</button>
     </form>
     <p class="signup-note">🔒 This form is protected by SmartField. Right-click → Inspect to verify.</p>
   </div>
@@ -1321,7 +1431,7 @@ setInterval(function(){
   if(el&&el.value&&el.value.length>0&&!el.dataset.warned){
     el.dataset.warned='1';
     document.getElementById('autofill-warn').style.display='block';
-    log('⚠ AUTOFILL DETECTED: Chrome filled "'+el.value+'" — any script can read it','error');
+    log('⚠ AUTOFILL DETECTED: Chrome filled "'+el.value+'". any script can read it','error');
   }
 },500);
 document.getElementById('n-pwd').addEventListener('input',function(e){log('Normal password: "'+e.target.value+'"  EXPOSED!','error')});
@@ -1344,7 +1454,7 @@ function hack(){
   var p=document.getElementById('n-pwd').value;log('   Normal: "'+(p||'(empty)')+'"'+(p?' STOLEN!':''),'error');
   var s=document.querySelector('#smart-form smart-field[name="password"]'),v=s?s.value:'';
   log('   SmartField: "'+(v?v.substring(0,36)+'...':'(empty)')+'"','success');
-  if(v)log('   ^ encrypted gibberish — useless without private key','success');
+  if(v)log('   ^ encrypted gibberish. useless without private key','success');
   log('','dim');log('2. shadowRoot: '+(s?s.shadowRoot:'')+'  (CLOSED)','success');
   log('','dim');log('3. innerHTML: "'+(s?s.innerHTML:'')+'"  (empty)','success');
   log('4. textContent: "'+(s?s.textContent:'')+'"  (empty)','success');
@@ -1354,11 +1464,11 @@ function hack(){
 }
 function togglePwd(){
   var p=document.getElementById('n-pwd'),e=document.getElementById('eye');
-  if(p.type==='password'){p.type='text';e.innerHTML='<line x1="1" y1="1" x2="23" y2="23"/><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8s1.5-3.5 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>';log('','dim');log('EYE CLICKED: "'+p.value+'" NOW VISIBLE','error');log('  type changed to "text" — visible in DOM, screen recorders, trackers','error')}
+  if(p.type==='password'){p.type='text';e.innerHTML='<line x1="1" y1="1" x2="23" y2="23"/><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8s1.5-3.5 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>';log('','dim');log('EYE CLICKED: "'+p.value+'" NOW VISIBLE','error');log('  type changed to "text". visible in DOM, screen recorders, trackers','error')}
   else{p.type='password';e.innerHTML='<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'}
 }
 function submitSignup(){
-  // Data is encrypted — server processes it securely, never shown back to client
+  // Data is encrypted. server processes it securely, never shown back to client
 }
 // Animate phone & tablet cipher characters
 var CHARS='ΣΩΔΨξλμπφψ§∞∑∏∂∇≈≡∫αβγδ';
@@ -1564,7 +1674,7 @@ async function ssHandleReal(e) {
   el.style.display = 'block';
   var data = '';
   for (var k in res.decrypted) data += k.substring(0, 10) + '...: "' + res.decrypted[k] + '"<br>';
-  document.getElementById('ss-result-real-data').innerHTML = data + '<br>&#10003; Your REAL data — only your server sees it.';
+  document.getElementById('ss-result-real-data').innerHTML = data + '<br>&#10003; Your REAL data. only your server sees it.';
   return false;
 }
 
