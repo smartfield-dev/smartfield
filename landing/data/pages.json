@@ -1,0 +1,193 @@
+{
+  "site": {
+    "name": "SmartField",
+    "url": "https://3wwprotocol.com",
+    "tagline": "Every Keystroke, Encrypted.",
+    "cta": "Try Live Demo",
+    "ctaUrl": "/landing/#demo"
+  },
+  "useCases": [
+    {
+      "slug": "banking-secure-login-fields",
+      "title": "Secure Banking Login Fields",
+      "vertical": "Banking & Finance",
+      "h1": "Secure Login Fields for Banking Applications",
+      "intro": "Banks handle the most targeted credentials on the internet. Every login form is a target for XSS, session replay, keyloggers, and browser extensions. SmartField encrypts every keystroke with AES-256-GCM before it touches the DOM.",
+      "dataTypes": ["Passwords", "Account numbers", "Wire transfer details", "PINs"],
+      "threats": ["XSS attacks", "Browser extensions", "Session replay (Hotjar, FullStory)", "Keyloggers", "Credential stuffing bots"],
+      "regulations": ["PCI-DSS", "SOX", "GDPR"],
+      "faq": [
+        {"q": "Does SmartField replace our existing authentication?", "a": "No. SmartField protects the input field itself. Your authentication system (OAuth, SAML, 2FA) stays the same. SmartField ensures that the password never exists as plaintext in the browser DOM."},
+        {"q": "Is it compatible with banking compliance requirements?", "a": "Yes. SmartField uses AES-256-GCM (NIST SP 800-38D) and RSA-2048 (NIST SP 800-56B). Both are approved for financial data. The zero-data architecture means SmartField never sees your customers' credentials."},
+        {"q": "What happens if a tracker like Hotjar is on the page?", "a": "Hotjar records DOM content. SmartField stores nothing in the DOM. The screen shows cipher characters. Hotjar captures encrypted symbols, not passwords."}
+      ]
+    },
+    {
+      "slug": "payments-secure-checkout-fields",
+      "title": "Secure Checkout Fields for Payments",
+      "vertical": "Payments & E-Commerce",
+      "h1": "Secure Payment Fields for Online Checkout",
+      "intro": "Credit card numbers exist as plaintext in standard HTML inputs. Any JavaScript on your checkout page can read them. SmartField encrypts card data at the keystroke level. No iframe. No third-party SDK. Just encrypted inputs.",
+      "dataTypes": ["Credit card numbers", "CVV", "Expiry dates", "Billing addresses"],
+      "threats": ["Magecart attacks", "JavaScript skimmers", "Third-party script injection", "Session replay tools", "Formjacking"],
+      "regulations": ["PCI-DSS Level 1", "PSD2", "GDPR"],
+      "faq": [
+        {"q": "Does SmartField replace Stripe Elements?", "a": "It can. Stripe Elements uses an iframe to isolate card data. SmartField uses a closed Shadow DOM with AES-256 encryption. Both protect card data, but SmartField works with any payment processor, not just Stripe."},
+        {"q": "Is this PCI-DSS compliant?", "a": "SmartField encrypts card data before it exists in the DOM. The plaintext never appears in your JavaScript environment. This is stronger than most PCI-DSS requirements for client-side protection."},
+        {"q": "Can Magecart attacks steal card data?", "a": "No. Magecart injects JavaScript to read input values. SmartField returns encrypted payloads from .value. The attacker gets AES-256 encrypted gibberish, useless without your server's RSA private key."}
+      ]
+    },
+    {
+      "slug": "healthcare-secure-patient-forms",
+      "title": "Secure Patient Forms for Healthcare",
+      "vertical": "Healthcare & Medical",
+      "h1": "Secure Medical Record Input Fields for Healthcare",
+      "intro": "Patient diagnoses, prescriptions, and lab results entered into web forms are visible to every tracker on the page. HIPAA requires protection of PHI. SmartField encrypts medical data at the keystroke level, invisible to Hotjar, FullStory, and every JavaScript on the page.",
+      "dataTypes": ["Patient diagnoses", "Prescriptions", "Lab results", "Insurance IDs", "Medical record numbers"],
+      "threats": ["Session replay capturing PHI", "Third-party analytics reading medical data", "XSS exposing patient records", "Browser extensions scraping forms"],
+      "regulations": ["HIPAA", "HITECH", "GDPR"],
+      "faq": [
+        {"q": "Does this help with HIPAA compliance?", "a": "Yes. HIPAA requires that PHI is protected from unauthorized access. SmartField ensures that patient data never exists as plaintext in the browser DOM. No tracker, extension, or injected script can read it."},
+        {"q": "What if our EHR system already has security?", "a": "Your EHR protects data at rest and in transit. SmartField protects data at the point of entry, in the browser. This is the gap most EHR systems miss."},
+        {"q": "Can screen recording tools capture patient data?", "a": "No. Screen recorders see cipher characters, not real text. SmartField auto-scrambles when the user switches tabs or takes a screenshot."}
+      ]
+    },
+    {
+      "slug": "government-secure-tax-forms",
+      "title": "Secure Tax Forms for Government",
+      "vertical": "Government & Public Sector",
+      "h1": "Secure Government Form Fields for Tax and ID Data",
+      "intro": "Government portals collect the most sensitive personal data: social security numbers, tax IDs, income data. Standard HTML inputs expose all of this to JavaScript. SmartField encrypts every character before it reaches the DOM.",
+      "dataTypes": ["Social security numbers", "Tax IDs", "Income data", "Bank account numbers", "Government IDs"],
+      "threats": ["XSS on government portals", "Third-party script access", "Browser extension data scraping", "Insider threat via DOM access"],
+      "regulations": ["FISMA", "FedRAMP", "NIST 800-53", "GDPR"],
+      "faq": [
+        {"q": "Is SmartField approved for government use?", "a": "SmartField uses NIST-approved algorithms: AES-256-GCM (SP 800-38D) and RSA-2048 (SP 800-56B). The Web Crypto API is FIPS-compliant on most platforms. No data leaves the browser unencrypted."},
+        {"q": "Can this protect against insider threats?", "a": "Yes. Even a developer with access to the page cannot read SmartField data. The value property returns encrypted payloads. The plaintext only exists on the server with the RSA private key."},
+        {"q": "Does it work on government-issued browsers?", "a": "SmartField works on any modern browser that supports Web Components and Web Crypto API: Chrome, Edge, Firefox, and Safari. No plugins or extensions required."}
+      ]
+    },
+    {
+      "slug": "crypto-secure-seed-phrase-input",
+      "title": "Secure Seed Phrase Input for Crypto",
+      "vertical": "Crypto & Web3",
+      "h1": "Secure Seed Phrase and Private Key Input for Crypto Wallets",
+      "intro": "A seed phrase entered into a standard input is immediately visible to every script on the page. One browser extension, one XSS attack, and the wallet is drained. SmartField encrypts seed phrases at the keystroke level. The browser never sees the real words.",
+      "dataTypes": ["Seed phrases", "Private keys", "Wallet addresses", "Recovery codes"],
+      "threats": ["Clipboard hijacking", "Browser extension key theft", "XSS seed phrase extraction", "Keyloggers capturing recovery words", "Screen recording of wallet import"],
+      "regulations": ["MiCA (EU)", "Travel Rule"],
+      "faq": [
+        {"q": "Can a browser extension steal the seed phrase?", "a": "Not with SmartField. Extensions read DOM content via JavaScript. SmartField stores data in a WeakMap inside a closed Shadow DOM. Extensions see cipher characters or encrypted payloads."},
+        {"q": "What about clipboard attacks?", "a": "SmartField blocks copy, paste, select, drag, and context menu events. The clipboard never contains the seed phrase."},
+        {"q": "Does it work for wallet import flows?", "a": "Yes. Use SmartField for the seed phrase input, then decrypt server-side to derive the wallet. The seed phrase never exists as plaintext in the browser."}
+      ]
+    },
+    {
+      "slug": "hr-secure-payroll-forms",
+      "title": "Secure Payroll Forms for HR",
+      "vertical": "HR & Payroll",
+      "h1": "Secure HR and Payroll Form Fields",
+      "intro": "HR departments handle SSNs, salaries, bank accounts, and tax forms. Every field is a liability. SmartField encrypts employee data at the keystroke level, invisible to every tracker and script on the page.",
+      "dataTypes": ["Social security numbers", "Salaries", "Bank account numbers", "Tax forms", "Home addresses"],
+      "threats": ["Third-party HR platform scripts", "Analytics capturing salary data", "XSS in HR portals", "Browser extensions reading SSNs"],
+      "regulations": ["GDPR", "CCPA", "SOX"],
+      "faq": [
+        {"q": "Does this work with our existing HR platform?", "a": "SmartField is a drop-in HTML component. If your HR platform uses web forms, SmartField can protect them. Replace input with smart-field. 2 lines of code."},
+        {"q": "Can our own HR team read the data?", "a": "Only the server with the RSA private key can decrypt. This prevents unauthorized access even from internal teams with browser access."},
+        {"q": "What about salary data in analytics?", "a": "Analytics tools (Google Analytics, Mixpanel, Amplitude) cannot read SmartField values. They see encrypted payloads or cipher characters."}
+      ]
+    },
+    {
+      "slug": "insurance-secure-claims-forms",
+      "title": "Secure Claims Forms for Insurance",
+      "vertical": "Insurance",
+      "h1": "Secure Insurance Claims and Application Fields",
+      "intro": "Insurance forms collect medical history, financial data, and personal identifiers. Standard inputs expose this to every script on the page. SmartField encrypts beneficiary data, policy numbers, and claim details at the keystroke level.",
+      "dataTypes": ["Policy numbers", "Medical history", "Beneficiary data", "Financial information", "Claim details"],
+      "threats": ["Third-party script access to claim data", "Session replay capturing medical history", "XSS in insurance portals"],
+      "regulations": ["HIPAA", "GDPR", "State insurance regulations"],
+      "faq": [
+        {"q": "Can SmartField protect medical information in claims?", "a": "Yes. Medical history entered through SmartField is encrypted before it touches the DOM. Session replay tools and analytics cannot capture it."},
+        {"q": "Does it work for multi-step claim forms?", "a": "Yes. SmartField works on any page with any number of steps. Each field independently encrypts its data."},
+        {"q": "Is the encrypted data compatible with our claims processing system?", "a": "SmartField outputs standard base64 JSON payloads. Your server decrypts with a single function call using our SDK (Node.js, Python, Java, Go, PHP, Ruby)."}
+      ]
+    },
+    {
+      "slug": "real-estate-secure-mortgage-forms",
+      "title": "Secure Mortgage Forms for Real Estate",
+      "vertical": "Real Estate",
+      "h1": "Secure Mortgage Application Form Fields",
+      "intro": "Mortgage applications ask for income, employer, SSN, and bank statements. Every field on a standard form is readable by JavaScript. SmartField encrypts financial data before it exists in the DOM.",
+      "dataTypes": ["SSN", "Income data", "Bank statements", "Employer information", "Property details"],
+      "threats": ["Third-party script access", "Analytics capturing financial data", "XSS in mortgage portals", "Session replay recording applications"],
+      "regulations": ["TRID", "RESPA", "GDPR", "CCPA"],
+      "faq": [
+        {"q": "Can this protect mortgage application data?", "a": "Yes. SmartField encrypts every field at the keystroke level. Income, SSN, bank details are never visible in the browser DOM."},
+        {"q": "Does it work with existing mortgage platforms?", "a": "SmartField is a standard Web Component. It works with any web-based mortgage application system."},
+        {"q": "What about document upload fields?", "a": "SmartField protects text input fields. Document uploads are handled separately. We recommend combining SmartField for text data with secure file upload for documents."}
+      ]
+    },
+    {
+      "slug": "immigration-secure-visa-forms",
+      "title": "Secure Visa Forms for Immigration",
+      "vertical": "Immigration",
+      "h1": "Secure Immigration and Visa Application Fields",
+      "intro": "Visa applications collect passport data, travel history, and the most personal information a government can request. SmartField encrypts this data at the keystroke level, invisible to every script on the page.",
+      "dataTypes": ["Passport numbers", "Travel history", "Visa application data", "Personal identification", "Employment history"],
+      "threats": ["Third-party scripts on immigration portals", "Browser extensions reading passport data", "XSS capturing visa applications"],
+      "regulations": ["GDPR", "National data protection laws"],
+      "faq": [
+        {"q": "Does SmartField work on government immigration portals?", "a": "SmartField works on any website that uses HTML forms. Government portals, third-party visa services, and immigration law firm websites can all use it."},
+        {"q": "Can this protect passport numbers?", "a": "Yes. Passport numbers entered through SmartField are encrypted with AES-256-GCM. The browser DOM never contains the plaintext."},
+        {"q": "Is it compatible with multi-language forms?", "a": "Yes. SmartField is language-agnostic. It encrypts whatever the user types, regardless of language or character set."}
+      ]
+    }
+  ],
+  "threats": [
+    {"slug": "keylogger-protection-for-web-forms", "title": "Keylogger Protection for Web Forms", "h1": "Protect Web Forms from Keyloggers", "threat": "Keyloggers", "description": "Keyloggers capture every keystroke before it reaches the server. SmartField blocks keyboard event propagation with stopPropagation() inside a closed Shadow DOM. External keylogger scripts receive nothing."},
+    {"slug": "session-replay-safe-input-fields", "title": "Session Replay Safe Input Fields", "h1": "Input Fields Safe from Session Replay Tools", "threat": "Session Replay (Hotjar, FullStory, Clarity)", "description": "Session replay tools record DOM content and user interactions. SmartField stores no real data in the DOM. The screen shows cipher characters. Replay recordings capture encrypted symbols."},
+    {"slug": "xss-resistant-input-fields", "title": "XSS Resistant Input Fields", "h1": "Input Fields Resistant to XSS Attacks", "threat": "Cross-Site Scripting (XSS)", "description": "XSS attacks inject JavaScript that reads form values. SmartField returns encrypted payloads from .value. Even successful XSS attacks capture only AES-256-GCM encrypted data, useless without the server's RSA private key."},
+    {"slug": "browser-extension-safe-input-fields", "title": "Browser Extension Safe Input Fields", "h1": "Input Fields Safe from Browser Extensions", "threat": "Browser Extensions", "description": "Browser extensions have full access to page DOM and can read any standard input value. SmartField's closed Shadow DOM returns null for shadowRoot. Extensions cannot find, read, or modify the encrypted input."},
+    {"slug": "screen-recorder-safe-input-fields", "title": "Screen Recorder Safe Input Fields", "h1": "Input Fields Safe from Screen Recorders", "threat": "Screen Recording", "description": "Screen recorders capture what is visible on screen. SmartField displays animated cipher characters that change 8 times per second. When the page loses focus, all characters scramble instantly."},
+    {"slug": "clipboard-safe-input-fields", "title": "Clipboard Safe Input Fields", "h1": "Protect Input Fields from Clipboard Attacks", "threat": "Clipboard Hijacking", "description": "Clipboard attacks steal data through copy, paste, and drag events. SmartField blocks all clipboard operations with capture-phase event handlers. The clipboard never contains sensitive data."},
+    {"slug": "autofill-safe-input-fields", "title": "Autofill Safe Input Fields", "h1": "Input Fields Safe from Browser Autofill Leaks", "threat": "Browser Autofill", "description": "Browsers autofill and autosave form data, often sending it to third-party services. SmartField uses cipher characters that the browser saves instead of real data. Autofill captures encrypted symbols."},
+    {"slug": "dom-invisible-input-fields", "title": "DOM Invisible Input Fields", "h1": "Input Fields Invisible to the DOM", "threat": "DOM Access", "description": "Standard inputs store plaintext in the DOM. Any JavaScript can read it with querySelector. SmartField stores data in a WeakMap inside a closed Shadow DOM. innerHTML, textContent, and querySelector all return empty or null."},
+    {"slug": "anti-bot-form-fields", "title": "Anti-Bot Form Fields", "h1": "Form Fields That Block Bots", "threat": "Automated Bots", "description": "Bots use Puppeteer, Selenium, and Playwright to fill and read forms. SmartField's closed Shadow DOM makes inputs invisible to querySelector. Bots cannot find, fill, or read the encrypted field. No CAPTCHA needed."},
+    {"slug": "anti-ai-form-fields", "title": "Anti-AI Form Fields", "h1": "Form Fields That Block AI Agents", "threat": "AI Agents", "description": "AI agents (GPT, Claude, Gemini, Grok) interact with web pages through DOM access. We tested all four against SmartField. None could read a single character. Shadow DOM, WeakMap, and encryption create an impenetrable barrier."},
+    {"slug": "anti-copy-paste-input-fields", "title": "Anti Copy Paste Input Fields", "h1": "Input Fields with Copy Paste Protection", "threat": "Copy/Paste Exfiltration", "description": "Copy and paste operations can be intercepted by malicious scripts. SmartField blocks copy, cut, paste, select, selectstart, contextmenu, dragstart, drag, and drop events at the capture phase."},
+    {"slug": "anti-session-recording-input-fields", "title": "Anti Session Recording Input Fields", "h1": "Input Fields Protected from Session Recording", "threat": "Session Recording Tools", "description": "Hotjar, FullStory, Clarity, and LogRocket record user sessions. They capture DOM content, keystrokes, and form values. SmartField ensures they only capture cipher characters and encrypted payloads."}
+  ],
+  "dataTypes": [
+    {"slug": "secure-password-input", "title": "Secure Password Input", "h1": "Encrypted Password Input Field", "dataType": "Passwords", "description": "Passwords entered in standard inputs are visible to any JavaScript on the page. SmartField encrypts every character with AES-256-GCM. The DOM never contains the plaintext password."},
+    {"slug": "secure-credit-card-input", "title": "Secure Credit Card Input", "h1": "Encrypted Credit Card Input Field", "dataType": "Credit Card Numbers", "description": "Credit card numbers in standard inputs are targets for Magecart, JavaScript skimmers, and session replay tools. SmartField encrypts card data at the keystroke level with built-in Luhn validation."},
+    {"slug": "secure-cvv-input", "title": "Secure CVV Input", "h1": "Encrypted CVV Input Field", "dataType": "CVV Codes", "description": "CVV codes are the most sensitive payment field. SmartField encrypts 3-4 digit CVV codes with AES-256-GCM. The code never appears in the DOM, browser autosave, or screen recordings."},
+    {"slug": "secure-bank-account-input", "title": "Secure Bank Account Input", "h1": "Encrypted Bank Account Input Field", "dataType": "Bank Account Numbers", "description": "Bank account and routing numbers entered in web forms are vulnerable to XSS, extensions, and analytics tools. SmartField encrypts them before they reach the DOM."},
+    {"slug": "secure-ssn-input", "title": "Secure SSN Input", "h1": "Encrypted Social Security Number Input", "dataType": "Social Security Numbers", "description": "SSNs are the most targeted personal identifier. SmartField encrypts 9-digit SSNs with AES-256-GCM, enforces format validation, and blocks all extraction attempts."},
+    {"slug": "secure-medical-record-input", "title": "Secure Medical Record Input", "h1": "Encrypted Medical Record Input Field", "dataType": "Medical Records", "description": "Patient data entered in web forms is protected by HIPAA but exposed in the browser DOM. SmartField encrypts diagnoses, prescriptions, and lab results at the keystroke level."},
+    {"slug": "secure-seed-phrase-input", "title": "Secure Seed Phrase Input", "h1": "Encrypted Seed Phrase Input for Crypto Wallets", "dataType": "Seed Phrases", "description": "A seed phrase in a standard input can be stolen by one browser extension. SmartField encrypts seed phrases character by character. The browser never sees the real words."},
+    {"slug": "secure-private-key-input", "title": "Secure Private Key Input", "h1": "Encrypted Private Key Input Field", "dataType": "Private Keys", "description": "Crypto private keys entered in web forms are the highest-value target. SmartField encrypts them with AES-256-GCM + RSA-2048. Zero exposure to JavaScript, clipboard, or screen capture."},
+    {"slug": "secure-tax-id-input", "title": "Secure Tax ID Input", "h1": "Encrypted Tax ID Input Field", "dataType": "Tax IDs", "description": "Tax identification numbers are used for identity theft. SmartField encrypts tax IDs at the keystroke level, invisible to analytics, extensions, and injected scripts."},
+    {"slug": "secure-passport-number-input", "title": "Secure Passport Number Input", "h1": "Encrypted Passport Number Input Field", "dataType": "Passport Numbers", "description": "Passport numbers entered on immigration and travel websites are exposed to every script on the page. SmartField encrypts them with military-grade AES-256-GCM encryption."}
+  ],
+  "developers": [
+    {"slug": "nodejs-encrypted-input-sdk", "title": "Node.js Encrypted Input SDK", "language": "Node.js", "install": "npm install @smartfield-dev/server", "initCode": "const sf = require('@smartfield-dev/server');\nawait sf.init();\napp.use(sf.middleware());", "decryptCode": "const password = await sf.decrypt(req.body.password);", "framework": "Express", "port": "3333"},
+    {"slug": "python-encrypted-input-sdk", "title": "Python Encrypted Input SDK", "language": "Python", "install": "pip install cryptography flask", "initCode": "from smartfield import SmartField\nsf = SmartField()\nsf.init()", "decryptCode": "password = sf.decrypt(request.json['password'])", "framework": "Flask / Django", "port": "5555"},
+    {"slug": "java-encrypted-input-sdk", "title": "Java Encrypted Input SDK", "language": "Java", "install": "// javax.crypto included in JDK", "initCode": "SmartField sf = new SmartField();\nsf.init();", "decryptCode": "String password = sf.decrypt(encryptedPayload);", "framework": "Spring / HttpServer", "port": "6666"},
+    {"slug": "go-encrypted-input-sdk", "title": "Go Encrypted Input SDK", "language": "Go", "install": "// crypto/rsa, crypto/aes included in stdlib", "initCode": "sf := smartfield.New()\nsf.Init()", "decryptCode": "password, err := sf.Decrypt(encryptedPayload)", "framework": "net/http / Gin / Echo", "port": "7777"},
+    {"slug": "php-encrypted-input-sdk", "title": "PHP Encrypted Input SDK", "language": "PHP", "install": "// openssl extension included in PHP", "initCode": "$sf = new SmartField();\n$sf->init();", "decryptCode": "$password = $sf->decrypt($_POST['password']);", "framework": "Laravel / Plain PHP", "port": "8888"},
+    {"slug": "ruby-encrypted-input-sdk", "title": "Ruby Encrypted Input SDK", "language": "Ruby", "install": "# OpenSSL included in Ruby stdlib", "initCode": "sf = SmartField.new\nsf.init", "decryptCode": "password = sf.decrypt(params[:password])", "framework": "Rails / Sinatra / WEBrick", "port": "9999"}
+  ],
+  "compare": [
+    {"slug": "smartfield-vs-html-input", "title": "SmartField vs Standard HTML Input", "competitor": "Standard <input>", "competitorDesc": "The default HTML input stores plaintext in the DOM. Any JavaScript can read it.", "advantage": "SmartField encrypts every keystroke. The DOM never contains plaintext."},
+    {"slug": "smartfield-vs-stripe-elements", "title": "SmartField vs Stripe Elements", "competitor": "Stripe Elements", "competitorDesc": "Stripe Elements uses iframes to isolate card data. Only works for Stripe payments.", "advantage": "SmartField works for any field type (passwords, SSNs, medical data), any payment processor, no iframe overhead."},
+    {"slug": "smartfield-vs-password-managers", "title": "SmartField vs Password Managers", "competitor": "Password Managers", "competitorDesc": "Password managers store and fill credentials. They don't encrypt data in the browser DOM.", "advantage": "SmartField encrypts data at the point of entry. Password managers complement SmartField, they don't replace it."},
+    {"slug": "smartfield-vs-captcha-for-bot-blocking", "title": "SmartField vs CAPTCHA for Bot Blocking", "competitor": "CAPTCHA / reCAPTCHA", "competitorDesc": "CAPTCHA asks users to prove they're human. It doesn't protect form data from JavaScript.", "advantage": "SmartField blocks bots by architecture (Shadow DOM), not by puzzles. No user friction. Bots can't find, fill, or read the input."},
+    {"slug": "smartfield-vs-iframe-payment-fields", "title": "SmartField vs iFrame Payment Fields", "competitor": "iFrame Payment Fields", "competitorDesc": "iFrames isolate payment forms in a separate origin. They add latency and styling limitations.", "advantage": "SmartField uses Shadow DOM (no iframe overhead), supports custom CSS variables, and works for any field type."},
+    {"slug": "smartfield-vs-client-side-masking", "title": "SmartField vs Client-Side Masking", "competitor": "Client-Side Input Masking", "competitorDesc": "Masking libraries hide characters with dots or asterisks. The plaintext still exists in the DOM.", "advantage": "SmartField goes beyond masking. The plaintext never exists in the DOM. The value property returns AES-256 encrypted data."},
+    {"slug": "smartfield-vs-obfuscated-inputs", "title": "SmartField vs Obfuscated Inputs", "competitor": "JavaScript Obfuscation", "competitorDesc": "Obfuscation makes code harder to read but doesn't prevent runtime access to DOM values.", "advantage": "SmartField uses closed Shadow DOM, WeakMap isolation, and real encryption. Not obfuscation but actual cryptographic protection."},
+    {"slug": "smartfield-vs-shadow-dom-only", "title": "SmartField vs Shadow DOM Only", "competitor": "Plain Shadow DOM", "competitorDesc": "Shadow DOM alone isolates elements but Google confirms it's not a security boundary.", "advantage": "SmartField uses Shadow DOM as one of 13 layers. WeakMap, AES-256-GCM, RSA-2048, event blocking, anti-screenshot, and more."},
+    {"slug": "smartfield-vs-traditional-password-fields", "title": "SmartField vs Traditional Password Fields", "competitor": "type='password'", "competitorDesc": "Password fields hide characters visually with dots. The plaintext is still accessible via .value in the DOM.", "advantage": "SmartField encrypts the value. querySelector returns null. .value returns encrypted payload. Even developer tools show cipher characters."},
+    {"slug": "smartfield-vs-form-encryption-libraries", "title": "SmartField vs Form Encryption Libraries", "competitor": "JavaScript Encryption Libraries", "competitorDesc": "Libraries like CryptoJS encrypt data before submit. But the plaintext exists in memory and DOM until encryption runs.", "advantage": "SmartField encrypts at the keystroke level. The plaintext never exists in the DOM at any point. Not even for a millisecond."},
+    {"slug": "smartfield-vs-session-replay-masking", "title": "SmartField vs Session Replay Masking", "competitor": "Session Replay Field Masking", "competitorDesc": "Hotjar and FullStory offer masking options. But masking is opt-in, often misconfigured, and doesn't protect from XSS.", "advantage": "SmartField protects by default. No configuration needed. Works against session replay, XSS, extensions, and bots simultaneously."}
+  ]
+}

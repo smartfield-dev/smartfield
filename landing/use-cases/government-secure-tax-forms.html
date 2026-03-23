@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Tax Forms for Government | SmartField</title>
+<meta name="description" content="Secure Tax Forms for Government. Encrypt Social security numbers, Tax IDs, Income data with AES-256-GCM + RSA-2048. Protect against XSS on government portals and Third-party script access. FISMA, FedRAMP, NIST 800-53, GDPR ready.">
+<link rel="canonical" href="https://3wwprotocol.com/landing/use-cases/government-secure-tax-forms.html">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:#fff;color:#111;line-height:1.7}
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+h1{font-size:36px;font-weight:800;color:#0B1120;margin-bottom:12px;line-height:1.2}
+h2{font-size:24px;font-weight:700;color:#0B1120;margin-top:40px;margin-bottom:12px}
+h3{font-size:18px;font-weight:700;color:#0B1120;margin-top:24px;margin-bottom:8px}
+p{font-size:17px;color:#444;margin-bottom:16px;line-height:1.7}
+ul{padding-left:20px;margin-bottom:16px}
+li{font-size:16px;color:#444;margin-bottom:8px;line-height:1.6}
+a{color:#00B88A;text-decoration:none;font-weight:600}
+a:hover{text-decoration:underline}
+.badge{display:inline-block;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;margin-bottom:16px}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.code-block{background:#0B1120;color:#e2e8f0;border-radius:10px;padding:20px;margin:12px 0 20px;overflow-x:auto;font-size:14px;line-height:1.6;font-family:'Fira Code',monospace}
+.code-inline{background:#f0f0f0;color:#0B1120;padding:2px 6px;border-radius:4px;font-size:13px;font-family:'Fira Code',monospace}
+.card{background:#f8fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:16px}
+.cta{display:inline-block;padding:14px 32px;background:#00B88A;color:#fff;font-size:16px;font-weight:700;border-radius:10px;margin-top:24px;transition:opacity .2s}
+.cta:hover{opacity:.85;text-decoration:none}
+.faq-item{border-bottom:1px solid #e5e7eb;padding:16px 0;cursor:pointer}
+.faq-q{font-size:17px;font-weight:600;color:#0B1120;display:flex;justify-content:space-between;align-items:center}
+.faq-a{display:none;font-size:16px;color:#555;margin-top:10px;line-height:1.7}
+.faq-item.open .faq-a{display:block}
+.breadcrumb{font-size:14px;color:#888;margin-bottom:24px}
+.breadcrumb a{color:#00B88A;font-weight:500}
+nav{position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 20px;z-index:100;display:flex;justify-content:space-between;align-items:center}
+nav a.logo{font-size:18px;font-weight:800;color:#0B1120;text-decoration:none}
+nav a.logo span{color:#00B88A}
+nav .nav-cta{padding:8px 20px;background:#0B1120;color:#fff;font-size:13px;font-weight:700;border-radius:8px;text-decoration:none}
+.spacer{height:70px}
+footer{border-top:1px solid #e5e7eb;padding:40px 20px;text-align:center;font-size:14px;color:#888;margin-top:60px}
+.related{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.related a{display:block;padding:16px;background:#f8fafb;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-weight:600;color:#0B1120;text-decoration:none;transition:border-color .2s}
+.related a:hover{border-color:#00B88A}
+@media(max-width:768px){.related{grid-template-columns:1fr}h1{font-size:28px}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is SmartField approved for government use?","acceptedAnswer":{"@type":"Answer","text":"SmartField uses NIST-approved algorithms: AES-256-GCM (SP 800-38D) and RSA-2048 (SP 800-56B). The Web Crypto API is FIPS-compliant on most platforms. No data leaves the browser unencrypted."}},{"@type":"Question","name":"Can this protect against insider threats?","acceptedAnswer":{"@type":"Answer","text":"Yes. Even a developer with access to the page cannot read SmartField data. The value property returns encrypted payloads. The plaintext only exists on the server with the RSA private key."}},{"@type":"Question","name":"Does it work on government-issued browsers?","acceptedAnswer":{"@type":"Answer","text":"SmartField works on any modern browser that supports Web Components and Web Crypto API: Chrome, Edge, Firefox, and Safari. No plugins or extensions required."}}]}</script>
+</head>
+<body>
+
+<nav>
+  <a href="/landing/" class="logo">Smart<span>Field</span></a>
+  <a href="/landing/#demo" class="nav-cta">Try Demo</a>
+</nav>
+<div class="spacer"></div>
+
+<div class="container">
+
+<div class="breadcrumb"><a href="/landing/">Home</a> / <a href="/landing/use-cases/">Use Cases</a> / Government & Public Sector</div>
+<span class="badge badge-green">Government & Public Sector</span>
+<h1>Secure Government Form Fields for Tax and ID Data</h1>
+<p>Government portals collect the most sensitive personal data: social security numbers, tax IDs, income data. Standard HTML inputs expose all of this to JavaScript. SmartField encrypts every character before it reaches the DOM.</p>
+
+<h2>What Data This Protects</h2>
+<ul><li><strong>Social security numbers</strong></li>
+<li><strong>Tax IDs</strong></li>
+<li><strong>Income data</strong></li>
+<li><strong>Bank account numbers</strong></li>
+<li><strong>Government IDs</strong></li></ul>
+
+<h2>Threats Blocked</h2>
+<div class="card">
+<ul><li>XSS on government portals</li>
+<li>Third-party script access</li>
+<li>Browser extension data scraping</li>
+<li>Insider threat via DOM access</li></ul>
+</div>
+
+<h2>How It Works</h2>
+<p>Replace your standard HTML input with SmartField. 2 lines of code:</p>
+<div class="code-block">&lt;script src="https://cdn.smartfield.dev/v1/smartfield.js"&gt;&lt;/script&gt;
+
+&lt;smart-field type="password" placeholder="password"
+  encrypt-key="/api/sf-key"&gt;&lt;/smart-field&gt;</div>
+<p>Every keystroke is encrypted with AES-256-GCM. The AES key is wrapped with RSA-2048. Only your server can decrypt.</p>
+
+<h2>Why Standard Inputs Fail</h2>
+<div class="card">
+<p>A standard <span class="code-inline">&lt;input&gt;</span> stores plaintext in the DOM. Any JavaScript on the page can read it:</p>
+<div class="code-block">document.querySelector('input').value
+// "MyBankPassword123"  &larr; stolen</div>
+<p>With SmartField, the same code returns:</p>
+<div class="code-block">document.querySelector('smart-field').value
+// "eyJ2IjoxLCJpdiI6IkNx..."  &larr; encrypted</div>
+</div>
+
+<h2>Compliance</h2>
+<p>SmartField helps meet requirements for: <strong>FISMA, FedRAMP, NIST 800-53, GDPR</strong></p>
+<ul>
+<li>AES-256-GCM (NIST SP 800-38D)</li>
+<li>RSA-2048 (NIST SP 800-56B)</li>
+<li>Zero-data architecture. SmartField never sees your data.</li>
+</ul>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-list">
+  <div class="faq-item">
+    <div class="faq-q">Is SmartField approved for government use?<span>+</span></div>
+    <div class="faq-a">SmartField uses NIST-approved algorithms: AES-256-GCM (SP 800-38D) and RSA-2048 (SP 800-56B). The Web Crypto API is FIPS-compliant on most platforms. No data leaves the browser unencrypted.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Can this protect against insider threats?<span>+</span></div>
+    <div class="faq-a">Yes. Even a developer with access to the page cannot read SmartField data. The value property returns encrypted payloads. The plaintext only exists on the server with the RSA private key.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Does it work on government-issued browsers?<span>+</span></div>
+    <div class="faq-a">SmartField works on any modern browser that supports Web Components and Web Crypto API: Chrome, Edge, Firefox, and Safari. No plugins or extensions required.</div>
+  </div>
+</div>
+
+<h2>Related Pages</h2>
+<div class="related">
+  <a href="/landing/use-cases/banking-secure-login-fields.html">Secure Banking Login Fields</a>
+  <a href="/landing/use-cases/payments-secure-checkout-fields.html">Secure Checkout Fields for Payments</a>
+  <a href="/landing/use-cases/healthcare-secure-patient-forms.html">Secure Patient Forms for Healthcare</a>
+</div>
+
+<div style="text-align:center;margin-top:40px">
+  <a href="/landing/#demo" class="cta">Try Live Demo</a>
+</div>
+</div>
+
+<footer>
+  <p>SmartField. Every Keystroke, Encrypted. <a href="/landing/">Home</a> &middot; <a href="/landing/docs.html">Docs</a> &middot; <a href="https://github.com/smartfield-dev/smartfield">GitHub</a></p>
+</footer>
+
+
+<script>document.querySelectorAll('.faq-item').forEach(i=>i.addEventListener('click',()=>i.classList.toggle('open')))</script>
+
+</body>
+</html>
